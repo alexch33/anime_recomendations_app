@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:boilerplate/data/local/constants/db_constants.dart';
 import 'package:boilerplate/data/local/datasources/post/post_datasource.dart';
+import 'package:boilerplate/data/local/datasources/token/token_datasource.dart';
+import 'package:boilerplate/data/local/datasources/user/user_datasource.dart';
 import 'package:boilerplate/data/network/apis/animes/anime_api.dart';
 import 'package:boilerplate/data/network/apis/users/users_api.dart';
 import 'package:boilerplate/data/repository.dart';
@@ -68,6 +70,14 @@ class LocalModule extends NetworkModule {
   @singleton
   PostDataSource providePostDataSource() => PostDataSource(database);
 
+  @provide
+  @singleton
+  UserDataSource provideUserDataSource() => UserDataSource(database);
+
+  @provide
+  @singleton
+  TokenDataSource provideTokenDataSource() => TokenDataSource(database);
+
   // DataSources End:-----------------------------------------------------------
 
   /// A singleton repository provider.
@@ -76,10 +86,12 @@ class LocalModule extends NetworkModule {
   @provide
   @singleton
   Repository provideRepository(
-    AnimeApi postApi,
+    AnimeApi animeApi,
     UsersApi usersApi,
     SharedPreferenceHelper preferenceHelper,
     PostDataSource postDataSource,
+    UserDataSource userDataSource,
+    TokenDataSource tokenDataSource,
   ) =>
-      Repository(postApi, usersApi, preferenceHelper, postDataSource);
+      Repository(animeApi, usersApi, preferenceHelper, postDataSource, userDataSource, tokenDataSource);
 }

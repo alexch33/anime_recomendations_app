@@ -45,7 +45,7 @@ class NetworkModule extends PreferenceModule {
             var token = prefs.getString(Preferences.auth_token);
 
             if (token != null) {
-              options.headers.putIfAbsent('Authorization', () => token);
+              options.headers.putIfAbsent('Authorization', () => "Bearer " + token);
             } else {
               print('Auth token is null');
             }

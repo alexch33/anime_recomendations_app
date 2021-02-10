@@ -2,7 +2,7 @@ class Endpoints {
   Endpoints._();
 
   // base url
-  static const String baseUrl = "http://192.168.43.174/v1";
+  static const String baseUrl = "http://192.168.43.174:3000/v1";
 
   // receiveTimeout
   static const int receiveTimeout = 5000;
@@ -12,4 +12,6 @@ class Endpoints {
 
   // booking endpoints
   static const String getPosts = baseUrl + "/animes";
+
+  static const String login = baseUrl + "/auth/login";
 }

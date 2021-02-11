@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:boilerplate/data/local/constants/db_constants.dart';
-import 'package:boilerplate/data/local/datasources/post/post_datasource.dart';
+import 'package:boilerplate/data/local/datasources/anime/anime_datasource.dart';
 import 'package:boilerplate/data/local/datasources/token/token_datasource.dart';
 import 'package:boilerplate/data/local/datasources/user/user_datasource.dart';
 import 'package:boilerplate/data/network/apis/animes/anime_api.dart';
@@ -68,7 +68,7 @@ class LocalModule extends NetworkModule {
   /// Calling it multiple times will return the same instance.
   @provide
   @singleton
-  PostDataSource providePostDataSource() => PostDataSource(database);
+  AnimeDataSource providePostDataSource() => AnimeDataSource(database);
 
   @provide
   @singleton
@@ -89,7 +89,7 @@ class LocalModule extends NetworkModule {
     AnimeApi animeApi,
     UsersApi usersApi,
     SharedPreferenceHelper preferenceHelper,
-    PostDataSource postDataSource,
+    AnimeDataSource postDataSource,
     UserDataSource userDataSource,
     TokenDataSource tokenDataSource,
   ) =>

@@ -1,5 +1,5 @@
 import 'package:boilerplate/data/repository.dart';
-import 'package:boilerplate/models/post/post_list.dart';
+import 'package:boilerplate/models/anime/anime_list.dart';
 import 'package:boilerplate/stores/error/error_store.dart';
 import 'package:boilerplate/utils/dio/dio_error_util.dart';
 import 'package:mobx/mobx.dart';
@@ -19,15 +19,15 @@ abstract class _AnimeStore with Store {
   _AnimeStore(Repository repository) : this._repository = repository;
 
   // store variables:-----------------------------------------------------------
-  static ObservableFuture<PostList> emptyPostResponse =
+  static ObservableFuture<AnimeList> emptyPostResponse =
       ObservableFuture.value(null);
 
   @observable
-  ObservableFuture<PostList> fetchPostsFuture =
-      ObservableFuture<PostList>(emptyPostResponse);
+  ObservableFuture<AnimeList> fetchPostsFuture =
+      ObservableFuture<AnimeList>(emptyPostResponse);
 
   @observable
-  PostList postList;
+  AnimeList animeList;
 
   @observable
   bool success = false;
@@ -41,8 +41,8 @@ abstract class _AnimeStore with Store {
     final future = _repository.getAnimes();
     fetchPostsFuture = ObservableFuture(future);
 
-    future.then((postList) {
-      this.postList = postList;
+    future.then((animeList) {
+      this.animeList = animeList;
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
     });

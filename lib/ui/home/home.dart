@@ -20,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   //stores:---------------------------------------------------------------------
-  AnimeStore _postStore;
+  AnimeStore _animeStore;
   ThemeStore _themeStore;
   LanguageStore _languageStore;
   UserStore _userStore;
@@ -37,12 +37,12 @@ class _HomeScreenState extends State<HomeScreen> {
     // initializing stores
     _languageStore = Provider.of<LanguageStore>(context);
     _themeStore = Provider.of<ThemeStore>(context);
-    _postStore = Provider.of<AnimeStore>(context);
+    _animeStore = Provider.of<AnimeStore>(context);
     _userStore = Provider.of<UserStore>(context);
 
     // check to see if already called api
-    if (!_postStore.loading) {
-      _postStore.getAnimes();
+    if (!_animeStore.loading) {
+      _animeStore.getAnimes();
     }
   }
 
@@ -121,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildMainContent() {
     return Observer(
       builder: (context) {
-        return _postStore.loading
+        return _animeStore.loading
             ? CustomProgressIndicatorWidget()
             : Material(child: _buildListView());
       },
@@ -129,9 +129,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildListView() {
-    return _postStore.postList != null
+    return _animeStore.animeList != null
         ? ListView.separated(
-            itemCount: _postStore.postList.posts.length,
+            itemCount: _animeStore.animeList.animes.length,
             separatorBuilder: (context, position) {
               return Divider();
             },
@@ -151,14 +151,14 @@ class _HomeScreenState extends State<HomeScreen> {
       dense: true,
       leading: Icon(Icons.cloud_circle),
       title: Text(
-        '${_postStore.postList.posts[position].title}',
+        '${_animeStore.animeList.animes[position].name}',
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         softWrap: false,
         style: Theme.of(context).textTheme.title,
       ),
       subtitle: Text(
-        '${_postStore.postList.posts[position].body}',
+        '${_animeStore.animeList.animes[position].rating}',
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         softWrap: false,
@@ -169,8 +169,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _handleErrorMessage() {
     return Observer(
       builder: (context) {
-        if (_postStore.errorStore.errorMessage.isNotEmpty) {
-          return _showErrorMessage(_postStore.errorStore.errorMessage);
+        if (_animeStore.errorStore.errorMessage.isNotEmpty) {
+          return _showErrorMessage(_animeStore.errorStore.errorMessage);
         }
 
         return SizedBox.shrink();

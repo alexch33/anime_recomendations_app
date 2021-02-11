@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:boilerplate/data/network/constants/endpoints.dart';
 import 'package:boilerplate/data/network/dio_client.dart';
 import 'package:boilerplate/data/network/rest_client.dart';
-import 'package:boilerplate/models/post/post_list.dart';
+import 'package:boilerplate/models/anime/anime_list.dart';
 
 class AnimeApi {
   // dio instance
@@ -16,10 +16,10 @@ class AnimeApi {
   AnimeApi(this._dioClient, this._restClient);
 
   /// Returns list of post in response
-  Future<PostList> getAnimes() async {
+  Future<AnimeList> getAnimes() async {
     try {
-      final res = await _dioClient.get(Endpoints.getPosts);
-      return PostList.fromJson(res);
+      final res = await _dioClient.get(Endpoints.getAnimes);
+      return AnimeList.fromJson(res["results"]);
     } catch (e) {
       print(e.toString());
       throw e;

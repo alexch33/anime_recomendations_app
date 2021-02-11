@@ -35,23 +35,61 @@ class NetworkModule extends PreferenceModule {
         requestBody: true,
         requestHeader: true,
       ))
-      ..interceptors.add(
-        InterceptorsWrapper(
-          onRequest: (Options options) async {
-            // getting shared pref instance
-            var prefs = await SharedPreferences.getInstance();
+      ..interceptors.add(InterceptorsWrapper(
+        onRequest: (Options options) async {
+          // getting shared pref instance
+          var prefs = await SharedPreferences.getInstance();
 
-            // getting token
-            var token = prefs.getString(Preferences.auth_token);
+          // getting token
+          var token = prefs.getString(Preferences.auth_token);
 
-            if (token != null) {
-              options.headers.putIfAbsent('Authorization', () => "Bearer " + token);
-            } else {
-              print('Auth token is null');
+          if (token != null) {
+            options.headers
+                .putIfAbsent('Authorization', () => "Bearer " + token);
+          } else {
+            print('Auth token is null');
+          }
+        },
+        onError: ((DioError error) async {
+          if (error.response?.statusCode == 401) {
+            final prefs = await SharedPreferences.getInstance();
+            final refreshToken = prefs.getString(Preferences.refresh_token);
+
+            if (refreshToken != null) {
+              RequestOptions options = error.response.request;
+
+              final res = await dio.post(Endpoints.refreshTokens,
+                  data: {"refreshToken": refreshToken});
+
+              dio.interceptors.requestLock.lock();
+              dio.interceptors.responseLock.lock();
+
+              if (res.statusCode == 200) {
+                final token = res.data["access"]["token"];
+                final refresh = res.data["refresh"]["token"];
+
+                await prefs.setString(Preferences.auth_token, token);
+                await prefs.setString(Preferences.refresh_token, refresh);
+
+                options.headers["Authorization"] = "Bearer " + token;
+
+                dio.interceptors.requestLock.unlock();
+                dio.interceptors.responseLock.unlock();
+                return dio.request(options.path, options: options);
+              }
             }
-          },
-        ),
-      );
+            dio.interceptors.requestLock.unlock();
+            dio.interceptors.responseLock.unlock();
+
+            return error;
+          } else {
+            dio.interceptors.requestLock.unlock();
+            dio.interceptors.responseLock.unlock();
+
+            return error;
+          }
+        }),
+      ));
 
     return dio;
   }

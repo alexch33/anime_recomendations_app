@@ -87,8 +87,8 @@ class Repository {
     bool success = false;
     if (user != null && token != null) {
       await _userDataSource.insertUser(user);
-      await _tokenDataSource.insertToken(token);
       _sharedPrefsHelper.saveAuthToken(token.accessToken);
+      _sharedPrefsHelper.saveRefreshToken(token.refreshToken);
       success = true;
     }
 
@@ -99,6 +99,9 @@ class Repository {
 
   Future logout() async {
     saveIsLoggedIn(false);
+    _usersApi
+        .logout(await _sharedPrefsHelper.refreshToken)
+        .catchError((error) => throw error);
     deleteToken();
     deleteUser();
   }
@@ -132,6 +135,7 @@ class Repository {
 
   Future<int> deleteToken() async {
     _sharedPrefsHelper.removeAuthToken();
+    _sharedPrefsHelper.removeRefreshToken();
     return await _tokenDataSource.deleteAll();
   }
 

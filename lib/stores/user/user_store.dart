@@ -1,5 +1,4 @@
 import 'package:boilerplate/models/user/user.dart';
-import 'package:boilerplate/models/user/user_token.dart';
 import 'package:boilerplate/stores/error/error_store.dart';
 import 'package:mobx/mobx.dart';
 
@@ -35,7 +34,6 @@ abstract class _UserStore with Store {
 
       if (this.isLoggedIn) {
         _repository.getUser().then((user) => this.user = user);
-        _repository.getToken().then((token) => this.token = token);
       }
     });
   }
@@ -57,8 +55,6 @@ abstract class _UserStore with Store {
   @observable
   User user;
 
-  UserToken token;
-
   @observable
   bool success = false;
 
@@ -77,7 +73,6 @@ abstract class _UserStore with Store {
     await future.then((value) async {
       if (value) {
         this.user = await _repository.getUser();
-        this.token = await _repository.getToken();
         this.isLoggedIn = true;
         this.success = true;
       } else {
@@ -92,7 +87,8 @@ abstract class _UserStore with Store {
     });
   }
 
-  logout() {
+  @action
+  Future logout() async {
     this.isLoggedIn = false;
     _repository.logout();
   }

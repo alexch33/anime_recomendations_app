@@ -3,6 +3,7 @@ import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/stores/language/language_store.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
 import 'package:boilerplate/stores/theme/theme_store.dart';
+import 'package:boilerplate/stores/user/user_store.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/widgets/progress_indicator_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
@@ -22,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   AnimeStore _postStore;
   ThemeStore _themeStore;
   LanguageStore _languageStore;
+  UserStore _userStore;
 
   @override
   void initState() {
@@ -36,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _languageStore = Provider.of<LanguageStore>(context);
     _themeStore = Provider.of<ThemeStore>(context);
     _postStore = Provider.of<AnimeStore>(context);
+    _userStore = Provider.of<UserStore>(context);
 
     // check to see if already called api
     if (!_postStore.loading) {
@@ -85,10 +88,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildLogoutButton() {
     return IconButton(
       onPressed: () {
-        SharedPreferences.getInstance().then((preference) {
-          preference.setBool(Preferences.is_logged_in, false);
-          Navigator.of(context).pushReplacementNamed(Routes.login);
-        });
+        _userStore.logout().then((value) =>
+            Navigator.of(context).pushReplacementNamed(Routes.login));
       },
       icon: Icon(
         Icons.power_settings_new,
@@ -223,7 +224,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(
                     color: _languageStore.locale == object.locale
                         ? Theme.of(context).primaryColor
-                        : _themeStore.darkMode ? Colors.white : Colors.black,
+                        : _themeStore.darkMode
+                            ? Colors.white
+                            : Colors.black,
                   ),
                 ),
                 onTap: () {

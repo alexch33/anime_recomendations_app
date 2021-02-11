@@ -14,4 +14,8 @@ class Endpoints {
   static const String getPosts = baseUrl + "/animes";
 
   static const String login = baseUrl + "/auth/login";
+
+  static const String logout = baseUrl + "/auth/logout";
+
+  static const String refreshTokens = baseUrl + "/auth/refresh-tokens";
 }

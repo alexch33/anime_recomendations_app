@@ -1,4 +1,3 @@
-import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
 import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/stores/language/language_store.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
@@ -11,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:material_dialog/material_dialog.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -34,15 +32,17 @@ class _HomeScreenState extends State<HomeScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    // initializing stores
-    _languageStore = Provider.of<LanguageStore>(context);
-    _themeStore = Provider.of<ThemeStore>(context);
-    _animeStore = Provider.of<AnimeStore>(context);
-    _userStore = Provider.of<UserStore>(context);
+    if (_animeStore == null && _themeStore == null &&_languageStore == null && _userStore == null) {
+      // initializing stores
+      _languageStore = Provider.of<LanguageStore>(context);
+      _themeStore = Provider.of<ThemeStore>(context);
+      _animeStore = Provider.of<AnimeStore>(context);
+      _userStore = Provider.of<UserStore>(context);
 
-    // check to see if already called api
-    if (!_animeStore.loading) {
-      _animeStore.getAnimes();
+      // check to see if already called api
+      if (!_animeStore.loading) {
+        _animeStore.getAnimes();
+      }
     }
   }
 

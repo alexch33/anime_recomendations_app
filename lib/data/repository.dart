@@ -42,7 +42,7 @@ class Repository {
       });
 
       return animesList;
-    }).catchError((error) => throw error);
+    }).catchError((error) => _animeDataSource.getAnimesFromDb());
   }
 
   Future<List<Anime>> findPostById(int id) {

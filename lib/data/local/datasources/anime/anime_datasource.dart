@@ -20,7 +20,8 @@ class AnimeDataSource {
 
   // DB functions:--------------------------------------------------------------
   Future<int> insert(Anime anime) async {
-    return await _animesStore.add(await _db, anime.toMap());
+    final result = await _animesStore.record(anime.dataId).put(await _db, anime.toMap());
+    return result["dataId"];
   }
 
   Future<int> count() async {
@@ -42,7 +43,7 @@ class AnimeDataSource {
     return recordSnapshots.map((snapshot) {
       final anime = Anime.fromMap(snapshot.value);
       // An ID is a key of a record from the database.
-      anime.id = snapshot.key.toString();
+      // anime.id = snapshot.key.toString();
       return anime;
     }).toList();
   }
@@ -65,7 +66,7 @@ class AnimeDataSource {
           animes: recordSnapshots.map((snapshot) {
             final anime = Anime.fromMap(snapshot.value);
             // An ID is a key of a record from the database.
-            anime.id = snapshot.key.toString();
+            // anime.id = snapshot.key.toString();
             return anime;
           }).toList());
     }
@@ -76,7 +77,7 @@ class AnimeDataSource {
   Future<int> update(Anime anime) async {
     // For filtering by key (ID), RegEx, greater than, and many other criteria,
     // we use a Finder.
-    final finder = Finder(filter: Filter.byKey(anime.id));
+    final finder = Finder(filter: Filter.byKey(anime.dataId));
     return await _animesStore.update(
       await _db,
       anime.toMap(),
@@ -85,7 +86,7 @@ class AnimeDataSource {
   }
 
   Future<int> delete(Anime anime) async {
-    final finder = Finder(filter: Filter.byKey(anime.id));
+    final finder = Finder(filter: Filter.byKey(anime.dataId));
     return await _animesStore.delete(
       await _db,
       finder: finder,

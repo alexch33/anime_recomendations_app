@@ -36,13 +36,16 @@ class Repository {
     // check to see if posts are present in database, then fetch from database
     // else make a network call to get all posts, store them into database for
     // later use
+    int count = await _animeDataSource.count();
+    if (count > 0) return await _animeDataSource.getAnimesFromDb();
+    
     return await _animeApi.getAnimes().then((animesList) {
       animesList.animes.forEach((anime) {
         _animeDataSource.insert(anime);
       });
 
       return animesList;
-    }).catchError((error) => _animeDataSource.getAnimesFromDb());
+    }).catchError((error) => throw error);
   }
 
   Future<List<Anime>> findPostById(int id) {

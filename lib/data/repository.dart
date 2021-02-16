@@ -38,13 +38,26 @@ class Repository {
     // later use
     int count = await _animeDataSource.count();
     if (count > 0) return await _animeDataSource.getAnimesFromDb();
-    
+
     return await _animeApi.getAnimes().then((animesList) {
       animesList.animes.forEach((anime) {
         _animeDataSource.insert(anime);
       });
 
       return animesList;
+    }).catchError((error) => throw error);
+  }
+
+  Future<bool> likeAnime(int animeId) async {
+    return await _animeApi.likeAnime(animeId).then((boolVal) async {
+      if (boolVal) {
+        User user = await _userDataSource.getUserFromDb();
+
+        user.pushLikedAnime(animeId);
+        print(user.likedAnimes);
+        await _userDataSource.update(user);
+      }
+      return boolVal;
     }).catchError((error) => throw error);
   }
 

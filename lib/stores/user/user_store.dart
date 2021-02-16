@@ -88,6 +88,11 @@ abstract class _UserStore with Store {
   }
 
   @action
+  Future initUser() async {
+    this.user = await _repository.getUser();
+  }
+
+  @action
   Future logout() async {
     this.isLoggedIn = false;
     _repository.logout();

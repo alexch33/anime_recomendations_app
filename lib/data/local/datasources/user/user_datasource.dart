@@ -42,14 +42,7 @@ class UserDataSource {
   }
 
   Future<int> update(User user) async {
-    // For filtering by key (ID), RegEx, greater than, and many other criteria,
-    // we use a Finder.
-    final finder = Finder(filter: Filter.byKey(user.id));
-    return await _userStore.update(
-      await _db,
-      user.toMap(),
-      finder: finder,
-    );
+    return await this.insertUser(user);
   }
 
   Future deleteAll() async {

@@ -22,9 +22,16 @@ abstract class _AnimeStore with Store {
   static ObservableFuture<AnimeList> emptyPostResponse =
       ObservableFuture.value(null);
 
+  static ObservableFuture<bool> emptyLikeResponse =
+      ObservableFuture.value(false);
+
   @observable
   ObservableFuture<AnimeList> fetchPostsFuture =
       ObservableFuture<AnimeList>(emptyPostResponse);
+
+  @observable
+  ObservableFuture<bool> fetchLikeFuture =
+      ObservableFuture<bool>(emptyLikeResponse);
 
   @observable
   AnimeList animeList;
@@ -43,6 +50,19 @@ abstract class _AnimeStore with Store {
 
     future.then((animeList) {
       this.animeList = animeList;
+    }).catchError((error) {
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+    });
+  }
+
+  @action
+  Future likeAnime(int animeId) async {
+    final future = _repository.likeAnime(animeId);
+    fetchLikeFuture = ObservableFuture(future);
+
+    future.then((isLiked) {
+      print("IsLiked ::  " + isLiked.toString());
+      if (isLiked) {}
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
     });

@@ -32,7 +32,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (_animeStore == null && _themeStore == null &&_languageStore == null && _userStore == null) {
+    if (_animeStore == null &&
+        _themeStore == null &&
+        _languageStore == null &&
+        _userStore == null) {
       // initializing stores
       _languageStore = Provider.of<LanguageStore>(context);
       _themeStore = Provider.of<ThemeStore>(context);
@@ -44,6 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
         _animeStore.getAnimes();
       }
     }
+
+    _userStore.initUser();
   }
 
   @override
@@ -147,11 +152,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildListItem(int position) {
+    final isLiked = _userStore.user
+        .isAnimeLiked(_animeStore.animeList.animes[position].dataId);
+
     return ListTile(
       dense: true,
       leading: Icon(Icons.cloud_circle),
       title: Text(
-        '${_animeStore.animeList.animes[position].name}',
+        '${_animeStore.animeList.animes[position].name} liked ${_animeStore.animeList.animes[position].dataId} ${isLiked}',
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         softWrap: false,
@@ -163,6 +171,9 @@ class _HomeScreenState extends State<HomeScreen> {
         overflow: TextOverflow.ellipsis,
         softWrap: false,
       ),
+      onLongPress: () {
+        _animeStore.likeAnime(_animeStore.animeList.animes[position].dataId);
+      },
     );
   }
 

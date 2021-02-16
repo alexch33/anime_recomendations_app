@@ -18,4 +18,6 @@ class Endpoints {
   static const String logout = baseUrl + "/auth/logout";
 
   static const String refreshTokens = baseUrl + "/auth/refresh-tokens";
+
+  static const String likeAnime = baseUrl + "/ur/createUserAnimeEvent";
 }

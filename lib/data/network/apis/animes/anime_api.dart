@@ -26,6 +26,16 @@ class AnimeApi {
     }
   }
 
+  Future<bool> likeAnime(int animeId) async {
+    try {
+      await _dioClient.post(Endpoints.likeAnime, data: { "animeId": animeId });
+      return true;
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
   /// sample api call with default rest client
 //  Future<PostsList> getPosts() {
 //

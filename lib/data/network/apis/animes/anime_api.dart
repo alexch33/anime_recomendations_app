@@ -47,4 +47,14 @@ class AnimeApi {
       throw e;
     }
   }
+
+  Future<RecomendationList> querrySimilarItems(String animeId) async {
+    try {
+      final resp = await _dioClient
+          .post(Endpoints.querySimilarItems, data: {"itemId": animeId});
+      return RecomendationList.fromJson(jsonDecode(resp)["result"]);
+    } catch (e) {
+      throw e;
+    }
+  }
 }

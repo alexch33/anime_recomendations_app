@@ -39,6 +39,17 @@ class Repository {
   );
 
   // Post: ---------------------------------------------------------------------
+
+  Future<RecomendationList> getSimilarItems(String itemId) async {
+    return await _animeApi.querrySimilarItems(itemId).then((list) async {
+      if (list != null) {
+
+        return list;
+      }
+      return null;
+    }).catchError((error) => throw error);
+  }
+
   Future<AnimeList> getAnimes() async {
     // check to see if posts are present in database, then fetch from database
     // else make a network call to get all posts, store them into database for

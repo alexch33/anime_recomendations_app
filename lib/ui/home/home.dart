@@ -174,6 +174,10 @@ class _HomeScreenState extends State<HomeScreen> {
       onLongPress: () async {
         // final res = await _userStore.querryUserRecomendations(_userStore.user.id);
         // print(res.recomendations.map((e) => e.item.toString()));
+
+        // //similar items
+        // final res = await _animeStore.querrySImilarItems(_animeStore.animeList.animes[position].dataId.toString());
+        // print(res.recomendations.map((e) => e.item.toString()));
       },
       onTap: () {
         // _animeStore.likeAnime(_animeStore.animeList.animes[position].dataId);

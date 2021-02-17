@@ -3,6 +3,7 @@ import 'package:boilerplate/models/anime/anime_list.dart';
 import 'package:boilerplate/stores/error/error_store.dart';
 import 'package:boilerplate/utils/dio/dio_error_util.dart';
 import 'package:mobx/mobx.dart';
+import 'package:boilerplate/models/recomendation/recomendation_list.dart';
 
 part 'anime_store.g.dart';
 
@@ -66,5 +67,10 @@ abstract class _AnimeStore with Store {
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
     });
+  }
+
+  @action
+  Future<RecomendationList> querrySImilarItems(String itemDataId) async {
+    return await _repository.getSimilarItems(itemDataId);
   }
 }

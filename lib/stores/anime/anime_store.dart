@@ -56,13 +56,13 @@ abstract class _AnimeStore with Store {
   }
 
   @action
-  Future likeAnime(int animeId) async {
+  Future<bool> likeAnime(int animeId) async {
     final future = _repository.likeAnime(animeId);
     fetchLikeFuture = ObservableFuture(future);
 
     future.then((isLiked) {
       print("IsLiked ::  " + isLiked.toString());
-      if (isLiked) {}
+      if (isLiked) return true;
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
     });

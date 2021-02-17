@@ -171,8 +171,12 @@ class _HomeScreenState extends State<HomeScreen> {
         overflow: TextOverflow.ellipsis,
         softWrap: false,
       ),
-      onLongPress: () {
-        _animeStore.likeAnime(_animeStore.animeList.animes[position].dataId);
+      onLongPress: () async {
+        // final res = await _userStore.querryUserRecomendations(_userStore.user.id);
+        // print(res.recomendations.map((e) => e.item.toString()));
+      },
+      onTap: () {
+        // _animeStore.likeAnime(_animeStore.animeList.animes[position].dataId);
       },
     );
   }

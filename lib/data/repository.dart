@@ -7,6 +7,7 @@ import 'package:boilerplate/data/network/apis/users/users_api.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/models/anime/anime.dart';
 import 'package:boilerplate/models/anime/anime_list.dart';
+import 'package:boilerplate/models/recomendation/recomendation_list.dart';
 import 'package:boilerplate/models/user/user.dart';
 import 'package:boilerplate/models/user/user_token.dart';
 import 'package:sembast/sembast.dart';
@@ -28,8 +29,14 @@ class Repository {
   final SharedPreferenceHelper _sharedPrefsHelper;
 
   // constructor
-  Repository(this._animeApi, this._usersApi, this._sharedPrefsHelper,
-      this._animeDataSource, this._userDataSource, this._tokenDataSource);
+  Repository(
+    this._animeApi,
+    this._usersApi,
+    this._sharedPrefsHelper,
+    this._animeDataSource,
+    this._userDataSource,
+    this._tokenDataSource,
+  );
 
   // Post: ---------------------------------------------------------------------
   Future<AnimeList> getAnimes() async {
@@ -138,6 +145,16 @@ class Repository {
 
   Future<int> deleteUser() async {
     return await _userDataSource.deleteAll();
+  }
+
+  Future<RecomendationList> getUserRecomendations(String userId) async {
+    return await _animeApi.querryUserRecomendations(userId).then((list) async {
+      if (list != null) {
+
+        return list;
+      }
+      return null;
+    }).catchError((error) => throw error);
   }
 
   // Token:---------------------------------------------------------------------

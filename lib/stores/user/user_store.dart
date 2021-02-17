@@ -1,3 +1,4 @@
+import 'package:boilerplate/models/recomendation/recomendation_list.dart';
 import 'package:boilerplate/models/user/user.dart';
 import 'package:boilerplate/stores/error/error_store.dart';
 import 'package:mobx/mobx.dart';
@@ -96,6 +97,11 @@ abstract class _UserStore with Store {
   Future logout() async {
     this.isLoggedIn = false;
     _repository.logout();
+  }
+
+  @action
+  Future<RecomendationList> querryUserRecomendations(String userId) async {
+    return await _repository.getUserRecomendations(userId);
   }
 
   // general methods:-----------------------------------------------------------

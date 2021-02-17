@@ -20,4 +20,8 @@ class Endpoints {
   static const String refreshTokens = baseUrl + "/auth/refresh-tokens";
 
   static const String likeAnime = baseUrl + "/ur/createUserAnimeEvent";
+
+  static const String querryUserRecomendations = baseUrl + "/ur/queryUserRecomendations";
+
+  static const String querySimilarItems = baseUrl + "/ur/querySimilarItems";
 }

@@ -3,6 +3,7 @@ import 'package:boilerplate/stores/language/language_store.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
 import 'package:boilerplate/stores/theme/theme_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
+import 'package:boilerplate/ui/anime_recomendations/anime_recomendations.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/widgets/progress_indicator_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
@@ -27,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   LanguageStore _languageStore;
   UserStore _userStore;
 
-  List<Widget> pages = [UserProfile(), AnimeList(), Center(child: Text("User Recomendations"))];
+  List<Widget> pages = [UserProfile(), AnimeList(), AnimeRecomendations()];
   int _page = 1;
   GlobalKey _bottomNavigationKey = GlobalKey();
 

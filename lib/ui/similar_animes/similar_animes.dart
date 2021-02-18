@@ -1,3 +1,4 @@
+import 'package:boilerplate/models/recomendation/recomendation_list.dart';
 import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/stores/language/language_store.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
@@ -10,18 +11,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:material_dialog/material_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:boilerplate/models/anime/anime.dart';
 
-class AnimeList extends StatefulWidget {
+class SimilarAnimes extends StatefulWidget {
   @override
-  _AnimeListState createState() => _AnimeListState();
+  _SimilarAnimesState createState() => _SimilarAnimesState();
 }
 
-class _AnimeListState extends State<AnimeList> {
+class _SimilarAnimesState extends State<SimilarAnimes> {
   //stores:---------------------------------------------------------------------
   AnimeStore _animeStore;
   ThemeStore _themeStore;
   LanguageStore _languageStore;
   UserStore _userStore;
+
+  RecomendationList _recomendationsList;
 
   @override
   void initState() {
@@ -39,16 +43,15 @@ class _AnimeListState extends State<AnimeList> {
       // initializing stores
       _languageStore = Provider.of<LanguageStore>(context);
       _themeStore = Provider.of<ThemeStore>(context);
-      _animeStore = Provider.of<AnimeStore>(context);
       _userStore = Provider.of<UserStore>(context);
+      _animeStore = Provider.of<AnimeStore>(context);
 
-      // check to see if already called api
-      if (!_animeStore.loading) {
-        _animeStore.getAnimes();
-      }
+      Anime anime = ModalRoute.of(context).settings.arguments;
+
+      _animeStore
+          .querrySImilarItems(anime.dataId.toString())
+          .then((value) => setState(() => _recomendationsList = value));
     }
-
-    _userStore.initUser();
   }
 
   @override
@@ -59,7 +62,7 @@ class _AnimeListState extends State<AnimeList> {
   Widget _buildMainContent() {
     return Observer(
       builder: (context) {
-        return _animeStore.loading
+        return _userStore.isLoading
             ? CustomProgressIndicatorWidget()
             : Material(child: _buildListView());
       },
@@ -67,9 +70,9 @@ class _AnimeListState extends State<AnimeList> {
   }
 
   Widget _buildListView() {
-    return _animeStore.animeList != null
+    return _recomendationsList != null
         ? ListView.separated(
-            itemCount: _animeStore.animeList.animes.length,
+            itemCount: _recomendationsList.recomendations.length,
             separatorBuilder: (context, position) {
               return Divider();
             },
@@ -85,37 +88,29 @@ class _AnimeListState extends State<AnimeList> {
   }
 
   Widget _buildListItem(int position) {
-    final isLiked = _userStore.user
-        .isAnimeLiked(_animeStore.animeList.animes[position].dataId);
+    Anime animeItem = _animeStore.animeList.animes.firstWhere((anime) =>
+        anime.dataId.toString() ==
+        _recomendationsList.recomendations[position].item.toString());
 
     return ListTile(
       dense: true,
-      leading: Icon(Icons.cloud_circle,
-          color: isLiked ? Colors.red : Colors.blueGrey),
+      leading: Icon(Icons.cloud_circle, color: Colors.red),
       title: Text(
-        '${_animeStore.animeList.animes[position].name}',
+        '${animeItem.name}',
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         softWrap: false,
         style: Theme.of(context).textTheme.title,
       ),
       subtitle: Text(
-        '${_animeStore.animeList.animes[position].rating}',
+        'rating: ${animeItem.rating} score: ${_recomendationsList.recomendations[position].score}',
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         softWrap: false,
       ),
-      onLongPress: () async {
-        // final res = await _userStore.querryUserRecomendations(_userStore.user.id);
-        // print(res.recomendations.map((e) => e.item.toString()));
-
-        // //similar items
-        // final res = await _animeStore.querrySImilarItems(_animeStore.animeList.animes[position].dataId.toString());
-        // print(res.recomendations.map((e) => e.item.toString()));
-      },
       onTap: () {
-        Navigator.of(context).pushNamed(Routes.animeDetails,
-            arguments: _animeStore.animeList.animes[position]);
+        Navigator.of(context)
+            .pushNamed(Routes.animeDetails, arguments: animeItem);
       },
     );
   }

@@ -46,9 +46,11 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
       _userStore = Provider.of<UserStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
     }
-     _userStore.querryUserRecomendations(_userStore.user.id).then((value) => setState(() {
-       _recomendationsList = value;
-     })); 
+    _userStore
+        .querryUserRecomendations(_userStore.user.id)
+        .then((value) => setState(() {
+              _recomendationsList = value;
+            }));
     _userStore.initUser();
   }
 
@@ -62,12 +64,15 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
       builder: (context) {
         return _userStore.isLoading
             ? CustomProgressIndicatorWidget()
-            : Material(child: Center(child: _buildListView(),));
+            : Material(
+                child: Center(
+                child: _buildListView(),
+              ));
       },
     );
   }
 
-   Widget _buildListView() {
+  Widget _buildListView() {
     return _recomendationsList != null
         ? ListView.separated(
             itemCount: _recomendationsList.recomendations.length,
@@ -86,12 +91,13 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
   }
 
   Widget _buildListItem(int position) {
-    Anime animeItem = _animeStore.animeList.animes.firstWhere((anime) => anime.dataId.toString() == _recomendationsList.recomendations[position].item.toString());
+    Anime animeItem = _animeStore.animeList.animes.firstWhere((anime) =>
+        anime.dataId.toString() ==
+        _recomendationsList.recomendations[position].item.toString());
 
     return ListTile(
       dense: true,
-      leading: Icon(Icons.cloud_circle,
-          color: Colors.red),
+      leading: Icon(Icons.cloud_circle, color: Colors.red),
       title: Text(
         '${animeItem.name}',
         maxLines: 1,
@@ -105,6 +111,10 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
         overflow: TextOverflow.ellipsis,
         softWrap: false,
       ),
+      onTap: () {
+        Navigator.of(context)
+            .pushNamed(Routes.animeDetails, arguments: animeItem);
+      },
     );
   }
 }

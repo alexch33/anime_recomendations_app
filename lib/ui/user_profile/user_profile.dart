@@ -43,10 +43,14 @@ class _UserProfileState extends State<UserProfile> {
       _themeStore = Provider.of<ThemeStore>(context);
       _userStore = Provider.of<UserStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
+
+      likedAnimes = _animeStore.animeList.animes
+          .where((anime) => _userStore.user.isAnimeLiked(anime.dataId))
+          .toList();
+      setState(() {
+        this.likedAnimes = likedAnimes;
+      });
     }
-    likedAnimes = _animeStore.animeList.animes
-        .where((anime) => _userStore.user.isAnimeLiked(anime.dataId))
-        .toList();
 
     _userStore.initUser();
   }
@@ -90,8 +94,7 @@ class _UserProfileState extends State<UserProfile> {
   Widget _buildListItem(int position) {
     return ListTile(
       dense: true,
-      leading: Icon(Icons.cloud_circle,
-          color: Colors.red),
+      leading: Icon(Icons.cloud_circle, color: Colors.red),
       title: Text(
         '${likedAnimes[position].name}',
         maxLines: 1,
@@ -105,6 +108,10 @@ class _UserProfileState extends State<UserProfile> {
         overflow: TextOverflow.ellipsis,
         softWrap: false,
       ),
+      onTap: () {
+        Navigator.of(context)
+            .pushNamed(Routes.animeDetails, arguments: likedAnimes[position]);
+      },
     );
   }
 }

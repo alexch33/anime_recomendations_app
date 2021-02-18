@@ -1,3 +1,4 @@
+import 'package:boilerplate/models/anime/anime.dart';
 import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/stores/language/language_store.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
@@ -22,6 +23,7 @@ class _UserProfileState extends State<UserProfile> {
   ThemeStore _themeStore;
   LanguageStore _languageStore;
   UserStore _userStore;
+  List<Anime> likedAnimes = [];
 
   @override
   void initState() {
@@ -40,7 +42,11 @@ class _UserProfileState extends State<UserProfile> {
       _languageStore = Provider.of<LanguageStore>(context);
       _themeStore = Provider.of<ThemeStore>(context);
       _userStore = Provider.of<UserStore>(context);
+      _animeStore = Provider.of<AnimeStore>(context);
     }
+    likedAnimes = _animeStore.animeList.animes
+        .where((anime) => _userStore.user.isAnimeLiked(anime.dataId))
+        .toList();
 
     _userStore.initUser();
   }
@@ -55,8 +61,50 @@ class _UserProfileState extends State<UserProfile> {
       builder: (context) {
         return _userStore.isLoading
             ? CustomProgressIndicatorWidget()
-            : Material(child: Center(child: Text("User Profile"),));
+            : Material(
+                child: Center(
+                child: _buildListView(),
+              ));
       },
+    );
+  }
+
+  Widget _buildListView() {
+    return likedAnimes.length > 0
+        ? ListView.separated(
+            itemCount: likedAnimes.length,
+            separatorBuilder: (context, position) {
+              return Divider();
+            },
+            itemBuilder: (context, position) {
+              return _buildListItem(position);
+            },
+          )
+        : Center(
+            child: Text(
+              AppLocalizations.of(context).translate('home_tv_no_post_found'),
+            ),
+          );
+  }
+
+  Widget _buildListItem(int position) {
+    return ListTile(
+      dense: true,
+      leading: Icon(Icons.cloud_circle,
+          color: Colors.red),
+      title: Text(
+        '${likedAnimes[position].name}',
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        softWrap: false,
+        style: Theme.of(context).textTheme.title,
+      ),
+      subtitle: Text(
+        '${likedAnimes[position].rating}',
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        softWrap: false,
+      ),
     );
   }
 }

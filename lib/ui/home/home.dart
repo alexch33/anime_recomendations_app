@@ -10,6 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:material_dialog/material_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:boilerplate/ui/anime_list/anime_list.dart';
+import 'package:boilerplate/ui/user_profile/user_profile.dart';
+
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -22,6 +26,10 @@ class _HomeScreenState extends State<HomeScreen> {
   ThemeStore _themeStore;
   LanguageStore _languageStore;
   UserStore _userStore;
+
+  List<Widget> pages = [UserProfile(), AnimeList(), Center(child: Text("User Recomendations"))];
+  int _page = 1;
+  GlobalKey _bottomNavigationKey = GlobalKey();
 
   @override
   void initState() {
@@ -54,8 +62,28 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: _buildNavBar(),
       appBar: _buildAppBar(),
       body: _buildBody(),
+    );
+  }
+
+  Widget _buildNavBar() {
+    return CurvedNavigationBar(
+      key: _bottomNavigationKey,
+      index: 1,
+      backgroundColor: Colors.pink,
+      items: <Widget>[
+        Icon(Icons.person, size: 30),
+        Icon(Icons.list, size: 30),
+        Icon(Icons.recommend, size: 30),
+      ],
+      onTap: (index) {
+        //Handle button tap
+        setState(() {
+          _page = index;
+        });
+      },
     );
   }
 
@@ -118,70 +146,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return Stack(
       children: <Widget>[
         _handleErrorMessage(),
-        _buildMainContent(),
+        pages[_page],
       ],
-    );
-  }
-
-  Widget _buildMainContent() {
-    return Observer(
-      builder: (context) {
-        return _animeStore.loading
-            ? CustomProgressIndicatorWidget()
-            : Material(child: _buildListView());
-      },
-    );
-  }
-
-  Widget _buildListView() {
-    return _animeStore.animeList != null
-        ? ListView.separated(
-            itemCount: _animeStore.animeList.animes.length,
-            separatorBuilder: (context, position) {
-              return Divider();
-            },
-            itemBuilder: (context, position) {
-              return _buildListItem(position);
-            },
-          )
-        : Center(
-            child: Text(
-              AppLocalizations.of(context).translate('home_tv_no_post_found'),
-            ),
-          );
-  }
-
-  Widget _buildListItem(int position) {
-    final isLiked = _userStore.user
-        .isAnimeLiked(_animeStore.animeList.animes[position].dataId);
-
-    return ListTile(
-      dense: true,
-      leading: Icon(Icons.cloud_circle),
-      title: Text(
-        '${_animeStore.animeList.animes[position].name} liked ${_animeStore.animeList.animes[position].dataId} ${isLiked}',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        softWrap: false,
-        style: Theme.of(context).textTheme.title,
-      ),
-      subtitle: Text(
-        '${_animeStore.animeList.animes[position].rating}',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        softWrap: false,
-      ),
-      onLongPress: () async {
-        // final res = await _userStore.querryUserRecomendations(_userStore.user.id);
-        // print(res.recomendations.map((e) => e.item.toString()));
-
-        // //similar items
-        // final res = await _animeStore.querrySImilarItems(_animeStore.animeList.animes[position].dataId.toString());
-        // print(res.recomendations.map((e) => e.item.toString()));
-      },
-      onTap: () {
-        // _animeStore.likeAnime(_animeStore.animeList.animes[position].dataId);
-      },
     );
   }
 

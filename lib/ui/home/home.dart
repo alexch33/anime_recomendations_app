@@ -15,7 +15,6 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:boilerplate/ui/anime_list/anime_list.dart';
 import 'package:boilerplate/ui/user_profile/user_profile.dart';
 
-
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -50,13 +49,8 @@ class _HomeScreenState extends State<HomeScreen> {
       _themeStore = Provider.of<ThemeStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
       _userStore = Provider.of<UserStore>(context);
-
-      // check to see if already called api
-      if (!_animeStore.loading) {
-        _animeStore.getAnimes();
-      }
     }
-
+    _animeStore.getAnimes();
     _userStore.initUser();
   }
 

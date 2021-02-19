@@ -49,11 +49,11 @@ abstract class _AnimeStore with Store {
     final future = _repository.getAnimes();
     fetchPostsFuture = ObservableFuture(future);
 
-    future.then((animeList) {
-      this.animeList = animeList;
-    }).catchError((error) {
+    try {
+      this.animeList = await future;
+    } catch(error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
-    });
+    }
   }
 
   @action

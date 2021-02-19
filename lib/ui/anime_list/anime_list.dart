@@ -41,11 +41,6 @@ class _AnimeListState extends State<AnimeList> {
       _themeStore = Provider.of<ThemeStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
       _userStore = Provider.of<UserStore>(context);
-
-      // check to see if already called api
-      if (!_animeStore.loading) {
-        _animeStore.getAnimes();
-      }
     }
 
     _userStore.initUser();

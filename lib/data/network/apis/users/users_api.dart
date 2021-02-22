@@ -27,4 +27,13 @@ class UsersApi {
       await _dioClient
           .post(Endpoints.logout, data: {"refreshToken": refreshToken});
   }
+
+  Future<bool> deleteAllUserEvents() async {
+    try {
+      await _dioClient.post(Endpoints.deleteAllUsersAnimeEvents);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

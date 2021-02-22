@@ -24,4 +24,6 @@ class Endpoints {
   static const String querryUserRecomendations = baseUrl + "/ur/queryUserRecomendations";
 
   static const String querySimilarItems = baseUrl + "/ur/querySimilarItems";
+
+  static const String deleteAllUsersAnimeEvents = baseUrl + "/ur/deleteAllUsersAnimeEvents";
 }

@@ -107,6 +107,13 @@ abstract class _UserStore with Store {
     }
   }
 
+  @action
+  Future<bool> deleteAllUserEvents() async {
+    await _repository.deleteAllUserEvents();
+    await this.initUser();
+    return true;
+  }
+
   // general methods:-----------------------------------------------------------
   void dispose() {
     for (final d in _disposers) {

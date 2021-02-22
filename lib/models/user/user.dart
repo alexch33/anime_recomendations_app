@@ -33,6 +33,10 @@ class User {
     }
   }
 
+  clearLikes() {
+    likedAnimes = [];
+  }
+
   bool isAnimeLiked(int animeDataId) {
     int id = likedAnimes.firstWhere((element) => element == animeDataId,
         orElse: () => 0);

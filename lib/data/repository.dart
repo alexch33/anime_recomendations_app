@@ -157,6 +157,14 @@ class Repository {
     return await _userDataSource.deleteAll();
   }
 
+  Future<bool> deleteAllUserEvents() async {
+    await _usersApi.deleteAllUserEvents();
+    User currentUser = await _userDataSource.getUserFromDb();
+    currentUser.clearLikes();
+    _userDataSource.update(currentUser);
+    return true;
+  }
+
   Future<RecomendationList> getUserRecomendations(String userId) async {
     return await _animeApi.querryUserRecomendations(userId).then((list) async {
       if (list != null) {

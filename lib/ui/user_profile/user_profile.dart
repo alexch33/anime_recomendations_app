@@ -108,6 +108,9 @@ class _UserProfileState extends State<UserProfile> {
         overflow: TextOverflow.ellipsis,
         softWrap: false,
       ),
+      onLongPress: () {
+        _userStore.deleteAllUserEvents();
+      },
       onTap: () {
         Navigator.of(context)
             .pushNamed(Routes.animeDetails, arguments: likedAnimes[position]);

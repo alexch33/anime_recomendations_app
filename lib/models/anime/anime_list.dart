@@ -2,6 +2,7 @@ import 'package:boilerplate/models/anime/anime.dart';
 
 class AnimeList {
   final List<Anime> animes;
+  List<Anime> cashedAnimes = [];
 
   AnimeList({
     this.animes,

@@ -5,6 +5,7 @@ import 'package:boilerplate/stores/anime/anime_store.dart';
 import 'package:boilerplate/stores/theme/theme_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
+import 'package:boilerplate/widgets/anime_list_tile.dart';
 import 'package:boilerplate/widgets/progress_indicator_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
@@ -92,29 +93,6 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   Widget _buildListItem(int position) {
-    return ListTile(
-      dense: true,
-      leading: Icon(Icons.cloud_circle, color: Colors.red),
-      title: Text(
-        '${likedAnimes[position].name}',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        softWrap: false,
-        style: Theme.of(context).textTheme.title,
-      ),
-      subtitle: Text(
-        '${likedAnimes[position].rating}',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        softWrap: false,
-      ),
-      onLongPress: () {
-        _userStore.deleteAllUserEvents();
-      },
-      onTap: () {
-        Navigator.of(context)
-            .pushNamed(Routes.animeDetails, arguments: likedAnimes[position]);
-      },
-    );
+    return AnimeListTile(anime: likedAnimes[position], isLiked: true);
   }
 }

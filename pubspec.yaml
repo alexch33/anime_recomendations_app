@@ -58,6 +58,9 @@ dependencies:
   # translation, plurals and genders, date/number formatting and parsing, and bidirectional text.
   intl: ^0.16.1
 
+  # Animated nav bar
+  curved_navigation_bar: ^0.3.7
+
   # Dependency injection
   inject:
     git:

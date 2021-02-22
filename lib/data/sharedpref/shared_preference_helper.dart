@@ -17,6 +17,24 @@ class SharedPreferenceHelper {
     });
   }
 
+  Future<String> get refreshToken async {
+    return _sharedPreference.then((preference) {
+      return preference.getString(Preferences.refresh_token);
+    });
+  }
+
+  Future<void> saveRefreshToken(String refreshToken) async {
+    return _sharedPreference.then((preference) {
+      preference.setString(Preferences.refresh_token, refreshToken);
+    });
+  }
+
+  Future<void> removeRefreshToken() async {
+    return _sharedPreference.then((preference) {
+      preference.remove(Preferences.refresh_token);
+    });
+  }
+
   Future<void> saveAuthToken(String authToken) async {
     return _sharedPreference.then((preference) {
       preference.setString(Preferences.auth_token, authToken);

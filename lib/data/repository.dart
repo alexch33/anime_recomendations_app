@@ -1,10 +1,15 @@
 import 'dart:async';
 
-import 'package:boilerplate/data/local/datasources/post/post_datasource.dart';
+import 'package:boilerplate/data/local/datasources/anime/anime_datasource.dart';
+import 'package:boilerplate/data/local/datasources/token/token_datasource.dart';
+import 'package:boilerplate/data/local/datasources/user/user_datasource.dart';
 import 'package:boilerplate/data/network/apis/users/users_api.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
-import 'package:boilerplate/models/post/post.dart';
-import 'package:boilerplate/models/post/post_list.dart';
+import 'package:boilerplate/models/anime/anime.dart';
+import 'package:boilerplate/models/anime/anime_list.dart';
+import 'package:boilerplate/models/recomendation/recomendation_list.dart';
+import 'package:boilerplate/models/user/user.dart';
+import 'package:boilerplate/models/user/user_token.dart';
 import 'package:sembast/sembast.dart';
 
 import 'local/constants/db_constants.dart';
@@ -12,7 +17,9 @@ import 'network/apis/animes/anime_api.dart';
 
 class Repository {
   // data source object
-  final PostDataSource _postDataSource;
+  final AnimeDataSource _animeDataSource;
+  final UserDataSource _userDataSource;
+  final TokenDataSource _tokenDataSource;
 
   // api objects
   final AnimeApi _animeApi;
@@ -22,23 +29,56 @@ class Repository {
   final SharedPreferenceHelper _sharedPrefsHelper;
 
   // constructor
-  Repository(this._animeApi, this._usersApi, this._sharedPrefsHelper, this._postDataSource);
+  Repository(
+    this._animeApi,
+    this._usersApi,
+    this._sharedPrefsHelper,
+    this._animeDataSource,
+    this._userDataSource,
+    this._tokenDataSource,
+  );
 
   // Post: ---------------------------------------------------------------------
-  Future<PostList> getAnimes() async {
-    // check to see if posts are present in database, then fetch from database
-    // else make a network call to get all posts, store them into database for
-    // later use
-    return await _animeApi.getAnimes().then((postsList) {
-      postsList.posts.forEach((post) {
-        _postDataSource.insert(post);
-      });
 
-      return postsList;
+  Future<RecomendationList> getSimilarItems(String itemId) async {
+    return await _animeApi.querrySimilarItems(itemId).then((list) async {
+      if (list != null) {
+        return list;
+      }
+      return null;
     }).catchError((error) => throw error);
   }
 
-  Future<List<Post>> findPostById(int id) {
+  Future<AnimeList> getAnimes() async {
+    // check to see if posts are present in database, then fetch from database
+    // else make a network call to get all posts, store them into database for
+    // later use
+    int count = await _animeDataSource.count();
+    if (count > 0) return await _animeDataSource.getAnimesFromDb();
+
+    return await _animeApi.getAnimes().then((animesList) {
+      animesList.animes.forEach((anime) {
+        _animeDataSource.insert(anime);
+      });
+
+      return animesList;
+    }).catchError((error) => throw error);
+  }
+
+  Future<bool> likeAnime(int animeId) async {
+    return await _animeApi.likeAnime(animeId).then((boolVal) async {
+      if (boolVal) {
+        User user = await _userDataSource.getUserFromDb();
+
+        user.pushLikedAnime(animeId);
+        print(user.likedAnimes);
+        await _userDataSource.update(user);
+      }
+      return boolVal;
+    }).catchError((error) => throw error);
+  }
+
+  Future<List<Anime>> findPostById(int id) {
     //creating filter
     List<Filter> filters = List();
 
@@ -49,37 +89,105 @@ class Repository {
     }
 
     //making db call
-    return _postDataSource
+    return _animeDataSource
         .getAllSortedByFilter(filters: filters)
         .then((posts) => posts)
         .catchError((error) => throw error);
   }
 
-  Future<int> insert(Post post) => _postDataSource
+  Future<int> insert(Anime post) => _animeDataSource
       .insert(post)
       .then((id) => id)
       .catchError((error) => throw error);
 
-  Future<int> update(Post post) => _postDataSource
+  Future<int> update(Anime post) => _animeDataSource
       .update(post)
       .then((id) => id)
       .catchError((error) => throw error);
 
-  Future<int> delete(Post post) => _postDataSource
+  Future<int> delete(Anime post) => _animeDataSource
       .update(post)
       .then((id) => id)
       .catchError((error) => throw error);
-
 
   // Login:---------------------------------------------------------------------
   Future<bool> login(String email, String password) async {
-    return await Future.delayed(Duration(seconds: 2), ()=> true);
+    List data = await _usersApi.login(email, password);
+
+    User user = data[0];
+    UserToken token = data[1];
+
+    bool success = false;
+    if (user != null && token != null) {
+      await _userDataSource.insertUser(user);
+      _sharedPrefsHelper.saveAuthToken(token.accessToken);
+      _sharedPrefsHelper.saveRefreshToken(token.refreshToken);
+      success = true;
+    }
+
+    await this.saveIsLoggedIn(success);
+
+    return success;
+  }
+
+  Future logout() async {
+    saveIsLoggedIn(false);
+    _usersApi
+        .logout(await _sharedPrefsHelper.refreshToken)
+        .catchError((error) => throw error);
+    deleteToken();
+    deleteUser();
   }
 
   Future<void> saveIsLoggedIn(bool value) =>
       _sharedPrefsHelper.saveIsLoggedIn(value);
 
   Future<bool> get isLoggedIn => _sharedPrefsHelper.isLoggedIn;
+
+  // User:----------------------------------------------------------------------
+  Future<User> getUser() async {
+    return await _userDataSource.getUserFromDb();
+  }
+
+  Future<int> updateUser(User user) async {
+    return await _userDataSource.update(user);
+  }
+
+  Future<int> deleteUser() async {
+    return await _userDataSource.deleteAll();
+  }
+
+  Future<bool> deleteAllUserEvents() async {
+    await _usersApi.deleteAllUserEvents();
+    User currentUser = await _userDataSource.getUserFromDb();
+    currentUser.clearLikes();
+    _userDataSource.update(currentUser);
+    return true;
+  }
+
+  Future<RecomendationList> getUserRecomendations(String userId) async {
+    return await _animeApi.querryUserRecomendations(userId).then((list) async {
+      if (list != null) {
+        return list;
+      }
+      return null;
+    }).catchError((error) => throw error);
+  }
+
+  // Token:---------------------------------------------------------------------
+  Future<UserToken> getToken() async {
+    return await _tokenDataSource.getTokenFromDb();
+  }
+
+  Future<int> updateToken(UserToken token) async {
+    return await _tokenDataSource.update(token);
+  }
+
+  Future<int> deleteToken() async {
+    _sharedPrefsHelper.removeAuthToken();
+    _sharedPrefsHelper.removeRefreshToken();
+    return await _tokenDataSource.deleteAll();
+  }
 
   // Theme: --------------------------------------------------------------------
   Future<void> changeBrightnessToDark(bool value) =>

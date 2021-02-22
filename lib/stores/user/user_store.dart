@@ -1,4 +1,7 @@
+import 'package:boilerplate/models/recomendation/recomendation_list.dart';
+import 'package:boilerplate/models/user/user.dart';
 import 'package:boilerplate/stores/error/error_store.dart';
+import 'package:boilerplate/utils/dio/dio_error_util.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../data/repository.dart';
@@ -23,13 +26,16 @@ abstract class _UserStore with Store {
 
   // constructor:---------------------------------------------------------------
   _UserStore(Repository repository) : this._repository = repository {
-
     // setting up disposers
     _setupDisposers();
 
     // checking if user is logged in
     repository.isLoggedIn.then((value) {
       this.isLoggedIn = value ?? false;
+
+      if (this.isLoggedIn) {
+        _repository.getUser().then((user) => this.user = user);
+      }
     });
   }
 
@@ -44,9 +50,12 @@ abstract class _UserStore with Store {
 
   // empty responses:-----------------------------------------------------------
   static ObservableFuture<bool> emptyLoginResponse =
-  ObservableFuture.value(false);
+      ObservableFuture.value(false);
 
   // store variables:-----------------------------------------------------------
+  @observable
+  User user;
+
   @observable
   bool success = false;
 
@@ -59,16 +68,16 @@ abstract class _UserStore with Store {
   // actions:-------------------------------------------------------------------
   @action
   Future login(String email, String password) async {
-
     final future = _repository.login(email, password);
     loginFuture = ObservableFuture(future);
     await future.then((value) async {
       if (value) {
-        _repository.saveIsLoggedIn(true);
+        this.user = await _repository.getUser();
         this.isLoggedIn = true;
         this.success = true;
       } else {
-        print('failed to login');
+        this.isLoggedIn = false;
+        this.success = false;
       }
     }).catchError((e) {
       print(e);
@@ -78,9 +87,31 @@ abstract class _UserStore with Store {
     });
   }
 
-  logout() {
+  @action
+  Future initUser() async {
+    this.user = await _repository.getUser();
+  }
+
+  @action
+  Future logout() async {
     this.isLoggedIn = false;
-    _repository.saveIsLoggedIn(false);
+    _repository.logout();
+  }
+
+  @action
+  Future<RecomendationList> querryUserRecomendations(String userId) async {
+    try {
+      return await _repository.getUserRecomendations(userId);
+    } catch (e) {
+      errorStore.errorMessage = DioErrorUtil.handleError(e);
+    }
+  }
+
+  @action
+  Future<bool> deleteAllUserEvents() async {
+    await _repository.deleteAllUserEvents();
+    await this.initUser();
+    return true;
   }
 
   // general methods:-----------------------------------------------------------

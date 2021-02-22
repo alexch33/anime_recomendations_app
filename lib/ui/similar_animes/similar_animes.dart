@@ -5,6 +5,7 @@ import 'package:boilerplate/stores/anime/anime_store.dart';
 import 'package:boilerplate/stores/theme/theme_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
+import 'package:boilerplate/widgets/anime_list_tile.dart';
 import 'package:boilerplate/widgets/progress_indicator_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +57,11 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _buildMainContent());
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Similar"),
+        ),
+        body: _buildMainContent());
   }
 
   Widget _buildMainContent() {
@@ -91,27 +96,8 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
     Anime animeItem = _animeStore.animeList.animes.firstWhere((anime) =>
         anime.dataId.toString() ==
         _recomendationsList.recomendations[position].item.toString());
+    bool isLiked = _userStore.user.isAnimeLiked(animeItem.dataId);
 
-    return ListTile(
-      dense: true,
-      leading: Icon(Icons.cloud_circle, color: Colors.red),
-      title: Text(
-        '${animeItem.name}',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        softWrap: false,
-        style: Theme.of(context).textTheme.title,
-      ),
-      subtitle: Text(
-        'rating: ${animeItem.rating} score: ${_recomendationsList.recomendations[position].score}',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        softWrap: false,
-      ),
-      onTap: () {
-        Navigator.of(context)
-            .pushNamed(Routes.animeDetails, arguments: animeItem);
-      },
-    );
+    return AnimeListTile(anime: animeItem, isLiked: isLiked);
   }
 }

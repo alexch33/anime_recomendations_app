@@ -6,6 +6,7 @@ import 'package:boilerplate/stores/anime/anime_store.dart';
 import 'package:boilerplate/stores/theme/theme_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
+import 'package:boilerplate/widgets/empty_app_bar_widget.dart';
 import 'package:boilerplate/widgets/progress_indicator_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   ThemeStore _themeStore;
   LanguageStore _languageStore;
   UserStore _userStore;
+  Anime _anime;
 
   @override
   void initState() {
@@ -48,66 +50,86 @@ class _AnimeDetailsState extends State<AnimeDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _buildMainContent());
+    _anime = ModalRoute.of(context).settings.arguments;
+
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Info"),
+        ),
+        body: _buildMainContent());
   }
 
   Widget _buildMainContent() {
-    Anime anime = ModalRoute.of(context).settings.arguments;
+    return Material(child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints viewportConstraints) {
+      return SingleChildScrollView(
+          child: ConstrainedBox(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _buildImageBlock(),
+                    _buildTextInfo(),
+                  ]),
+              constraints: BoxConstraints(
+                minHeight: viewportConstraints.maxHeight,
+              )));
+    }));
+  }
 
-    return Observer(
-      builder: (context) {
-        return _animeStore.loading
-            ? CustomProgressIndicatorWidget()
-            : Material(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(anime.name),
-                      Row(
-                        children: [
-                          ClipOval(
-                            child: Material(
-                              color: Colors.green, // button color
-                              child: InkWell(
-                                splashColor: Colors.blue, // inkwell color
-                                child: SizedBox(
-                                    width: 56,
-                                    height: 56,
-                                    child: Icon(Icons.recommend)),
-                                onTap: () {
-                                  _animeStore.likeAnime(anime.dataId);
-                                },
-                              ),
-                            ),
-                          ),
-                          ClipOval(
-                            child: Material(
-                              color: Colors.red, // button color
-                              child: InkWell(
-                                splashColor: Colors.blue, // inkwell color
-                                child: SizedBox(
-                                    width: 56,
-                                    height: 56,
-                                    child: Icon(Icons.delete)),
-                                onTap: () {
-                                  //TODO remove like
-                                },
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      ElevatedButton(
-                        child: Text("Similar Items"),
-                        onPressed: () {
-                          Navigator.of(context).pushNamed(Routes.similarAnimes,
-                              arguments: anime);
-                        },
-                      )
-                    ]),
-              );
-      },
-    );
+  Widget _buildImageBlock() {
+    return Stack(alignment: Alignment.bottomCenter, children: [
+      Image.network('https://yummyanime.club/img/posters/1610739660.jpg'),
+      _buildButtons()
+    ]);
+  }
+
+  Widget _buildTextInfo() {
+    return Card(
+        child: Column(
+      children: [
+        Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(_anime.name,
+                style: Theme.of(context).textTheme.headline6)),
+        Text("Description TODO", style: Theme.of(context).textTheme.bodyText1),
+      ],
+    ));
+  }
+
+  Widget _buildButtons() {
+    return Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            ElevatedButton(
+              child: Text("Similar Items",
+                  style: Theme.of(context).textTheme.button),
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamed(Routes.similarAnimes, arguments: _anime);
+              },
+            ),
+            ClipOval(
+              child: Material(
+                color: Colors.green, // button color
+                child: InkWell(
+                  splashColor: Colors.blue, // inkwell color
+                  child: SizedBox(
+                      width: 56,
+                      height: 56,
+                      child: Icon(
+                        Icons.recommend,
+                        size: 32,
+                      )),
+                  onTap: () {
+                    _animeStore.likeAnime(_anime.dataId);
+                  },
+                ),
+              ),
+            ),
+          ],
+        ));
   }
 }

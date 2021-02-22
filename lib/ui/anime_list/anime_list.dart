@@ -5,6 +5,7 @@ import 'package:boilerplate/stores/anime/anime_store.dart';
 import 'package:boilerplate/stores/theme/theme_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
+import 'package:boilerplate/widgets/anime_list_tile.dart';
 import 'package:boilerplate/widgets/progress_indicator_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
@@ -175,27 +176,7 @@ class _AnimeListState extends State<AnimeList> {
     final isLiked = _userStore.user
         .isAnimeLiked(_animeStore.animeList.cashedAnimes[position].dataId);
 
-    return ListTile(
-      dense: true,
-      leading: Icon(Icons.cloud_circle,
-          color: isLiked ? Colors.red : Colors.blueGrey),
-      title: Text(
-        '${_animeStore.animeList.cashedAnimes[position].name}',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        softWrap: false,
-        style: Theme.of(context).textTheme.title,
-      ),
-      subtitle: Text(
-        '${_animeStore.animeList.cashedAnimes[position].rating}',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        softWrap: false,
-      ),
-      onTap: () {
-        Navigator.of(context).pushNamed(Routes.animeDetails,
-            arguments: _animeStore.animeList.cashedAnimes[position]);
-      },
-    );
+    return AnimeListTile(
+        isLiked: isLiked, anime: _animeStore.animeList.cashedAnimes[position]);
   }
 }

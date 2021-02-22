@@ -43,7 +43,6 @@ class Repository {
   Future<RecomendationList> getSimilarItems(String itemId) async {
     return await _animeApi.querrySimilarItems(itemId).then((list) async {
       if (list != null) {
-
         return list;
       }
       return null;
@@ -161,7 +160,6 @@ class Repository {
   Future<RecomendationList> getUserRecomendations(String userId) async {
     return await _animeApi.querryUserRecomendations(userId).then((list) async {
       if (list != null) {
-
         return list;
       }
       return null;

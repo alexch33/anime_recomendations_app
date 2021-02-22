@@ -13,4 +13,6 @@ class DBConstants {
 
   // Fields
   static const FIELD_ID = 'id';
+
+  static const RATING_FIELD = "rating";
 }

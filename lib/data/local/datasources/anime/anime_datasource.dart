@@ -20,7 +20,8 @@ class AnimeDataSource {
 
   // DB functions:--------------------------------------------------------------
   Future<int> insert(Anime anime) async {
-    final result = await _animesStore.record(anime.dataId).put(await _db, anime.toMap());
+    final result =
+        await _animesStore.record(anime.dataId).put(await _db, anime.toMap());
     return result["dataId"];
   }
 
@@ -49,26 +50,25 @@ class AnimeDataSource {
   }
 
   Future<AnimeList> getAnimesFromDb() async {
-
     print('Loading from database');
 
     // anime list
     var animesList;
+    final finder =
+        Finder(sortOrders: [SortOrder(DBConstants.RATING_FIELD, false, false)]);
 
     // fetching data
-    final recordSnapshots = await _animesStore.find(
-      await _db,
-    );
+    final recordSnapshots = await _animesStore.find(await _db, finder: finder);
 
     // Making a List<Anime> out of List<RecordSnapshot>
-    if(recordSnapshots.length > 0) {
+    if (recordSnapshots.length > 0) {
       animesList = AnimeList(
           animes: recordSnapshots.map((snapshot) {
-            final anime = Anime.fromMap(snapshot.value);
-            // An ID is a key of a record from the database.
-            // anime.id = snapshot.key.toString();
-            return anime;
-          }).toList());
+        final anime = Anime.fromMap(snapshot.value);
+        // An ID is a key of a record from the database.
+        // anime.id = snapshot.key.toString();
+        return anime;
+      }).toList());
     }
 
     return animesList;
@@ -98,5 +98,4 @@ class AnimeDataSource {
       await _db,
     );
   }
-
 }

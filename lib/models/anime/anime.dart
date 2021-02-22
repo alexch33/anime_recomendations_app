@@ -5,7 +5,7 @@ class Anime {
   List genre;
   String type;
   String episodes;
-  String rating;
+  double rating;
   int members;
 
   Anime({
@@ -26,7 +26,7 @@ class Anime {
         genre: json["genre"],
         type: json["type"],
         episodes: json["episodes"],
-        rating: json["rating"].toString(),
+        rating: double.tryParse(json["rating"].toString()),
         members: json["members"]
       );
 

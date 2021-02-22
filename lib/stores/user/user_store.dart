@@ -1,6 +1,7 @@
 import 'package:boilerplate/models/recomendation/recomendation_list.dart';
 import 'package:boilerplate/models/user/user.dart';
 import 'package:boilerplate/stores/error/error_store.dart';
+import 'package:boilerplate/utils/dio/dio_error_util.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../data/repository.dart';
@@ -25,7 +26,6 @@ abstract class _UserStore with Store {
 
   // constructor:---------------------------------------------------------------
   _UserStore(Repository repository) : this._repository = repository {
-
     // setting up disposers
     _setupDisposers();
 
@@ -50,7 +50,7 @@ abstract class _UserStore with Store {
 
   // empty responses:-----------------------------------------------------------
   static ObservableFuture<bool> emptyLoginResponse =
-  ObservableFuture.value(false);
+      ObservableFuture.value(false);
 
   // store variables:-----------------------------------------------------------
   @observable
@@ -68,7 +68,6 @@ abstract class _UserStore with Store {
   // actions:-------------------------------------------------------------------
   @action
   Future login(String email, String password) async {
-
     final future = _repository.login(email, password);
     loginFuture = ObservableFuture(future);
     await future.then((value) async {
@@ -101,7 +100,11 @@ abstract class _UserStore with Store {
 
   @action
   Future<RecomendationList> querryUserRecomendations(String userId) async {
-    return await _repository.getUserRecomendations(userId);
+    try {
+      return await _repository.getUserRecomendations(userId);
+    } catch (e) {
+      errorStore.errorMessage = DioErrorUtil.handleError(e);
+    }
   }
 
   // general methods:-----------------------------------------------------------

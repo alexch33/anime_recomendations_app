@@ -152,7 +152,9 @@ class _HomeScreenState extends State<HomeScreen> {
         if (_animeStore.errorStore.errorMessage.isNotEmpty) {
           return _showErrorMessage(_animeStore.errorStore.errorMessage);
         }
-
+        if (_userStore.errorStore.errorMessage.isNotEmpty) {
+          return _showErrorMessage(_userStore.errorStore.errorMessage);
+        }
         return SizedBox.shrink();
       },
     );

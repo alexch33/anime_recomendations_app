@@ -94,8 +94,9 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
   Widget _buildListItem(int position) {
     Anime animeItem = _animeStore.animeList.animes.firstWhere((anime) =>
         anime.dataId.toString() ==
-        _recomendationsList.recomendations[position].item.toString());
+        _recomendationsList.recomendations[position].item.toString(), orElse: () => null);
 
+    if (animeItem == null) animeItem = Anime(id: "0", dataId: 0, name: "noname", imgUrl: "");
     final isLiked = _userStore.user
         .isAnimeLiked(animeItem.dataId);
 

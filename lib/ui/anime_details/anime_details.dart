@@ -79,7 +79,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
 
   Widget _buildImageBlock() {
     return Stack(alignment: Alignment.bottomCenter, children: [
-      Image.network('https://yummyanime.club/img/posters/1610739660.jpg'),
+      Image.network(_anime.imgUrl),
       _buildButtons()
     ]);
   }
@@ -92,7 +92,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
             padding: EdgeInsets.all(8.0),
             child: Text(_anime.name,
                 style: Theme.of(context).textTheme.headline6)),
-        Text("Description TODO", style: Theme.of(context).textTheme.bodyText1),
+        Text(_anime.synopsis, style: Theme.of(context).textTheme.bodyText1),
       ],
     ));
   }

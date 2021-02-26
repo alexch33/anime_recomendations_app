@@ -29,7 +29,7 @@ class AnimeListTile extends StatelessWidget {
               children: [
                 Expanded(
                     flex: 33,
-                    child: Image.network('https://picsum.photos/250?image=9')),
+                    child: Image.network(this.anime.imgUrl)),
                 Expanded(
                     flex: 67,
                     child: Column(

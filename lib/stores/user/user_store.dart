@@ -114,6 +114,20 @@ abstract class _UserStore with Store {
     return true;
   }
 
+  @action
+  Future pushWatchLaterAnime(int animeId) async {
+    bool isPushed = user.pushWatchLaterAnime(animeId);
+    if (isPushed) await _repository.updateUser(user);
+    else print("alredy pushed");
+  }
+
+  @action
+  Future pushBlackListAnime(int animeId) async {
+    bool isPushed = user.pushBlackListAnime(animeId);
+    if (isPushed) await _repository.updateUser(user);
+    else print("Already pused");
+  }
+
   // general methods:-----------------------------------------------------------
   void dispose() {
     for (final d in _disposers) {

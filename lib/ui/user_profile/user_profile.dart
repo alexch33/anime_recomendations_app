@@ -25,6 +25,8 @@ class _UserProfileState extends State<UserProfile> {
   LanguageStore _languageStore;
   UserStore _userStore;
   List<Anime> likedAnimes = [];
+  List<Anime> laterAnimes = [];
+  List<Anime> blackAnimes = [];
 
   @override
   void initState() {
@@ -45,11 +47,19 @@ class _UserProfileState extends State<UserProfile> {
       _userStore = Provider.of<UserStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
 
-      likedAnimes = _animeStore.animeList.animes
-          .where((anime) => _userStore.user.isAnimeLiked(anime.dataId))
-          .toList();
       setState(() {
-        this.likedAnimes = likedAnimes;
+        likedAnimes = _animeStore.animeList.animes
+            .where(
+                (anime) => _userStore.user.likedAnimes.contains(anime.dataId))
+            .toList();
+        laterAnimes = _animeStore.animeList.animes
+            .where((anime) =>
+                _userStore.user.watchLaterAnimes.contains(anime.dataId))
+            .toList();
+        blackAnimes = _animeStore.animeList.animes
+            .where((anime) =>
+                _userStore.user.blackListAnimes.contains(anime.dataId))
+            .toList();
       });
     }
 
@@ -82,15 +92,29 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   Widget _buildWatchLaterContent() {
-    return Center(
-      child: Text("Watch later"),
-    );
+    return Container(child: Observer(
+      builder: (context) {
+        return _userStore.isLoading
+            ? CustomProgressIndicatorWidget()
+            : Material(
+                child: Center(
+                child: _buildListViewLater(),
+              ));
+      },
+    ));
   }
 
   Widget _buildBlackListContent() {
-    return Center(
-      child: Text("Black list"),
-    );
+    return Container(child: Observer(
+      builder: (context) {
+        return _userStore.isLoading
+            ? CustomProgressIndicatorWidget()
+            : Material(
+                child: Center(
+                child: _buildListViewBlack(),
+              ));
+      },
+    ));
   }
 
   Widget _buildFavoriteContent() {
@@ -100,13 +124,13 @@ class _UserProfileState extends State<UserProfile> {
             ? CustomProgressIndicatorWidget()
             : Material(
                 child: Center(
-                child: _buildListView(),
+                child: _buildListViewLiked(),
               ));
       },
     ));
   }
 
-  Widget _buildListView() {
+  Widget _buildListViewLiked() {
     return likedAnimes.length > 0
         ? ListView.separated(
             itemCount: likedAnimes.length,
@@ -114,7 +138,7 @@ class _UserProfileState extends State<UserProfile> {
               return Divider();
             },
             itemBuilder: (context, position) {
-              return _buildListItem(position);
+              return _buildListItemLiked(position);
             },
           )
         : Center(
@@ -124,11 +148,69 @@ class _UserProfileState extends State<UserProfile> {
           );
   }
 
-  Widget _buildListItem(int position) {
+  Widget _buildListViewLater() {
+    return laterAnimes.length > 0
+        ? ListView.separated(
+            itemCount: laterAnimes.length,
+            separatorBuilder: (context, position) {
+              return Divider();
+            },
+            itemBuilder: (context, position) {
+              return _buildListItemLater(position);
+            },
+          )
+        : Center(
+            child: Text(
+              AppLocalizations.of(context).translate('home_tv_no_post_found'),
+            ),
+          );
+  }
+
+  Widget _buildListViewBlack() {
+    return blackAnimes.length > 0
+        ? ListView.separated(
+            itemCount: blackAnimes.length,
+            separatorBuilder: (context, position) {
+              return Divider();
+            },
+            itemBuilder: (context, position) {
+              return _buildListItemBlack(position);
+            },
+          )
+        : Center(
+            child: Text(
+              AppLocalizations.of(context).translate('home_tv_no_post_found'),
+            ),
+          );
+  }
+
+  Widget _buildListItemLiked(int position) {
     return GestureDetector(
       child: AnimeListTile(anime: likedAnimes[position], isLiked: true),
       onLongPress: () {
-        _userStore.deleteAllUserEvents();
+        // _userStore.pushBlackListAnime(likedAnimes[position].dataId);
+      },
+    );
+  }
+
+  Widget _buildListItemLater(int position) {
+    return GestureDetector(
+      child: AnimeListTile(
+          anime: laterAnimes[position],
+          isLiked: _userStore.user.isAnimeLiked(laterAnimes[position].dataId)),
+      onLongPress: () {
+        // _userStore.pushWatchLaterAnime(laterAnimes[position].dataId);
+      },
+    );
+  }
+
+  Widget _buildListItemBlack(int position) {
+    return GestureDetector(
+      child: AnimeListTile(
+          anime: blackAnimes[position],
+          isLiked: _userStore.user.isAnimeLiked(blackAnimes[position].dataId)),
+      onLongPress: () {
+        // _userStore.pushWatchLaterAnime(laterAnimes[position].dataId);
       },
     );
   }

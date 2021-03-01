@@ -33,15 +33,22 @@ class AnimeListTile extends StatelessWidget {
                 Expanded(
                     flex: 67,
                     child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             '${anime.name}',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             softWrap: false,
-                            style: Theme.of(context).textTheme.title,
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                          Text(
+                            '${anime.nameEng}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: false,
+                            style: Theme.of(context).textTheme.bodyText1,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,

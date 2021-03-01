@@ -116,6 +116,9 @@ class _AnimeListState extends State<AnimeList> {
     } else {
       _animeStore.animeList.cashedAnimes = _animeStore.animeList.animes
           .where((element) =>
+              element.nameEng
+                  .toLowerCase()
+                  .contains(_searchText.toLowerCase()) ||
               element.name.toLowerCase().contains(_searchText.toLowerCase()))
           .toList();
     }

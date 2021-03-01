@@ -39,7 +39,7 @@ class Anime {
         imgUrl: json["imgUrl"] ?? "",
         url: json["url"],
         synopsis: json["synopsis"],
-        nameEng: json["nameEng"],
+        nameEng: json["nameEng"] ?? "",
       );
 
   Map<String, dynamic> toMap() => {

@@ -95,7 +95,10 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
   Widget _buildListItem(int position) {
     Anime animeItem = _animeStore.animeList.animes.firstWhere((anime) =>
         anime.dataId.toString() ==
-        _recomendationsList.recomendations[position].item.toString());
+        _recomendationsList.recomendations[position].item.toString(), orElse: () => null);
+
+    if (animeItem == null) animeItem = Anime(id: "0", dataId: 0, name: "noname", imgUrl: "");
+
     bool isLiked = _userStore.user.isAnimeLiked(animeItem.dataId);
 
     return AnimeListTile(anime: animeItem, isLiked: isLiked);

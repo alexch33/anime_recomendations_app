@@ -1,4 +1,5 @@
 import 'package:boilerplate/models/anime/anime.dart';
+import 'package:boilerplate/widgets/build_ganres.dart';
 import 'package:flutter/material.dart';
 
 import '../routes.dart';
@@ -51,28 +52,10 @@ class AnimeGridTile extends StatelessWidget {
                             softWrap: false,
                             style: Theme.of(context).textTheme.bodyText1),
                       ]),
-                      Wrap(
-                          direction: Axis.horizontal, children: _buildGenres()),
+                      buildGenres(this.anime.genre)
                     ],
                   ),
                   flex: 32)
             ]));
-  }
-
-  List<Widget> _buildGenres() {
-    return this
-        .anime
-        .genre
-        .map((anime) => Padding(
-            padding: EdgeInsets.all(1),
-            child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.all(Radius.circular(7))),
-                child: Padding(
-                  padding: EdgeInsets.all(1),
-                  child: Text(anime),
-                ))))
-        .toList();
   }
 }

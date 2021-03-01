@@ -6,6 +6,7 @@ import 'package:boilerplate/stores/anime/anime_store.dart';
 import 'package:boilerplate/stores/theme/theme_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
+import 'package:boilerplate/widgets/build_ganres.dart';
 import 'package:boilerplate/widgets/empty_app_bar_widget.dart';
 import 'package:boilerplate/widgets/progress_indicator_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
@@ -14,6 +15,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:material_dialog/material_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:boilerplate/models/anime/anime.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'dart:math' as math;
 
 class AnimeDetails extends StatefulWidget {
   @override
@@ -45,6 +48,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
       _languageStore = Provider.of<LanguageStore>(context);
       _themeStore = Provider.of<ThemeStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
+      _userStore = Provider.of<UserStore>(context);
     }
   }
 
@@ -66,7 +70,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
           child: ConstrainedBox(
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildImageBlock(),
                     _buildTextInfo(),
@@ -78,10 +82,68 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   }
 
   Widget _buildImageBlock() {
-    return Stack(alignment: Alignment.bottomCenter, children: [
-      Image.network(_anime.imgUrl),
-      _buildButtons()
+    return Container(
+        child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+          Expanded(
+              flex: 62,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.network(_anime.imgUrl, fit: BoxFit.fill),
+              )),
+          Expanded(flex: 38, child: _buildRightImageBlock()),
+        ]));
+  }
+
+  Widget _buildRightImageBlock() {
+    return Column(children: [
+      Divider(),
+      _buildRating(),
+      Divider(),
+      buildGenres(_anime.genre),
+      Divider(),
+      _buildButtons(),
+      Divider(),
+      _buildSimilarButton(),
+      Divider(),
+      _buildMalLink(),
     ]);
+  }
+
+  Widget _buildSimilarButton() {
+    return ElevatedButton(
+      child: Text("Similar Items", style: Theme.of(context).textTheme.button),
+      onPressed: () {
+        Navigator.of(context)
+            .pushNamed(Routes.similarAnimes, arguments: _anime);
+      },
+    );
+  }
+
+  Widget _buildMalLink() {
+    return GestureDetector(
+      child: Text("View on MAL",
+          style: TextStyle(
+              decoration: TextDecoration.underline, color: Colors.blue)),
+      onTap: () {
+        _launchURL(_anime.url);
+      },
+    );
+  }
+
+  Widget _buildRating() {
+    return Row(
+      children: [
+        Icon(
+          Icons.star,
+          color: Colors.yellowAccent,
+        ),
+        Text(_anime.rating?.toStringAsFixed(2) ?? "no rating",
+            style: Theme.of(context).textTheme.headline6),
+      ],
+    );
   }
 
   Widget _buildTextInfo() {
@@ -91,45 +153,56 @@ class _AnimeDetailsState extends State<AnimeDetails> {
         Padding(
             padding: EdgeInsets.all(8.0),
             child: Text(_anime.name,
+                style: Theme.of(context).textTheme.headline5)),
+        Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(_anime.nameEng ?? "",
                 style: Theme.of(context).textTheme.headline6)),
-        Text(_anime.synopsis, style: Theme.of(context).textTheme.bodyText1),
+        Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(_anime.synopsis,
+                style: Theme.of(context).textTheme.bodyText1)),
       ],
     ));
   }
 
   Widget _buildButtons() {
+    bool isLiked = _userStore.user.isAnimeLiked(_anime.dataId);
+
     return Padding(
         padding: EdgeInsets.all(8.0),
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            ElevatedButton(
-              child: Text("Similar Items",
-                  style: Theme.of(context).textTheme.button),
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamed(Routes.similarAnimes, arguments: _anime);
-              },
-            ),
-            ClipOval(
-              child: Material(
-                color: Colors.green, // button color
-                child: InkWell(
-                  splashColor: Colors.blue, // inkwell color
-                  child: SizedBox(
-                      width: 56,
-                      height: 56,
-                      child: Icon(
-                        Icons.recommend,
-                        size: 32,
-                      )),
-                  onTap: () {
-                    _animeStore.likeAnime(_anime.dataId);
-                  },
-                ),
-              ),
+            Row(
+              children: [
+                IconButton(
+                    icon: Icon(
+                        isLiked
+                            ? Icons.favorite
+                            : Icons.favorite_border_outlined,
+                        color: Colors.red,
+                        size: 32),
+                    onPressed: () => _animeStore.likeAnime(_anime.dataId)),
+                IconButton(
+                    icon:
+                        Icon(Icons.watch_later, color: Colors.purple, size: 32),
+                    onPressed: () {}),
+                Transform.rotate(
+                  angle: math.pi,
+                  child: IconButton(
+                      icon: Icon(Icons.recommend, color: Colors.red, size: 32),
+                      onPressed: () {}),
+                )
+              ],
             ),
           ],
         ));
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    }
   }
 }

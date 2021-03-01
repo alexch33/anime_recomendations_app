@@ -61,6 +61,8 @@ dependencies:
   # Animated nav bar
   curved_navigation_bar: ^0.3.7
 
+  url_launcher: ^5.7.10
+  
   # Dependency injection
   inject:
     git:

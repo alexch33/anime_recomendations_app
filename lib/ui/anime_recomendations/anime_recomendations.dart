@@ -5,6 +5,7 @@ import 'package:boilerplate/stores/anime/anime_store.dart';
 import 'package:boilerplate/stores/theme/theme_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
+import 'package:boilerplate/widgets/anime_grid_tile.dart';
 import 'package:boilerplate/widgets/anime_list_tile.dart';
 import 'package:boilerplate/widgets/progress_indicator_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
@@ -67,21 +68,22 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
             ? CustomProgressIndicatorWidget()
             : Material(
                 child: Center(
-                child: _buildListView(),
+                child: _buildGridView(),
               ));
       },
     );
   }
 
-  Widget _buildListView() {
+  Widget _buildGridView() {
     return _recomendationsList != null
-        ? ListView.separated(
+        ? GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 0.5,
+            ),
             itemCount: _recomendationsList.recomendations.length,
-            separatorBuilder: (context, position) {
-              return Divider();
-            },
-            itemBuilder: (context, position) {
-              return _buildListItem(position);
+            itemBuilder: (context, index) {
+              return _buildGridItem(index);
             },
           )
         : Center(
@@ -91,15 +93,17 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
           );
   }
 
-  Widget _buildListItem(int position) {
-    Anime animeItem = _animeStore.animeList.animes.firstWhere((anime) =>
-        anime.dataId.toString() ==
-        _recomendationsList.recomendations[position].item.toString(), orElse: () => null);
+  Widget _buildGridItem(int position) {
+    Anime animeItem = _animeStore.animeList.animes.firstWhere(
+        (anime) =>
+            anime.dataId.toString() ==
+            _recomendationsList.recomendations[position].item.toString(),
+        orElse: () => null);
 
-    if (animeItem == null) animeItem = Anime(id: "0", dataId: 0, name: "noname", imgUrl: "");
-    final isLiked = _userStore.user
-        .isAnimeLiked(animeItem.dataId);
+    if (animeItem == null)
+      animeItem = Anime(id: "0", dataId: 0, name: "noname", imgUrl: "");
+    final isLiked = _userStore.user.isAnimeLiked(animeItem.dataId);
 
-    return AnimeListTile(anime: animeItem, isLiked: isLiked);
+    return AnimeGridTile(anime: animeItem, isLiked: isLiked);
   }
 }

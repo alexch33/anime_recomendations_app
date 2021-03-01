@@ -37,7 +37,7 @@ class AnimeGridTile extends StatelessWidget {
                               Icons.star,
                               color: Colors.yellowAccent,
                             ),
-                            Text(this.anime.rating.toStringAsFixed(2),
+                            Text(this.anime.rating?.toStringAsFixed(2) ?? "",
                                 style: Theme.of(context).textTheme.headline6),
                           ],
                         ),

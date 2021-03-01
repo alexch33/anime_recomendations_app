@@ -58,11 +58,43 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _buildMainContent());
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+            bottom: TabBar(
+              tabs: [
+                Tab(icon: Icon(Icons.favorite)),
+                Tab(icon: Icon(Icons.watch_later)),
+                Tab(icon: Icon(Icons.recommend)),
+              ],
+            ),
+            title: Text('Tabs Demo')),
+        body: TabBarView(
+          children: [
+            _buildFavoriteContent(),
+            _buildWatchLaterContent(),
+            _buildBlackListContent(),
+          ],
+        ),
+      ),
+    );
   }
 
-  Widget _buildMainContent() {
-    return Observer(
+  Widget _buildWatchLaterContent() {
+    return Center(
+      child: Text("Watch later"),
+    );
+  }
+
+  Widget _buildBlackListContent() {
+    return Center(
+      child: Text("Black list"),
+    );
+  }
+
+  Widget _buildFavoriteContent() {
+    return Container(child: Observer(
       builder: (context) {
         return _userStore.isLoading
             ? CustomProgressIndicatorWidget()
@@ -71,7 +103,7 @@ class _UserProfileState extends State<UserProfile> {
                 child: _buildListView(),
               ));
       },
-    );
+    ));
   }
 
   Widget _buildListView() {

@@ -6,6 +6,7 @@ import 'package:boilerplate/stores/theme/theme_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/widgets/anime_list_tile.dart';
+import 'package:boilerplate/widgets/anime_grid_tile.dart';
 import 'package:boilerplate/widgets/progress_indicator_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
@@ -110,6 +111,35 @@ class _AnimeListState extends State<AnimeList> {
     });
   }
 
+  // GridView.builder(
+  //             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //               crossAxisCount: isLandscape ? 3 : 2,
+  //               crossAxisSpacing: 15,
+  //               mainAxisSpacing: 10,
+  //               childAspectRatio: 0.9,
+  //             ),
+  //             itemCount: groupList.length,
+  //             itemBuilder: (context, index) {
+  //               FantyGroup group = groupList[index];
+  //               return InkWell(
+  //                   onTap: () {
+  //                     _fantyStore.selectedGroup = group;
+  //                   },
+  //                   child: Column(
+  //                     children: <Widget>[
+  //                       Expanded(
+  //                         flex: 5,
+  //                         child: Stack(
+  //                           children: <Widget>[
+  //                             _buildFirstLayer(group),
+  //                             _buildSecondLayer(group)
+  //                           ],
+  //                         ),
+  //                       ),
+  //                       Expanded(flex: 1, child: _buildProPlate(group))
+  //                     ],
+  //                   ))
+
   Widget _buildListView() {
     if (_searchText.isEmpty) {
       _animeStore.animeList.cashedAnimes = _animeStore.animeList.animes;
@@ -124,13 +154,14 @@ class _AnimeListState extends State<AnimeList> {
     }
 
     return _animeStore.animeList != null
-        ? ListView.separated(
+        ? GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 0.5,
+            ),
             itemCount: _animeStore.animeList.cashedAnimes.length,
-            separatorBuilder: (context, position) {
-              return Divider();
-            },
-            itemBuilder: (context, position) {
-              return _buildListItem(position);
+            itemBuilder: (context, index) {
+              return _buildGridItem(index);
             },
           )
         : Center(
@@ -175,11 +206,10 @@ class _AnimeListState extends State<AnimeList> {
     );
   }
 
-  Widget _buildListItem(int position) {
+  Widget _buildGridItem(int position) {
     final isLiked = _userStore.user
         .isAnimeLiked(_animeStore.animeList.cashedAnimes[position].dataId);
 
-    return AnimeListTile(
-        isLiked: isLiked, anime: _animeStore.animeList.cashedAnimes[position]);
+    return AnimeGridTile(anime: _animeStore.animeList.cashedAnimes[position], isLiked: isLiked);
   }
 }

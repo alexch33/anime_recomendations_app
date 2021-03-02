@@ -167,7 +167,9 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   }
 
   Widget _buildButtons() {
-    bool isLiked = _userStore.user.isAnimeLiked(_anime.dataId);
+    final isLiked = _userStore.user.likedAnimes.contains(_anime.dataId);
+    final isLater = _userStore.user.watchLaterAnimes.contains(_anime.dataId);
+    final isBlack = _userStore.user.blackListAnimes.contains(_anime.dataId);
 
     return Padding(
         padding: EdgeInsets.all(8.0),
@@ -185,15 +187,20 @@ class _AnimeDetailsState extends State<AnimeDetails> {
                         size: 32),
                     onPressed: () => _animeStore.likeAnime(_anime.dataId)),
                 IconButton(
-                    icon:
-                        Icon(Icons.watch_later, color: Colors.purple, size: 32),
+                    icon: Icon(
+                        isLater
+                            ? Icons.watch_later
+                            : Icons.watch_later_outlined,
+                        color: Colors.purple,
+                        size: 32),
                     onPressed: () {
                       _userStore.pushWatchLaterAnime(_anime.dataId);
                     }),
                 Transform.rotate(
                   angle: math.pi,
                   child: IconButton(
-                      icon: Icon(Icons.recommend, color: Colors.red, size: 32),
+                      icon: Icon(Icons.recommend,
+                          color: isBlack ? Colors.red : Colors.grey, size: 32),
                       onPressed: () {
                         _userStore.pushBlackListAnime(_anime.dataId);
                       }),

@@ -7,7 +7,7 @@ Widget buildGenres(List<String> ganres) {
             padding: EdgeInsets.all(1),
             child: Container(
                 decoration: BoxDecoration(
-                    color: Colors.deepPurpleAccent,
+                    color: Colors.purple,
                     borderRadius: BorderRadius.all(Radius.circular(7))),
                 child: Padding(
                   padding: EdgeInsets.all(1),

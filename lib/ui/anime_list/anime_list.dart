@@ -177,9 +177,12 @@ class _AnimeListState extends State<AnimeList> {
   }
 
   Widget _buildGridItem(int position) {
-    final isLiked = _userStore.user
-        .isAnimeLiked(_animeStore.animeList.cashedAnimes[position].dataId);
+    final anime = _animeStore.animeList.cashedAnimes[position];
 
-    return AnimeGridTile(anime: _animeStore.animeList.cashedAnimes[position], isLiked: isLiked);
+    return AnimeGridTile(
+        anime: anime,
+        isLiked: _userStore.user.likedAnimes.contains(anime.dataId),
+        isLater: _userStore.user.watchLaterAnimes.contains(anime.dataId),
+        isBlack: _userStore.user.blackListAnimes.contains(anime.dataId));
   }
 }

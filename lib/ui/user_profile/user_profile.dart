@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:material_dialog/material_dialog.dart';
 import 'package:provider/provider.dart';
+import 'dart:math' as math;
 
 class UserProfile extends StatefulWidget {
   @override
@@ -76,7 +77,9 @@ class _UserProfileState extends State<UserProfile> {
               tabs: [
                 Tab(icon: Icon(Icons.favorite)),
                 Tab(icon: Icon(Icons.watch_later)),
-                Tab(icon: Icon(Icons.recommend)),
+                Tab(
+                    icon: Transform.rotate(
+                        angle: math.pi, child: Icon(Icons.recommend))),
               ],
             ),
             title: Text('Tabs Demo')),

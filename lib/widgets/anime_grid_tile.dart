@@ -1,14 +1,19 @@
 import 'package:boilerplate/models/anime/anime.dart';
 import 'package:boilerplate/widgets/build_ganres.dart';
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 import '../routes.dart';
 
 class AnimeGridTile extends StatelessWidget {
   final Anime anime;
   final bool isLiked;
+  final bool isLater;
+  final bool isBlack;
 
-  const AnimeGridTile({Key key, this.anime, this.isLiked}) : super(key: key);
+  const AnimeGridTile(
+      {Key key, this.anime, this.isLiked, this.isLater, this.isBlack})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +28,9 @@ class AnimeGridTile extends StatelessWidget {
               Expanded(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
-                    child: Image.network(this.anime.imgUrl, fit: BoxFit.fill),
+                    child: this.anime.imgUrl != null
+                        ? Image.network(this.anime.imgUrl, fit: BoxFit.fill)
+                        : Container(),
                   ),
                   flex: 68),
               Expanded(
@@ -39,20 +46,38 @@ class AnimeGridTile extends StatelessWidget {
                             ),
                             Text(this.anime.rating?.toStringAsFixed(2) ?? "",
                                 style: Theme.of(context).textTheme.headline6),
+                            Container(width: 16),
+                            isLiked
+                                ? Icon(Icons.favorite, color: Colors.red)
+                                : Container(),
+                            isLater
+                                ? Icon(
+                                    Icons.watch_later,
+                                    color: Colors.purple,
+                                  )
+                                : Container(),
+                            isBlack
+                                ? Transform.rotate(
+                                    angle: math.pi,
+                                    child: Icon(Icons.recommend,
+                                        color: Colors.red))
+                                : Container(),
                           ],
                         ),
-                        Text(this.anime.name,
+                        Text(this.anime.name ?? "no title",
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             softWrap: false,
                             style: Theme.of(context).textTheme.headline6),
-                        Text(this.anime.nameEng,
+                        Text(this.anime.nameEng ?? "",
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             softWrap: false,
                             style: Theme.of(context).textTheme.bodyText1),
                       ]),
-                      buildGenres(this.anime.genre)
+                      this.anime.genre != null
+                          ? buildGenres(this.anime.genre)
+                          : Container()
                     ],
                   ),
                   flex: 32)

@@ -104,8 +104,11 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
 
     if (animeItem == null)
       animeItem = Anime(id: "0", dataId: 0, name: "noname", imgUrl: "");
-    final isLiked = _userStore.user.isAnimeLiked(animeItem.dataId);
+    final isLiked = _userStore.user.likedAnimes.contains(animeItem.dataId);
+    final isLater = _userStore.user.watchLaterAnimes.contains(animeItem.dataId);
+    final isBlack = _userStore.user.blackListAnimes.contains(animeItem.dataId);
 
-    return AnimeGridTile(anime: animeItem, isLiked: isLiked);
+    return AnimeGridTile(
+        anime: animeItem, isLiked: isLiked, isLater: isLater, isBlack: isBlack);
   }
 }

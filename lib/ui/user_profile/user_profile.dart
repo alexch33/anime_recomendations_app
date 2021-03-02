@@ -82,7 +82,7 @@ class _UserProfileState extends State<UserProfile> {
                         angle: math.pi, child: Icon(Icons.recommend))),
               ],
             ),
-            title: Text('Tabs Demo')),
+            title: Text('Profile lists')),
         body: TabBarView(
           children: [
             _buildFavoriteContent(),

@@ -4,8 +4,17 @@ class User {
   String role;
   String email;
   List<int> likedAnimes;
+  List<int> watchLaterAnimes;
+  List<int> blackListAnimes;
 
-  User({this.id, this.name, this.email, this.role, this.likedAnimes});
+  User(
+      {this.id,
+      this.name,
+      this.email,
+      this.role,
+      this.likedAnimes,
+      this.watchLaterAnimes,
+      this.blackListAnimes});
 
   factory User.fromMap(Map<String, dynamic> json) => User(
         id: json["id"],
@@ -13,6 +22,8 @@ class User {
         email: json["email"],
         role: json["role"],
         likedAnimes: json["likedAnimes"]?.cast<int>() ?? [],
+        watchLaterAnimes: json["watchLaterAnimes"]?.cast<int>() ?? [],
+        blackListAnimes: json["blackListAnimes"]?.cast<int>() ?? [],
       );
 
   Map<String, dynamic> toMap() => {
@@ -21,15 +32,60 @@ class User {
         "email": email,
         "role": role,
         "likedAnimes": likedAnimes ?? [],
+        "watchLaterAnimes": watchLaterAnimes ?? [],
+        "blackListAnimes": blackListAnimes ?? [],
       };
 
-  pushLikedAnime(int animeId) {
+  bool pushWatchLaterAnime(int animeId) {
+    if (watchLaterAnimes.contains(animeId))
+      return false;
+    else {
+      final sett = watchLaterAnimes.toSet();
+      sett.add(animeId);
+      watchLaterAnimes = sett.toList();
+      return true;
+    }
+  }
+
+  bool removeWatchLaterAnime(int animeId) {
+    if (watchLaterAnimes.contains(animeId)) {
+      var newWatchList = watchLaterAnimes.toList();
+      newWatchList.remove(animeId);
+      watchLaterAnimes = newWatchList;
+      return true;
+    } else
+      return false;
+  }
+
+  bool pushBlackListAnime(int animeId) {
+    if (blackListAnimes.contains(animeId))
+      return false;
+    else {
+      final sett = blackListAnimes.toSet();
+      sett.add(animeId);
+      blackListAnimes = sett.toList();
+      return true;
+    }
+  }
+
+  bool removeBlackListAnime(int animeId) {
+    if (blackListAnimes.contains(animeId)) {
+      var newBlackList = blackListAnimes.toList();
+      newBlackList.remove(animeId);
+      blackListAnimes = newBlackList;
+      return true;
+    } else
+      return false;
+  }
+
+  bool pushLikedAnime(int animeId) {
     if (likedAnimes.contains(animeId))
-      return;
+      return false;
     else {
       final sett = likedAnimes.toSet();
       sett.add(animeId);
       likedAnimes = sett.toList();
+      return true;
     }
   }
 

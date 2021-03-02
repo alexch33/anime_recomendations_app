@@ -36,4 +36,19 @@ class UsersApi {
       return false;
     }
   }
+
+  Future<User> userUpdateSelf(User user) async {
+    try {
+      var userMap = user.toMap();
+      userMap.remove("id");
+      userMap.remove("role");
+      userMap.remove("likedAnimes");
+
+      final res =
+          await _dioClient.post(Endpoints.userUpdateSelf, data: userMap);
+      return User.fromMap(res);
+    } catch (e) {
+      throw e;
+    }
+  }
 }

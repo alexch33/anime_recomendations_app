@@ -21,9 +21,14 @@ class Endpoints {
 
   static const String likeAnime = baseUrl + "/ur/createUserAnimeEvent";
 
-  static const String querryUserRecomendations = baseUrl + "/ur/queryUserRecomendations";
+  static const String querryUserRecomendations =
+      baseUrl + "/ur/queryUserRecomendations";
 
   static const String querySimilarItems = baseUrl + "/ur/querySimilarItems";
 
-  static const String deleteAllUsersAnimeEvents = baseUrl + "/ur/deleteAllUsersAnimeEvents";
+  static const String deleteAllUsersAnimeEvents =
+      baseUrl + "/ur/deleteAllUsersAnimeEvents";
+
+  static const String userUpdateSelf =
+      baseUrl + "/users/updateSelf";
 }

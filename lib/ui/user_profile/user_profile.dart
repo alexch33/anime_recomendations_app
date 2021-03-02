@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:material_dialog/material_dialog.dart';
 import 'package:provider/provider.dart';
+import 'dart:math' as math;
 
 class UserProfile extends StatefulWidget {
   @override
@@ -25,6 +26,8 @@ class _UserProfileState extends State<UserProfile> {
   LanguageStore _languageStore;
   UserStore _userStore;
   List<Anime> likedAnimes = [];
+  List<Anime> laterAnimes = [];
+  List<Anime> blackAnimes = [];
 
   @override
   void initState() {
@@ -45,11 +48,19 @@ class _UserProfileState extends State<UserProfile> {
       _userStore = Provider.of<UserStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
 
-      likedAnimes = _animeStore.animeList.animes
-          .where((anime) => _userStore.user.isAnimeLiked(anime.dataId))
-          .toList();
       setState(() {
-        this.likedAnimes = likedAnimes;
+        likedAnimes = _animeStore.animeList.animes
+            .where(
+                (anime) => _userStore.user.likedAnimes.contains(anime.dataId))
+            .toList();
+        laterAnimes = _animeStore.animeList.animes
+            .where((anime) =>
+                _userStore.user.watchLaterAnimes.contains(anime.dataId))
+            .toList();
+        blackAnimes = _animeStore.animeList.animes
+            .where((anime) =>
+                _userStore.user.blackListAnimes.contains(anime.dataId))
+            .toList();
       });
     }
 
@@ -58,23 +69,71 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _buildMainContent());
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+            bottom: TabBar(
+              tabs: [
+                Tab(icon: Icon(Icons.favorite)),
+                Tab(icon: Icon(Icons.watch_later)),
+                Tab(
+                    icon: Transform.rotate(
+                        angle: math.pi, child: Icon(Icons.recommend))),
+              ],
+            ),
+            title: Text('Tabs Demo')),
+        body: TabBarView(
+          children: [
+            _buildFavoriteContent(),
+            _buildWatchLaterContent(),
+            _buildBlackListContent(),
+          ],
+        ),
+      ),
+    );
   }
 
-  Widget _buildMainContent() {
-    return Observer(
+  Widget _buildWatchLaterContent() {
+    return Container(child: Observer(
       builder: (context) {
         return _userStore.isLoading
             ? CustomProgressIndicatorWidget()
             : Material(
                 child: Center(
-                child: _buildListView(),
+                child: _buildListViewLater(),
               ));
       },
-    );
+    ));
   }
 
-  Widget _buildListView() {
+  Widget _buildBlackListContent() {
+    return Container(child: Observer(
+      builder: (context) {
+        return _userStore.isLoading
+            ? CustomProgressIndicatorWidget()
+            : Material(
+                child: Center(
+                child: _buildListViewBlack(),
+              ));
+      },
+    ));
+  }
+
+  Widget _buildFavoriteContent() {
+    return Container(child: Observer(
+      builder: (context) {
+        return _userStore.isLoading
+            ? CustomProgressIndicatorWidget()
+            : Material(
+                child: Center(
+                child: _buildListViewLiked(),
+              ));
+      },
+    ));
+  }
+
+  Widget _buildListViewLiked() {
     return likedAnimes.length > 0
         ? ListView.separated(
             itemCount: likedAnimes.length,
@@ -82,7 +141,7 @@ class _UserProfileState extends State<UserProfile> {
               return Divider();
             },
             itemBuilder: (context, position) {
-              return _buildListItem(position);
+              return _buildListItemLiked(position);
             },
           )
         : Center(
@@ -92,7 +151,93 @@ class _UserProfileState extends State<UserProfile> {
           );
   }
 
-  Widget _buildListItem(int position) {
-    return AnimeListTile(anime: likedAnimes[position], isLiked: true);
+  Widget _buildListViewLater() {
+    return laterAnimes.length > 0
+        ? ListView.separated(
+            itemCount: laterAnimes.length,
+            separatorBuilder: (context, position) {
+              return Divider();
+            },
+            itemBuilder: (context, position) {
+              return _buildListItemLater(position);
+            },
+          )
+        : Center(
+            child: Text(
+              AppLocalizations.of(context).translate('home_tv_no_post_found'),
+            ),
+          );
+  }
+
+  Widget _buildListViewBlack() {
+    return blackAnimes.length > 0
+        ? ListView.separated(
+            itemCount: blackAnimes.length,
+            separatorBuilder: (context, position) {
+              return Divider();
+            },
+            itemBuilder: (context, position) {
+              return _buildListItemBlack(position);
+            },
+          )
+        : Center(
+            child: Text(
+              AppLocalizations.of(context).translate('home_tv_no_post_found'),
+            ),
+          );
+  }
+
+  deleteLaterItem(int pos) async {
+    await _userStore.removeWatchLaterAnime(this.laterAnimes[pos].dataId);
+    setState(() {
+      laterAnimes = _animeStore.animeList.animes
+          .where((anime) =>
+              _userStore.user.watchLaterAnimes.contains(anime.dataId))
+          .toList();
+    });
+  }
+
+  Widget _buildListItemLaterButtonsBlock(int pos) {
+    return IconButton(
+        icon: Icon(Icons.delete), onPressed: () => deleteLaterItem(pos));
+  }
+
+  deleteBlackItem(int pos) async {
+    await _userStore.removeBlackListAnime(this.blackAnimes[pos].dataId);
+    setState(() {
+      blackAnimes = _animeStore.animeList.animes
+          .where(
+              (anime) => _userStore.user.blackListAnimes.contains(anime.dataId))
+          .toList();
+    });
+  }
+
+  Widget _buildListItemBlackButtonsBlock(int pos) {
+    return IconButton(
+        icon: Icon(Icons.delete), onPressed: () => deleteBlackItem(pos));
+  }
+
+  Widget _buildListItemLiked(int position) {
+    return GestureDetector(
+      child: AnimeListTile(anime: likedAnimes[position], isLiked: true),
+    );
+  }
+
+  Widget _buildListItemLater(int position) {
+    return GestureDetector(
+      child: AnimeListTile(
+          anime: laterAnimes[position],
+          isLiked: _userStore.user.isAnimeLiked(laterAnimes[position].dataId),
+          buttons: _buildListItemLaterButtonsBlock(position)),
+    );
+  }
+
+  Widget _buildListItemBlack(int position) {
+    return GestureDetector(
+      child: AnimeListTile(
+          anime: blackAnimes[position],
+          isLiked: _userStore.user.isAnimeLiked(blackAnimes[position].dataId),
+          buttons: _buildListItemBlackButtonsBlock(position)),
+    );
   }
 }

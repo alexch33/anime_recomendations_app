@@ -5,6 +5,7 @@ import 'package:boilerplate/stores/anime/anime_store.dart';
 import 'package:boilerplate/stores/theme/theme_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
+import 'package:boilerplate/widgets/anime_grid_tile.dart';
 import 'package:boilerplate/widgets/anime_list_tile.dart';
 import 'package:boilerplate/widgets/progress_indicator_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
@@ -25,6 +26,7 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
   ThemeStore _themeStore;
   LanguageStore _languageStore;
   UserStore _userStore;
+  Anime _anime;
 
   RecomendationList _recomendationsList;
 
@@ -47,10 +49,10 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
       _userStore = Provider.of<UserStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
 
-      Anime anime = ModalRoute.of(context).settings.arguments;
+      _anime = ModalRoute.of(context).settings.arguments;
 
       _animeStore
-          .querrySImilarItems(anime.dataId.toString())
+          .querrySImilarItems(_anime.dataId.toString())
           .then((value) => setState(() => _recomendationsList = value));
     }
   }
@@ -69,20 +71,21 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
       builder: (context) {
         return _userStore.isLoading
             ? CustomProgressIndicatorWidget()
-            : Material(child: _buildListView());
+            : Material(child: _buildGridView());
       },
     );
   }
 
-  Widget _buildListView() {
+  Widget _buildGridView() {
     return _recomendationsList != null
-        ? ListView.separated(
+        ? GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 0.5,
+            ),
             itemCount: _recomendationsList.recomendations.length,
-            separatorBuilder: (context, position) {
-              return Divider();
-            },
-            itemBuilder: (context, position) {
-              return _buildListItem(position);
+            itemBuilder: (context, index) {
+              return _buildGridItem(index);
             },
           )
         : Center(
@@ -92,12 +95,20 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
           );
   }
 
-  Widget _buildListItem(int position) {
-    Anime animeItem = _animeStore.animeList.animes.firstWhere((anime) =>
-        anime.dataId.toString() ==
-        _recomendationsList.recomendations[position].item.toString());
-    bool isLiked = _userStore.user.isAnimeLiked(animeItem.dataId);
+  Widget _buildGridItem(int position) {
+    Anime animeItem = _animeStore.animeList.animes.firstWhere(
+        (anime) =>
+            anime.dataId.toString() ==
+            _recomendationsList.recomendations[position].item.toString(),
+        orElse: () => null);
 
-    return AnimeListTile(anime: animeItem, isLiked: isLiked);
+    if (animeItem == null)
+      animeItem = Anime(id: "0", dataId: 0, name: "noname", imgUrl: "");
+    final isLiked = _userStore.user.likedAnimes.contains(animeItem.dataId);
+    final isLater = _userStore.user.watchLaterAnimes.contains(animeItem.dataId);
+    final isBlack = _userStore.user.blackListAnimes.contains(animeItem.dataId);
+
+    return AnimeGridTile(
+        anime: animeItem, isLiked: isLiked, isLater: isLater, isBlack: isBlack);
   }
 }

@@ -149,8 +149,14 @@ class Repository {
     return await _userDataSource.getUserFromDb();
   }
 
-  Future<int> updateUser(User user) async {
-    return await _userDataSource.update(user);
+  Future<User> updateUser(User user) async {
+    try {
+      User updatedUser = await _usersApi.userUpdateSelf(user);
+      await _userDataSource.update(updatedUser);
+      return await this.getUser();
+    } catch (error) {
+      throw error;
+    }
   }
 
   Future<int> deleteUser() async {

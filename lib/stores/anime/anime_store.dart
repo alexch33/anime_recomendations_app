@@ -64,6 +64,7 @@ abstract class _AnimeStore with Store {
     future.then((isLiked) {
       print("IsLiked ::  " + isLiked.toString());
       if (isLiked) return true;
+      return false;
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
     });

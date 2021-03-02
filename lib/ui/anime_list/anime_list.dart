@@ -127,7 +127,8 @@ class _AnimeListState extends State<AnimeList> {
         ? GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 0.5,
+              childAspectRatio: 0.4,
+              crossAxisSpacing: 4,
             ),
             itemCount: _animeStore.animeList.cashedAnimes.length,
             itemBuilder: (context, index) {

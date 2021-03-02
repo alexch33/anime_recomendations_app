@@ -102,7 +102,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
       Divider(),
       _buildRating(),
       Divider(),
-      buildGenres(_anime.genre),
+      buildGenres(_anime.genre, trim: false),
       Divider(),
       _buildButtons(),
       Divider(),
@@ -151,15 +151,15 @@ class _AnimeDetailsState extends State<AnimeDetails> {
         child: Column(
       children: [
         Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(2.0),
             child: Text(_anime.name,
                 style: Theme.of(context).textTheme.headline5)),
         Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(2.0),
             child: Text(_anime.nameEng ?? "",
                 style: Theme.of(context).textTheme.headline6)),
         Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
             child: Text(_anime.synopsis,
                 style: Theme.of(context).textTheme.bodyText1)),
       ],
@@ -176,7 +176,8 @@ class _AnimeDetailsState extends State<AnimeDetails> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Row(
+            Wrap(
+              direction: Axis.horizontal,
               children: [
                 IconButton(
                     icon: Icon(

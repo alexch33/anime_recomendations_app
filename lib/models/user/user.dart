@@ -49,7 +49,9 @@ class User {
 
   bool removeWatchLaterAnime(int animeId) {
     if (watchLaterAnimes.contains(animeId)) {
-      watchLaterAnimes.remove(animeId);
+      var newWatchList = watchLaterAnimes.toList();
+      newWatchList.remove(animeId);
+      watchLaterAnimes = newWatchList;
       return true;
     } else
       return false;
@@ -68,7 +70,9 @@ class User {
 
   bool removeBlackListAnime(int animeId) {
     if (blackListAnimes.contains(animeId)) {
-      blackListAnimes.remove(animeId);
+      var newBlackList = blackListAnimes.toList();
+      newBlackList.remove(animeId);
+      blackListAnimes = newBlackList;
       return true;
     } else
       return false;

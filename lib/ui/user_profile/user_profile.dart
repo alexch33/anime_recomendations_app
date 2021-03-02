@@ -184,12 +184,39 @@ class _UserProfileState extends State<UserProfile> {
           );
   }
 
+  deleteLaterItem(int pos) async {
+    await _userStore.removeWatchLaterAnime(this.laterAnimes[pos].dataId);
+    setState(() {
+      laterAnimes = _animeStore.animeList.animes
+          .where((anime) =>
+              _userStore.user.watchLaterAnimes.contains(anime.dataId))
+          .toList();
+    });
+  }
+
+  Widget _buildListItemLaterButtonsBlock(int pos) {
+    return IconButton(
+        icon: Icon(Icons.delete), onPressed: () => deleteLaterItem(pos));
+  }
+
+  deleteBlackItem(int pos) async {
+    await _userStore.removeBlackListAnime(this.blackAnimes[pos].dataId);
+    setState(() {
+      blackAnimes = _animeStore.animeList.animes
+          .where(
+              (anime) => _userStore.user.blackListAnimes.contains(anime.dataId))
+          .toList();
+    });
+  }
+
+  Widget _buildListItemBlackButtonsBlock(int pos) {
+    return IconButton(
+        icon: Icon(Icons.delete), onPressed: () => deleteBlackItem(pos));
+  }
+
   Widget _buildListItemLiked(int position) {
     return GestureDetector(
       child: AnimeListTile(anime: likedAnimes[position], isLiked: true),
-      onLongPress: () {
-        // _userStore.pushBlackListAnime(likedAnimes[position].dataId);
-      },
     );
   }
 
@@ -197,10 +224,8 @@ class _UserProfileState extends State<UserProfile> {
     return GestureDetector(
       child: AnimeListTile(
           anime: laterAnimes[position],
-          isLiked: _userStore.user.isAnimeLiked(laterAnimes[position].dataId)),
-      onLongPress: () {
-        // _userStore.pushWatchLaterAnime(laterAnimes[position].dataId);
-      },
+          isLiked: _userStore.user.isAnimeLiked(laterAnimes[position].dataId),
+          buttons: _buildListItemLaterButtonsBlock(position)),
     );
   }
 
@@ -208,10 +233,8 @@ class _UserProfileState extends State<UserProfile> {
     return GestureDetector(
       child: AnimeListTile(
           anime: blackAnimes[position],
-          isLiked: _userStore.user.isAnimeLiked(blackAnimes[position].dataId)),
-      onLongPress: () {
-        // _userStore.pushWatchLaterAnime(laterAnimes[position].dataId);
-      },
+          isLiked: _userStore.user.isAnimeLiked(blackAnimes[position].dataId),
+          buttons: _buildListItemBlackButtonsBlock(position)),
     );
   }
 }

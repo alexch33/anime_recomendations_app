@@ -187,12 +187,16 @@ class _AnimeDetailsState extends State<AnimeDetails> {
                 IconButton(
                     icon:
                         Icon(Icons.watch_later, color: Colors.purple, size: 32),
-                    onPressed: () {}),
+                    onPressed: () {
+                      _userStore.pushWatchLaterAnime(_anime.dataId);
+                    }),
                 Transform.rotate(
                   angle: math.pi,
                   child: IconButton(
                       icon: Icon(Icons.recommend, color: Colors.red, size: 32),
-                      onPressed: () {}),
+                      onPressed: () {
+                        _userStore.pushBlackListAnime(_anime.dataId);
+                      }),
                 )
               ],
             ),

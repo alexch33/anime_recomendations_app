@@ -71,12 +71,17 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
       _userStore = Provider.of<UserStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
     }
+
+    refreshRecs();
+  }
+
+  refreshRecs() async {
+    await _userStore.initUser();
     _userStore
         .querryUserRecomendations(_userStore.user.id)
         .then((value) => setState(() {
               _recomendationsList = value;
             }));
-    _userStore.initUser();
   }
 
   @override
@@ -180,17 +185,19 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
     }
 
     return _recomendationsList != null
-        ? GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.4,
-              crossAxisSpacing: 4,
+        ? RefreshIndicator(
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.4,
+                crossAxisSpacing: 4,
+              ),
+              itemCount: _recomendationsList.cachedRecomendations.length,
+              itemBuilder: (context, index) {
+                return _buildGridItem(index);
+              },
             ),
-            itemCount: _recomendationsList.cachedRecomendations.length,
-            itemBuilder: (context, index) {
-              return _buildGridItem(index);
-            },
-          )
+            onRefresh: () => refreshRecs())
         : Center(
             child: Text(
               AppLocalizations.of(context).translate('home_tv_no_post_found'),

@@ -196,7 +196,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
                             : Icons.favorite_border_outlined,
                         color: Colors.red,
                         size: 32),
-                    onPressed: _handleLike),
+                    onPressed: () => _handleLike()),
                 IconButton(
                     icon: Icon(
                         isLater
@@ -204,13 +204,13 @@ class _AnimeDetailsState extends State<AnimeDetails> {
                             : Icons.watch_later_outlined,
                         color: Colors.purple,
                         size: 32),
-                    onPressed: _handleLater),
+                    onPressed: () => _handleLater()),
                 Transform.rotate(
                   angle: math.pi,
                   child: IconButton(
                       icon: Icon(Icons.recommend,
                           color: isBlack ? Colors.red : Colors.grey, size: 32),
-                      onPressed: _handleBlackListed),
+                      onPressed: () => _handleBlackListed()),
                 )
               ],
             ),

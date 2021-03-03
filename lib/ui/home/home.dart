@@ -66,6 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return CurvedNavigationBar(
       key: _bottomNavigationKey,
       index: 1,
+      color: Theme.of(context).primaryColor,
       backgroundColor: Colors.pink,
       items: <Widget>[
         Icon(Icons.person, size: 30),

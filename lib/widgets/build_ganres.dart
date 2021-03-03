@@ -11,7 +11,7 @@ Widget buildGenres(List<String> ganres, { trim: true }) {
             padding: EdgeInsets.all(1),
             child: Container(
                 decoration: BoxDecoration(
-                    color: Colors.purple,
+                    color: Colors.deepPurple,
                     borderRadius: BorderRadius.all(Radius.circular(7))),
                 child: Padding(
                   padding: EdgeInsets.all(1),

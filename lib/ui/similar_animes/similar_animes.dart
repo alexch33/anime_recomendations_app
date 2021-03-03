@@ -69,7 +69,7 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
   Widget _buildMainContent() {
     return Observer(
       builder: (context) {
-        return _userStore.isLoading
+        return _animeStore.isLoading
             ? CustomProgressIndicatorWidget()
             : Material(child: _buildGridView());
       },
@@ -104,9 +104,9 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
 
     if (animeItem == null)
       animeItem = Anime(id: "0", dataId: 0, name: "noname", imgUrl: "");
-    final isLiked = _userStore.user.likedAnimes.contains(animeItem.dataId);
-    final isLater = _userStore.user.watchLaterAnimes.contains(animeItem.dataId);
-    final isBlack = _userStore.user.blackListAnimes.contains(animeItem.dataId);
+    final isLiked = _userStore.isLikedAnime(animeItem.dataId);
+    final isLater = _userStore.isLaterAnime(animeItem.dataId);
+    final isBlack = _userStore.isBlackListedAnime(animeItem.dataId);
 
     return AnimeGridTile(
         anime: animeItem, isLiked: isLiked, isLater: isLater, isBlack: isBlack);

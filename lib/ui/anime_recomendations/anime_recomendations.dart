@@ -154,7 +154,7 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
   Widget _buildMainContent() {
     return Observer(
       builder: (context) {
-        return _userStore.isLoading
+        return _userStore.loading
             ? CustomProgressIndicatorWidget()
             : Material(
                 child: Center(

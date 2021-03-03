@@ -61,7 +61,16 @@ class _AnimeDetailsState extends State<AnimeDetails> {
         appBar: AppBar(
           title: Text("Info"),
         ),
-        body: _buildMainContent());
+        body: Stack(
+          children: [
+            _buildMainContent(),
+            Observer(
+                builder: (context) =>
+                    (_userStore.loading || _animeStore.isLoading)
+                        ? CustomProgressIndicatorWidget()
+                        : Container())
+          ],
+        ));
   }
 
   Widget _buildMainContent() {

@@ -65,6 +65,9 @@ abstract class _UserStore with Store {
   @computed
   bool get isLoading => loginFuture.status == FutureStatus.pending;
 
+  @observable
+  bool loading = false;
+
   @action
   bool isLikedAnime(int dataId) {
     return user.likedAnimes.contains(dataId);
@@ -104,7 +107,13 @@ abstract class _UserStore with Store {
 
   @action
   Future initUser() async {
-    this.user = await _repository.getUser();
+    loading = true;
+    try {
+      this.user = await _repository.getUser();
+    } catch (e) {
+      errorStore.errorMessage = DioErrorUtil.handleError(e);
+    }
+    loading = false;
   }
 
   @action
@@ -116,52 +125,90 @@ abstract class _UserStore with Store {
   @action
   Future<RecomendationList> querryUserRecomendations(String userId) async {
     try {
-      return await _repository.getUserRecomendations(userId);
+      loading = true;
+      var res = await _repository.getUserRecomendations(userId);
+      loading = false;
+      return res;
     } catch (e) {
+      loading = false;
       errorStore.errorMessage = DioErrorUtil.handleError(e);
     }
   }
 
   @action
   Future<bool> deleteAllUserEvents() async {
-    await _repository.deleteAllUserEvents();
-    await this.initUser();
+    loading = true;
+
+    try {
+      await _repository.deleteAllUserEvents();
+      await this.initUser();
+    } catch (e) {
+      errorStore.errorMessage = DioErrorUtil.handleError(e);
+    }
+
+    loading = false;
     return true;
   }
 
   @action
   Future<bool> pushWatchLaterAnime(int animeId) async {
+    loading = true;
     bool isPushed = user.pushWatchLaterAnime(animeId);
     if (isPushed) {
-      await _repository.updateUser(user);
+      try {
+        await _repository.updateUser(user);
+      } catch (e) {
+        errorStore.errorMessage = DioErrorUtil.handleError(e);
+      }
     }
+    loading = false;
     return true;
   }
 
   @action
   Future<bool> removeWatchLaterAnime(int animeId) async {
+    loading = true;
+
     bool isPushed = user.removeWatchLaterAnime(animeId);
     if (isPushed) {
-      await _repository.updateUser(user);
+      try {
+        await _repository.updateUser(user);
+      } catch (error) {
+        errorStore.errorMessage = DioErrorUtil.handleError(error);
+      }
     }
+    loading = false;
     return true;
   }
 
   @action
   Future<bool> pushBlackListAnime(int animeId) async {
+    loading = true;
     bool isPushed = user.pushBlackListAnime(animeId);
     if (isPushed) {
-      await _repository.updateUser(user);
+      try {
+        await _repository.updateUser(user);
+      } catch (error) {
+        errorStore.errorMessage = DioErrorUtil.handleError(error);
+      }
+      loading = false;
     }
     return true;
   }
 
   @action
   Future<bool> removeBlackListAnime(int animeId) async {
+    loading = true;
+
     bool isPushed = user.removeBlackListAnime(animeId);
     if (isPushed) {
-      await _repository.updateUser(user);
+      try {
+        await _repository.updateUser(user);
+      } catch (e) {
+        errorStore.errorMessage = DioErrorUtil.handleError(e);
+      }
     }
+    loading = false;
     return true;
   }
 

@@ -43,6 +43,9 @@ abstract class _AnimeStore with Store {
   @computed
   bool get loading => fetchPostsFuture.status == FutureStatus.pending;
 
+  @observable
+  bool isLoading = false;
+
   // actions:-------------------------------------------------------------------
   @action
   Future getAnimes() async {
@@ -58,11 +61,15 @@ abstract class _AnimeStore with Store {
 
   @action
   Future<bool> likeAnime(int animeId) async {
+    isLoading = true;
+
     try {
       bool liked = await _repository.likeAnime(animeId);
+      isLoading = false;
       if (liked) return true;
       return false;
     } catch (error) {
+      isLoading = false;
       errorStore.errorMessage = DioErrorUtil.handleError(error);
       return false;
     }
@@ -70,6 +77,15 @@ abstract class _AnimeStore with Store {
 
   @action
   Future<RecomendationList> querrySImilarItems(String itemDataId) async {
-    return await _repository.getSimilarItems(itemDataId);
+    isLoading = true;
+    var res;
+    try {
+      res = await _repository.getSimilarItems(itemDataId);
+    } catch (error) {
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+    }
+    isLoading = false;
+
+    return res;
   }
 }

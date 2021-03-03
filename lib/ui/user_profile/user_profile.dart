@@ -72,25 +72,33 @@ class _UserProfileState extends State<UserProfile> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
-            bottom: TabBar(
-              tabs: [
-                Tab(icon: Icon(Icons.favorite)),
-                Tab(icon: Icon(Icons.watch_later)),
-                Tab(
-                    icon: Transform.rotate(
-                        angle: math.pi, child: Icon(Icons.recommend))),
-              ],
-            ),
-            title: Text('Profile lists')),
-        body: TabBarView(
-          children: [
-            _buildFavoriteContent(),
-            _buildWatchLaterContent(),
-            _buildBlackListContent(),
-          ],
-        ),
-      ),
+          appBar: AppBar(
+              bottom: TabBar(
+                tabs: [
+                  Tab(icon: Icon(Icons.favorite)),
+                  Tab(icon: Icon(Icons.watch_later)),
+                  Tab(
+                      icon: Transform.rotate(
+                          angle: math.pi, child: Icon(Icons.recommend))),
+                ],
+              ),
+              title: Text('Profile lists')),
+          body: Stack(
+            children: [
+              TabBarView(
+                children: [
+                  _buildFavoriteContent(),
+                  _buildWatchLaterContent(),
+                  _buildBlackListContent(),
+                ],
+              ),
+              Observer(
+                  builder: (context) =>
+                      (_userStore.loading || _userStore.isLoading)
+                          ? CustomProgressIndicatorWidget()
+                          : Container())
+            ],
+          )),
     );
   }
 

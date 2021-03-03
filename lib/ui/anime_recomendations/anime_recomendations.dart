@@ -213,9 +213,9 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
         orElse: () => null);
 
     if (animeItem == null) animeItem = Anime(dataId: 0);
-    final isLiked = _userStore.user.likedAnimes.contains(animeItem.dataId);
-    final isLater = _userStore.user.watchLaterAnimes.contains(animeItem.dataId);
-    final isBlack = _userStore.user.blackListAnimes.contains(animeItem.dataId);
+    final isLiked = _userStore.isLikedAnime(animeItem.dataId);
+    final isLater = _userStore.isLaterAnime(animeItem.dataId);
+    final isBlack = _userStore.isBlackListedAnime(animeItem.dataId);
 
     return AnimeGridTile(
         anime: animeItem, isLiked: isLiked, isLater: isLater, isBlack: isBlack);

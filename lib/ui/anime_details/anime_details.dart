@@ -92,7 +92,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
               flex: 62,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: Image.network(_anime.imgUrl, fit: BoxFit.fill),
+                child: Image.network(_anime.imgUrl ?? "", fit: BoxFit.fill),
               )),
           Expanded(flex: 38, child: _buildRightImageBlock()),
         ]));
@@ -103,7 +103,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
       Divider(),
       _buildRating(),
       Divider(),
-      buildGenres(_anime.genre, trim: false),
+      buildGenres(_anime.genre ?? [], trim: false),
       Divider(),
       _buildButtons(),
       Divider(),
@@ -153,7 +153,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
       children: [
         Padding(
             padding: EdgeInsets.all(2.0),
-            child: Text(_anime.name,
+            child: Text(_anime.name ?? "",
                 style: Theme.of(context).textTheme.headline5)),
         Padding(
             padding: EdgeInsets.all(2.0),
@@ -161,7 +161,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
                 style: Theme.of(context).textTheme.headline6)),
         Padding(
             padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-            child: Text(_anime.synopsis,
+            child: Text(_anime.synopsis ?? "",
                 style: Theme.of(context).textTheme.bodyText1)),
       ],
     ));

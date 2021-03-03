@@ -122,6 +122,7 @@ class _AnimeListState extends State<AnimeList> {
     var buttonsBlock = [];
     if (_isSearching == false)
       buttonsBlock = [
+        buildRefreshButton(),
         buildThemeButton(context, _themeStore),
         buildLogoutButton(context, _userStore)
       ];
@@ -130,6 +131,39 @@ class _AnimeListState extends State<AnimeList> {
       ...buttonsBlock,
       _buildSearchButton(),
     ];
+  }
+
+  Widget buildRefreshButton() {
+    return new IconButton(
+        icon: Icon(Icons.refresh),
+        onPressed: () {
+          _showMaterialDialog();
+        });
+  }
+
+  _showMaterialDialog() {
+    showDialog(
+        context: context,
+        builder: (_) => new AlertDialog(
+              title: new Text("Anime database refresh"),
+              content: new Text(
+                  "This action will fetch fresh anime database from server. Do you want to continue?"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Continue'),
+                  onPressed: () {
+                    _animeStore.refreshAnimes();
+                    Navigator.of(context).pop();
+                  },
+                ),
+                FlatButton(
+                  child: Text('Close'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ));
   }
 
   Widget _buildSearchButton() {

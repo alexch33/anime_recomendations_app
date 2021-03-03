@@ -60,6 +60,18 @@ abstract class _AnimeStore with Store {
   }
 
   @action
+  Future refreshAnimes() async {
+    final future = _repository.refreshAnimes();
+    fetchPostsFuture = ObservableFuture(future);
+
+    try {
+      this.animeList = await future;
+    } catch (error) {
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+    }
+  }
+
+  @action
   Future<bool> likeAnime(int animeId) async {
     isLoading = true;
 

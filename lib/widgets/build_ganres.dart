@@ -15,7 +15,7 @@ Widget buildGenres(List<String> ganres, { trim: true }) {
                     borderRadius: BorderRadius.all(Radius.circular(7))),
                 child: Padding(
                   padding: EdgeInsets.all(1),
-                  child: Text(anime),
+                  child: Text('  $anime  '),
                 ))))
         .toList()
   ]);

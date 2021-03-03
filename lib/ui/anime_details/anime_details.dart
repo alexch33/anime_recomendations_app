@@ -50,6 +50,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
       _animeStore = Provider.of<AnimeStore>(context);
       _userStore = Provider.of<UserStore>(context);
     }
+    _userStore.initUser();
   }
 
   @override
@@ -60,7 +61,16 @@ class _AnimeDetailsState extends State<AnimeDetails> {
         appBar: AppBar(
           title: Text("Info"),
         ),
-        body: _buildMainContent());
+        body: Stack(
+          children: [
+            _buildMainContent(),
+            Observer(
+                builder: (context) =>
+                    (_userStore.loading || _animeStore.isLoading)
+                        ? CustomProgressIndicatorWidget()
+                        : Container())
+          ],
+        ));
   }
 
   Widget _buildMainContent() {
@@ -91,7 +101,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
               flex: 62,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: Image.network(_anime.imgUrl, fit: BoxFit.fill),
+                child: Image.network(_anime.imgUrl ?? "", fit: BoxFit.fill),
               )),
           Expanded(flex: 38, child: _buildRightImageBlock()),
         ]));
@@ -102,7 +112,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
       Divider(),
       _buildRating(),
       Divider(),
-      buildGenres(_anime.genre),
+      buildGenres(_anime.genre ?? [], trim: false),
       Divider(),
       _buildButtons(),
       Divider(),
@@ -151,32 +161,33 @@ class _AnimeDetailsState extends State<AnimeDetails> {
         child: Column(
       children: [
         Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(_anime.name,
+            padding: EdgeInsets.all(2.0),
+            child: Text(_anime.name ?? "",
                 style: Theme.of(context).textTheme.headline5)),
         Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(2.0),
             child: Text(_anime.nameEng ?? "",
                 style: Theme.of(context).textTheme.headline6)),
         Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(_anime.synopsis,
+            padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+            child: Text(_anime.synopsis ?? "",
                 style: Theme.of(context).textTheme.bodyText1)),
       ],
     ));
   }
 
   Widget _buildButtons() {
-    final isLiked = _userStore.user.likedAnimes.contains(_anime.dataId);
-    final isLater = _userStore.user.watchLaterAnimes.contains(_anime.dataId);
-    final isBlack = _userStore.user.blackListAnimes.contains(_anime.dataId);
+    bool isLiked = _userStore.isLikedAnime(_anime.dataId);
+    bool isLater = _userStore.isLaterAnime(_anime.dataId);
+    bool isBlack = _userStore.isBlackListedAnime(_anime.dataId);
 
     return Padding(
         padding: EdgeInsets.all(8.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Row(
+            Wrap(
+              direction: Axis.horizontal,
               children: [
                 IconButton(
                     icon: Icon(
@@ -185,7 +196,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
                             : Icons.favorite_border_outlined,
                         color: Colors.red,
                         size: 32),
-                    onPressed: () => _animeStore.likeAnime(_anime.dataId)),
+                    onPressed: () => _handleLike()),
                 IconButton(
                     icon: Icon(
                         isLater
@@ -193,22 +204,34 @@ class _AnimeDetailsState extends State<AnimeDetails> {
                             : Icons.watch_later_outlined,
                         color: Colors.purple,
                         size: 32),
-                    onPressed: () {
-                      _userStore.pushWatchLaterAnime(_anime.dataId);
-                    }),
+                    onPressed: () => _handleLater()),
                 Transform.rotate(
                   angle: math.pi,
                   child: IconButton(
                       icon: Icon(Icons.recommend,
                           color: isBlack ? Colors.red : Colors.grey, size: 32),
-                      onPressed: () {
-                        _userStore.pushBlackListAnime(_anime.dataId);
-                      }),
+                      onPressed: () => _handleBlackListed()),
                 )
               ],
             ),
           ],
         ));
+  }
+
+  _handleLike() async {
+    bool isLiked = await _animeStore.likeAnime(_anime.dataId);
+    if (isLiked) await _userStore.initUser();
+    setState(() {});
+  }
+
+  _handleLater() async {
+    bool isPushed = await _userStore.pushWatchLaterAnime(_anime.dataId);
+    if (isPushed) setState(() {});
+  }
+
+  _handleBlackListed() async {
+    bool isPushed = await _userStore.pushBlackListAnime(_anime.dataId);
+    if (isPushed) setState(() {});
   }
 
   _launchURL(String url) async {

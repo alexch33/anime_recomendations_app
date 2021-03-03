@@ -43,6 +43,9 @@ abstract class _AnimeStore with Store {
   @computed
   bool get loading => fetchPostsFuture.status == FutureStatus.pending;
 
+  @observable
+  bool isLoading = false;
+
   // actions:-------------------------------------------------------------------
   @action
   Future getAnimes() async {
@@ -51,27 +54,50 @@ abstract class _AnimeStore with Store {
 
     try {
       this.animeList = await future;
-    } catch(error) {
+    } catch (error) {
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+    }
+  }
+
+  @action
+  Future refreshAnimes() async {
+    final future = _repository.refreshAnimes();
+    fetchPostsFuture = ObservableFuture(future);
+
+    try {
+      this.animeList = await future;
+    } catch (error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
     }
   }
 
   @action
   Future<bool> likeAnime(int animeId) async {
-    final future = _repository.likeAnime(animeId);
-    fetchLikeFuture = ObservableFuture(future);
+    isLoading = true;
 
-    future.then((isLiked) {
-      print("IsLiked ::  " + isLiked.toString());
-      if (isLiked) return true;
+    try {
+      bool liked = await _repository.likeAnime(animeId);
+      isLoading = false;
+      if (liked) return true;
       return false;
-    }).catchError((error) {
+    } catch (error) {
+      isLoading = false;
       errorStore.errorMessage = DioErrorUtil.handleError(error);
-    });
+      return false;
+    }
   }
 
   @action
   Future<RecomendationList> querrySImilarItems(String itemDataId) async {
-    return await _repository.getSimilarItems(itemDataId);
+    isLoading = true;
+    var res;
+    try {
+      res = await _repository.getSimilarItems(itemDataId);
+    } catch (error) {
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+    }
+    isLoading = false;
+
+    return res;
   }
 }

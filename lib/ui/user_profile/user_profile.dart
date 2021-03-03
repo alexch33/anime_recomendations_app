@@ -72,25 +72,33 @@ class _UserProfileState extends State<UserProfile> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
-            bottom: TabBar(
-              tabs: [
-                Tab(icon: Icon(Icons.favorite)),
-                Tab(icon: Icon(Icons.watch_later)),
-                Tab(
-                    icon: Transform.rotate(
-                        angle: math.pi, child: Icon(Icons.recommend))),
-              ],
-            ),
-            title: Text('Tabs Demo')),
-        body: TabBarView(
-          children: [
-            _buildFavoriteContent(),
-            _buildWatchLaterContent(),
-            _buildBlackListContent(),
-          ],
-        ),
-      ),
+          appBar: AppBar(
+              bottom: TabBar(
+                tabs: [
+                  Tab(icon: Icon(Icons.favorite)),
+                  Tab(icon: Icon(Icons.watch_later)),
+                  Tab(
+                      icon: Transform.rotate(
+                          angle: math.pi, child: Icon(Icons.recommend))),
+                ],
+              ),
+              title: Text('Profile lists')),
+          body: Stack(
+            children: [
+              TabBarView(
+                children: [
+                  _buildFavoriteContent(),
+                  _buildWatchLaterContent(),
+                  _buildBlackListContent(),
+                ],
+              ),
+              Observer(
+                  builder: (context) =>
+                      (_userStore.loading || _userStore.isLoading)
+                          ? CustomProgressIndicatorWidget()
+                          : Container())
+            ],
+          )),
     );
   }
 
@@ -197,6 +205,37 @@ class _UserProfileState extends State<UserProfile> {
     });
   }
 
+  _showMaterialDialog() {
+    showDialog(
+        context: context,
+        builder: (_) => new AlertDialog(
+              title: new Text("Favorites reset"),
+              content: new Text("Do you want to remove all favorites?"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Remove'),
+                  onPressed: () async {
+                    await deleteFavoritesAll();
+                    Navigator.of(context).pop();
+                  },
+                ),
+                FlatButton(
+                  child: Text('Close'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ));
+  }
+
+  deleteFavoritesAll() async {
+    await _userStore.deleteAllUserEvents();
+    setState(() {
+      likedAnimes = [];
+    });
+  }
+
   Widget _buildListItemLaterButtonsBlock(int pos) {
     return IconButton(
         icon: Icon(Icons.delete), onPressed: () => deleteLaterItem(pos));
@@ -219,6 +258,7 @@ class _UserProfileState extends State<UserProfile> {
 
   Widget _buildListItemLiked(int position) {
     return GestureDetector(
+      onLongPress: _showMaterialDialog,
       child: AnimeListTile(anime: likedAnimes[position], isLiked: true),
     );
   }

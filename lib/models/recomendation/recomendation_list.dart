@@ -3,6 +3,7 @@ import 'package:boilerplate/models/recomendation/recomendation.dart';
 
 class RecomendationList {
   final List<Recomendation> recomendations;
+  List<Recomendation> cachedRecomendations;
 
   RecomendationList({
     this.recomendations,

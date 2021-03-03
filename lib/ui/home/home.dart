@@ -58,7 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: _buildNavBar(),
-      appBar: _buildAppBar(),
       body: _buildBody(),
     );
   }
@@ -67,6 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return CurvedNavigationBar(
       key: _bottomNavigationKey,
       index: 1,
+      color: Theme.of(context).primaryColor,
       backgroundColor: Colors.pink,
       items: <Widget>[
         Icon(Icons.person, size: 30),
@@ -79,60 +79,6 @@ class _HomeScreenState extends State<HomeScreen> {
           _page = index;
         });
       },
-    );
-  }
-
-  // app bar methods:-----------------------------------------------------------
-  Widget _buildAppBar() {
-    return AppBar(
-      title: Text(AppLocalizations.of(context).translate('home_tv_posts')),
-      actions: _buildActions(context),
-    );
-  }
-
-  List<Widget> _buildActions(BuildContext context) {
-    return <Widget>[
-      _buildLanguageButton(),
-      _buildThemeButton(),
-      _buildLogoutButton(),
-    ];
-  }
-
-  Widget _buildThemeButton() {
-    return Observer(
-      builder: (context) {
-        return IconButton(
-          onPressed: () {
-            _themeStore.changeBrightnessToDark(!_themeStore.darkMode);
-          },
-          icon: Icon(
-            _themeStore.darkMode ? Icons.brightness_5 : Icons.brightness_3,
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildLogoutButton() {
-    return IconButton(
-      onPressed: () {
-        _userStore.logout().then((value) =>
-            Navigator.of(context).pushReplacementNamed(Routes.login));
-      },
-      icon: Icon(
-        Icons.power_settings_new,
-      ),
-    );
-  }
-
-  Widget _buildLanguageButton() {
-    return IconButton(
-      onPressed: () {
-        _buildLanguageDialog();
-      },
-      icon: Icon(
-        Icons.language,
-      ),
     );
   }
 

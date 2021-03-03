@@ -65,6 +65,24 @@ class Repository {
     }).catchError((error) => throw error);
   }
 
+  Future<AnimeList> refreshAnimes() async {
+    // check to see if posts are present in database, then fetch from database
+    // else make a network call to get all posts, store them into database for
+    // later use
+    int count = await _animeDataSource.count();
+    // if (count > 0) return await _animeDataSource.getAnimesFromDb();
+
+    return await _animeApi.getAnimes().then((animesList) {
+      if (count > 0) _animeDataSource.deleteAll();
+
+      animesList.animes.forEach((anime) {
+        _animeDataSource.insert(anime);
+      });
+
+      return animesList;
+    }).catchError((error) => throw error);
+  }
+
   Future<bool> likeAnime(int animeId) async {
     return await _animeApi.likeAnime(animeId).then((boolVal) async {
       if (boolVal) {

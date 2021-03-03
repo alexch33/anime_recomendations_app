@@ -32,7 +32,7 @@ class AnimeGridTile extends StatelessWidget {
                         ? Image.network(this.anime.imgUrl, fit: BoxFit.fill)
                         : Container(),
                   ),
-                  flex: 68),
+                  flex: 66),
               Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -69,18 +69,20 @@ class AnimeGridTile extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             softWrap: false,
                             style: Theme.of(context).textTheme.headline6),
-                        Text(this.anime.nameEng ?? "",
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: false,
-                            style: Theme.of(context).textTheme.bodyText1),
+                        this.anime.nameEng != null
+                            ? Text(this.anime.nameEng,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: false,
+                                style: Theme.of(context).textTheme.bodyText1)
+                            : Container(),
                       ]),
                       this.anime.genre != null
                           ? buildGenres(this.anime.genre)
                           : Container()
                     ],
                   ),
-                  flex: 32)
+                  flex: 34)
             ]));
   }
 }

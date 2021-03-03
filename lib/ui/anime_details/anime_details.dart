@@ -50,6 +50,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
       _animeStore = Provider.of<AnimeStore>(context);
       _userStore = Provider.of<UserStore>(context);
     }
+    _userStore.initUser();
   }
 
   @override
@@ -167,9 +168,9 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   }
 
   Widget _buildButtons() {
-    final isLiked = _userStore.user.likedAnimes.contains(_anime.dataId);
-    final isLater = _userStore.user.watchLaterAnimes.contains(_anime.dataId);
-    final isBlack = _userStore.user.blackListAnimes.contains(_anime.dataId);
+    bool isLiked = _userStore.isLikedAnime(_anime.dataId);
+    bool isLater = _userStore.isLaterAnime(_anime.dataId);
+    bool isBlack = _userStore.isBlackListedAnime(_anime.dataId);
 
     return Padding(
         padding: EdgeInsets.all(8.0),
@@ -186,7 +187,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
                             : Icons.favorite_border_outlined,
                         color: Colors.red,
                         size: 32),
-                    onPressed: () => _animeStore.likeAnime(_anime.dataId)),
+                    onPressed: _handleLike),
                 IconButton(
                     icon: Icon(
                         isLater
@@ -194,22 +195,34 @@ class _AnimeDetailsState extends State<AnimeDetails> {
                             : Icons.watch_later_outlined,
                         color: Colors.purple,
                         size: 32),
-                    onPressed: () {
-                      _userStore.pushWatchLaterAnime(_anime.dataId);
-                    }),
+                    onPressed: _handleLater),
                 Transform.rotate(
                   angle: math.pi,
                   child: IconButton(
                       icon: Icon(Icons.recommend,
                           color: isBlack ? Colors.red : Colors.grey, size: 32),
-                      onPressed: () {
-                        _userStore.pushBlackListAnime(_anime.dataId);
-                      }),
+                      onPressed: _handleBlackListed),
                 )
               ],
             ),
           ],
         ));
+  }
+
+  _handleLike() async {
+    bool isLiked = await _animeStore.likeAnime(_anime.dataId);
+    if (isLiked) await _userStore.initUser();
+    setState(() {});
+  }
+
+  _handleLater() async {
+    bool isPushed = await _userStore.pushWatchLaterAnime(_anime.dataId);
+    if (isPushed) setState(() {});
+  }
+
+  _handleBlackListed() async {
+    bool isPushed = await _userStore.pushBlackListAnime(_anime.dataId);
+    if (isPushed) setState(() {});
   }
 
   _launchURL(String url) async {

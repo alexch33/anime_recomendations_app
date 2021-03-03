@@ -65,6 +65,21 @@ abstract class _UserStore with Store {
   @computed
   bool get isLoading => loginFuture.status == FutureStatus.pending;
 
+  @action
+  bool isLikedAnime(int dataId) {
+    return user.likedAnimes.contains(dataId);
+  }
+
+  @action
+  bool isLaterAnime(int dataId) {
+    return user.watchLaterAnimes.contains(dataId);
+  }
+
+  @action
+  bool isBlackListedAnime(int dataId) {
+    return user.blackListAnimes.contains(dataId);
+  }
+
   // actions:-------------------------------------------------------------------
   @action
   Future login(String email, String password) async {
@@ -115,31 +130,39 @@ abstract class _UserStore with Store {
   }
 
   @action
-  Future pushWatchLaterAnime(int animeId) async {
+  Future<bool> pushWatchLaterAnime(int animeId) async {
     bool isPushed = user.pushWatchLaterAnime(animeId);
-    if (isPushed) await _repository.updateUser(user);
-    else print("alredy pushed");
+    if (isPushed) {
+      await _repository.updateUser(user);
+    }
+    return true;
   }
 
   @action
-  Future removeWatchLaterAnime(int animeId) async {
+  Future<bool> removeWatchLaterAnime(int animeId) async {
     bool isPushed = user.removeWatchLaterAnime(animeId);
-    if (isPushed) await _repository.updateUser(user);
-    else print("alredy removed");
+    if (isPushed) {
+      await _repository.updateUser(user);
+    }
+    return true;
   }
 
   @action
-  Future pushBlackListAnime(int animeId) async {
+  Future<bool> pushBlackListAnime(int animeId) async {
     bool isPushed = user.pushBlackListAnime(animeId);
-    if (isPushed) await _repository.updateUser(user);
-    else print("Already pused");
+    if (isPushed) {
+      await _repository.updateUser(user);
+    }
+    return true;
   }
 
   @action
-  Future removeBlackListAnime(int animeId) async {
+  Future<bool> removeBlackListAnime(int animeId) async {
     bool isPushed = user.removeBlackListAnime(animeId);
-    if (isPushed) await _repository.updateUser(user);
-    else print("Already removed");
+    if (isPushed) {
+      await _repository.updateUser(user);
+    }
+    return true;
   }
 
   // general methods:-----------------------------------------------------------

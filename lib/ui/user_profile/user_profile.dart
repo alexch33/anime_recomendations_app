@@ -219,6 +219,7 @@ class _UserProfileState extends State<UserProfile> {
 
   Widget _buildListItemLiked(int position) {
     return GestureDetector(
+      onLongPress: () => _userStore.deleteAllUserEvents(),
       child: AnimeListTile(anime: likedAnimes[position], isLiked: true),
     );
   }

@@ -51,23 +51,21 @@ abstract class _AnimeStore with Store {
 
     try {
       this.animeList = await future;
-    } catch(error) {
+    } catch (error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
     }
   }
 
   @action
   Future<bool> likeAnime(int animeId) async {
-    final future = _repository.likeAnime(animeId);
-    fetchLikeFuture = ObservableFuture(future);
-
-    future.then((isLiked) {
-      print("IsLiked ::  " + isLiked.toString());
-      if (isLiked) return true;
+    try {
+      bool liked = await _repository.likeAnime(animeId);
+      if (liked) return true;
       return false;
-    }).catchError((error) {
+    } catch (error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
-    });
+      return false;
+    }
   }
 
   @action

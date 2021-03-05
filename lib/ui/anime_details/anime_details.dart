@@ -50,7 +50,6 @@ class _AnimeDetailsState extends State<AnimeDetails> {
       _animeStore = Provider.of<AnimeStore>(context);
       _userStore = Provider.of<UserStore>(context);
     }
-    _userStore.initUser();
   }
 
   @override

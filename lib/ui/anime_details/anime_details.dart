@@ -17,6 +17,8 @@ import 'package:provider/provider.dart';
 import 'package:boilerplate/models/anime/anime.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:math' as math;
+import 'package:chewie/chewie.dart';
+import 'package:video_player/video_player.dart';
 
 class AnimeDetails extends StatefulWidget {
   @override
@@ -31,9 +33,31 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   UserStore _userStore;
   Anime _anime;
 
+  VideoPlayerController videoPlayerController;
+  ChewieController chewieController;
+
   @override
   void initState() {
     super.initState();
+
+    // initPlayer();
+  }
+
+  Future initPlayer() async {
+    final res = await _animeStore?.getAnimeLinks('horimiya', 1);
+
+    print("BBBB" + " " + res.first.src);
+
+    videoPlayerController = VideoPlayerController.network(res.first.src);
+
+    await videoPlayerController.initialize();
+
+    chewieController = ChewieController(
+      videoPlayerController: videoPlayerController,
+      autoPlay: true,
+      looping: true,
+    );
+    setState(() {});
   }
 
   @override
@@ -83,6 +107,15 @@ class _AnimeDetailsState extends State<AnimeDetails> {
                   children: [
                     _buildImageBlock(),
                     _buildTextInfo(),
+                    Container(
+                        color: Colors.grey,
+                        width: double.infinity,
+                        height: 400,
+                        child: chewieController != null
+                            ? Chewie(
+                                controller: chewieController,
+                              )
+                            : Container())
                   ]),
               constraints: BoxConstraints(
                 minHeight: viewportConstraints.maxHeight,
@@ -237,5 +270,12 @@ class _AnimeDetailsState extends State<AnimeDetails> {
     if (await canLaunch(url)) {
       await launch(url);
     }
+  }
+
+  @override
+  void dispose() {
+    videoPlayerController.dispose();
+    chewieController.dispose();
+    super.dispose();
   }
 }

@@ -110,4 +110,21 @@ class AnimeApi {
       throw e;
     }
   }
+
+  Future<String> searchAnime(String name) async {
+    final url = '${Endpoints.baseGoURL}/search.html?keyword=$name&page=${1}';
+
+    final resp = await _dioClient.get(url);
+    Document doc = parse(resp);
+
+    String id = doc
+        .querySelectorAll(".img")
+        .first
+        .children
+        .first
+        .attributes['href']
+        .substring(10);
+
+    return id;
+  }
 }

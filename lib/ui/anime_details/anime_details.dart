@@ -1,18 +1,13 @@
-import 'dart:convert';
-
+import 'package:boilerplate/models/anime/anime_video.dart';
 import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/stores/language/language_store.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
 import 'package:boilerplate/stores/theme/theme_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
-import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/widgets/build_ganres.dart';
-import 'package:boilerplate/widgets/empty_app_bar_widget.dart';
 import 'package:boilerplate/widgets/progress_indicator_widget.dart';
-import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:material_dialog/material_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:boilerplate/models/anime/anime.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -33,22 +28,50 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   UserStore _userStore;
   Anime _anime;
 
+  String _animeUrl;
+  List<AnimeVideo> _videos;
+  int _totalEpisodes = 0;
+  bool isLoading = true;
+  int episode = 1;
+  bool initedOnStart = false;
+
   VideoPlayerController videoPlayerController;
   ChewieController chewieController;
 
   @override
   void initState() {
     super.initState();
+  }
 
-    // initPlayer();
+  Future initVideoData(int episode) async {
+    setState(() {
+      isLoading = true;
+      if (initedOnStart = false) initedOnStart = true;
+    });
+    _anime = ModalRoute.of(context).settings.arguments;
+    String gogoId = await _animeStore?.getGogoAnimeId(_anime);
+    final res = await _animeStore?.getAnimeLinks(gogoId, episode);
+
+    setState(() {
+      _totalEpisodes = int.parse(res.first.totalEpisodes);
+      _animeUrl = res.first.src;
+      this.episode = episode;
+    });
+
+    await Future.delayed(Duration(milliseconds: 30));
+
+    setState(() {
+      isLoading = false;
+    });
+    return;
   }
 
   Future initPlayer() async {
-    final res = await _animeStore?.getAnimeLinks('horimiya', 1);
+    setState(() {
+      isLoading = true;
+    });
 
-    print("BBBB" + " " + res.first.src);
-
-    videoPlayerController = VideoPlayerController.network(res.first.src);
+    videoPlayerController = VideoPlayerController.network(_animeUrl);
 
     await videoPlayerController.initialize();
 
@@ -57,7 +80,9 @@ class _AnimeDetailsState extends State<AnimeDetails> {
       autoPlay: true,
       looping: true,
     );
-    setState(() {});
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -73,6 +98,10 @@ class _AnimeDetailsState extends State<AnimeDetails> {
       _themeStore = Provider.of<ThemeStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
       _userStore = Provider.of<UserStore>(context);
+    }
+
+    if (!this.initedOnStart) {
+      initVideoData(episode);
     }
   }
 
@@ -107,20 +136,61 @@ class _AnimeDetailsState extends State<AnimeDetails> {
                   children: [
                     _buildImageBlock(),
                     _buildTextInfo(),
-                    Container(
-                        color: Colors.grey,
-                        width: double.infinity,
-                        height: 400,
-                        child: chewieController != null
-                            ? Chewie(
-                                controller: chewieController,
-                              )
-                            : Container())
+                    _buildVideoBlock()
                   ]),
               constraints: BoxConstraints(
                 minHeight: viewportConstraints.maxHeight,
               )));
     }));
+  }
+
+  Widget _buildVideoBlock() {
+    return Container(
+        color: Colors.grey,
+        width: double.infinity,
+        height: 500,
+        child: Stack(
+          children: [
+            Center(
+                child:
+                    isLoading ? CustomProgressIndicatorWidget() : Container()),
+            Column(
+              children: [
+                Expanded(
+                    flex: 32,
+                    child: SingleChildScrollView(
+                        child: Wrap(
+                      children: [..._buildEpisodeButtons()],
+                    ))),
+                Expanded(
+                    flex: 69,
+                    child: chewieController != null
+                        ? Chewie(
+                            controller: chewieController,
+                          )
+                        : Container())
+              ],
+            )
+          ],
+        ));
+  }
+
+  List<Widget> _buildEpisodeButtons() {
+    var result = List.generate(_totalEpisodes, (index) => index + 1);
+
+    return result
+        .map((e) => Padding(
+              padding: EdgeInsets.all(4),
+              child: ElevatedButton(
+                child: Text("Episode $e",
+                    style: Theme.of(context).textTheme.button),
+                onPressed: () async {
+                  await initVideoData(e);
+                  initPlayer();
+                },
+              ),
+            ))
+        .toList();
   }
 
   Widget _buildImageBlock() {
@@ -274,8 +344,8 @@ class _AnimeDetailsState extends State<AnimeDetails> {
 
   @override
   void dispose() {
-    videoPlayerController.dispose();
-    chewieController.dispose();
+    videoPlayerController?.dispose();
+    chewieController?.dispose();
     super.dispose();
   }
 }

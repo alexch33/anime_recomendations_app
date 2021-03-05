@@ -1,4 +1,5 @@
 import 'package:boilerplate/data/repository.dart';
+import 'package:boilerplate/models/anime/anime.dart';
 import 'package:boilerplate/models/anime/anime_list.dart';
 import 'package:boilerplate/models/anime/anime_video.dart';
 import 'package:boilerplate/stores/error/error_store.dart';
@@ -105,5 +106,10 @@ abstract class _AnimeStore with Store {
   @action
   Future<List<AnimeVideo>> getAnimeLinks(String gogoId, int episodeNum) async {
     return await _repository.getAnimeLinks(gogoId, episodeNum);
+  }
+
+  @action
+  Future<String> getGogoAnimeId(Anime anime) async {
+    return await _repository.getGogoAnimeId(anime);
   }
 }

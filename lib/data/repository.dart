@@ -229,4 +229,10 @@ class Repository {
   Future<List<AnimeVideo>> getAnimeLinks(String gogoId, int episodeNum) async {
     return _animeApi.getLinksForAniById(gogoId, episodeNum);
   }
+
+  Future<String> getGogoAnimeId(Anime anime) async {
+    final result = await  _animeApi.searchAnime(anime.name);
+
+    return result;
+  }
 }

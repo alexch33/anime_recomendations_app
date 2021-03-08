@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:boilerplate/data/network/apis/animes/anime_scraper.dart';
+import 'package:boilerplate/models/anime/anime_video.dart';
 
 import 'package:boilerplate/data/network/constants/endpoints.dart';
 import 'package:boilerplate/data/network/dio_client.dart';
@@ -56,5 +58,17 @@ class AnimeApi {
     } catch (e) {
       throw e;
     }
+  }
+
+  Future<List<AnimeVideo>> getLinksForAniById(String id, int episode) async {
+    AnimeScrapper scrapper = GogoAnimeScrapper(_dioClient);
+
+    return await scrapper.getLinksForAniById(id, episode);
+  }
+
+  Future<String> searchAnime(String name) async {
+    AnimeScrapper scrapper = GogoAnimeScrapper(_dioClient);
+
+    return await scrapper.searchAnime(name);
   }
 }

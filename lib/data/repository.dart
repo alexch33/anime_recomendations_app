@@ -7,6 +7,7 @@ import 'package:boilerplate/data/network/apis/users/users_api.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/models/anime/anime.dart';
 import 'package:boilerplate/models/anime/anime_list.dart';
+import 'package:boilerplate/models/anime/anime_video.dart';
 import 'package:boilerplate/models/recomendation/recomendation_list.dart';
 import 'package:boilerplate/models/user/user.dart';
 import 'package:boilerplate/models/user/user_token.dart';
@@ -224,4 +225,14 @@ class Repository {
       _sharedPrefsHelper.changeLanguage(value);
 
   Future<String> get currentLanguage => _sharedPrefsHelper.currentLanguage;
+
+  Future<List<AnimeVideo>> getAnimeLinks(String gogoId, int episodeNum) async {
+    return _animeApi.getLinksForAniById(gogoId, episodeNum);
+  }
+
+  Future<String> getGogoAnimeId(Anime anime) async {
+    final result = await  _animeApi.searchAnime(anime.name);
+
+    return result;
+  }
 }

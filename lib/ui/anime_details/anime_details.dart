@@ -38,14 +38,10 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   VideoPlayerController videoPlayerController;
   ChewieController chewieController;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Future initVideoData(int episode) async {
     setState(() {
       isLoading = true;
+      this.episode = episode;
       if (initedOnStart = false) initedOnStart = true;
     });
     _anime = ModalRoute.of(context).settings.arguments;
@@ -55,7 +51,6 @@ class _AnimeDetailsState extends State<AnimeDetails> {
     setState(() {
       _totalEpisodes = int.parse(res.first.totalEpisodes);
       _animeUrl = res.first.src;
-      this.episode = episode;
     });
 
     await Future.delayed(Duration(milliseconds: 30));
@@ -146,7 +141,6 @@ class _AnimeDetailsState extends State<AnimeDetails> {
 
   Widget _buildVideoBlock() {
     return Container(
-        color: Colors.grey,
         width: double.infinity,
         height: 500,
         child: Stack(
@@ -157,18 +151,28 @@ class _AnimeDetailsState extends State<AnimeDetails> {
             Column(
               children: [
                 Expanded(
-                    flex: 32,
+                    flex: 31,
                     child: SingleChildScrollView(
-                        child: Wrap(
-                      children: [..._buildEpisodeButtons()],
+                        child: Container(
+                      child: Wrap(
+                        children: [..._buildEpisodeButtons()],
+                      ),
                     ))),
+                Divider(),
                 Expanded(
                     flex: 69,
                     child: chewieController != null
-                        ? Chewie(
-                            controller: chewieController,
-                          )
-                        : Container())
+                        ? isLoading
+                            ? Container()
+                            : Chewie(
+                                controller: chewieController,
+                              )
+                        : Center(
+                            child: isLoading
+                                ? Container()
+                                : IconButton(
+                                    icon: Icon(Icons.play_arrow),
+                                    onPressed: () => initPlayer())))
               ],
             )
           ],
@@ -182,8 +186,9 @@ class _AnimeDetailsState extends State<AnimeDetails> {
         .map((e) => Padding(
               padding: EdgeInsets.all(4),
               child: ElevatedButton(
-                child: Text("Episode $e",
-                    style: Theme.of(context).textTheme.button),
+                style: ElevatedButton.styleFrom(
+                    primary: e == episode ? Colors.red : Colors.black),
+                child: Text("$e"),
                 onPressed: () async {
                   await initVideoData(e);
                   initPlayer();

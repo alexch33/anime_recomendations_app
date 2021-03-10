@@ -1,15 +1,12 @@
-import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/stores/language/language_store.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
 import 'package:boilerplate/stores/theme/theme_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
 import 'package:boilerplate/ui/anime_recomendations/anime_recomendations.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
-import 'package:boilerplate/widgets/progress_indicator_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:material_dialog/material_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:boilerplate/ui/anime_list/anime_list.dart';
@@ -119,62 +116,5 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     return SizedBox.shrink();
-  }
-
-  _buildLanguageDialog() {
-    _showDialog<String>(
-      context: context,
-      child: MaterialDialog(
-        borderRadius: 5.0,
-        enableFullWidth: true,
-        title: Text(
-          AppLocalizations.of(context).translate('home_tv_choose_language'),
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16.0,
-          ),
-        ),
-        headerColor: Theme.of(context).primaryColor,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        closeButtonColor: Colors.white,
-        enableCloseButton: true,
-        enableBackButton: false,
-        onCloseButtonClicked: () {
-          Navigator.of(context).pop();
-        },
-        children: _languageStore.supportedLanguages
-            .map(
-              (object) => ListTile(
-                dense: true,
-                contentPadding: EdgeInsets.all(0.0),
-                title: Text(
-                  object.language,
-                  style: TextStyle(
-                    color: _languageStore.locale == object.locale
-                        ? Theme.of(context).primaryColor
-                        : _themeStore.darkMode
-                            ? Colors.white
-                            : Colors.black,
-                  ),
-                ),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  // change user language based on selected locale
-                  _languageStore.changeLanguage(object.locale);
-                },
-              ),
-            )
-            .toList(),
-      ),
-    );
-  }
-
-  _showDialog<T>({BuildContext context, Widget child}) {
-    showDialog<T>(
-      context: context,
-      builder: (BuildContext context) => child,
-    ).then<void>((T value) {
-      // The value passed to Navigator.pop() or null.
-    });
   }
 }

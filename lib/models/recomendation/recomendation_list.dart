@@ -1,4 +1,3 @@
-import 'package:boilerplate/models/anime/anime.dart';
 import 'package:boilerplate/models/recomendation/recomendation.dart';
 
 class RecomendationList {

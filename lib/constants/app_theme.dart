@@ -1,4 +1,3 @@
-import 'package:boilerplate/constants/colors.dart';
 import 'package:boilerplate/constants/font_family.dart';
 /**
  * Creating custom color palettes is part of creating a custom app. The idea is to create

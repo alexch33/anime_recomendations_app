@@ -1,5 +1,4 @@
 import 'package:boilerplate/models/anime/anime.dart';
-import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/stores/language/language_store.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
 import 'package:boilerplate/stores/theme/theme_store.dart';
@@ -7,10 +6,8 @@ import 'package:boilerplate/stores/user/user_store.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/widgets/anime_list_tile.dart';
 import 'package:boilerplate/widgets/progress_indicator_widget.dart';
-import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:material_dialog/material_dialog.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 

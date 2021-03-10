@@ -1,4 +1,3 @@
-import 'package:boilerplate/models/anime/anime_video.dart';
 import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/stores/language/language_store.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
@@ -29,7 +28,6 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   Anime _anime;
 
   String _animeUrl;
-  List<AnimeVideo> _videos;
   int _totalEpisodes = 0;
   bool isLoading = true;
   int episode = 1;

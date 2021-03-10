@@ -132,6 +132,7 @@ abstract class _UserStore with Store {
     } catch (e) {
       loading = false;
       errorStore.errorMessage = DioErrorUtil.handleError(e);
+      return null;
     }
   }
 

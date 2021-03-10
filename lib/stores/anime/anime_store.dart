@@ -105,11 +105,21 @@ abstract class _AnimeStore with Store {
 
   @action
   Future<List<AnimeVideo>> getAnimeLinks(String gogoId, int episodeNum) async {
-    return await _repository.getAnimeLinks(gogoId, episodeNum);
+    try {
+      return await _repository.getAnimeLinks(gogoId, episodeNum);
+    } catch (error) {
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+      return null;
+    }
   }
 
   @action
   Future<String> getGogoAnimeId(Anime anime) async {
-    return await _repository.getGogoAnimeId(anime);
+    try {
+      return await _repository.getGogoAnimeId(anime);
+    } catch (error) {
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+      return null;
+    }
   }
 }

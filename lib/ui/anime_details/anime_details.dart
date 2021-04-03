@@ -43,7 +43,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
       if (initedOnStart = false) initedOnStart = true;
     });
     _anime = ModalRoute.of(context).settings.arguments;
-    String gogoId = await _animeStore?.getGogoAnimeId(_anime);
+    String gogoId = await _animeStore?.getAnimeId(_anime);
     final res = await _animeStore?.getAnimeLinks(gogoId, episode);
 
     setState(() {

@@ -99,15 +99,12 @@ class AnimeVostScrapper extends AnimeScrapper {
 
     final resp = await _dioClient.post(url, data: payload);
     Document doc = parse(resp);
-    print("AAAAAAAAAAAAAAAA");
-    print(doc);
-    print("AAAAAAAAAAAAAAAA");
 
     String id = doc
         .querySelectorAll("div.shortstoryContent > a")
         .last
         .attributes['href'];
-
+    print("ID: $id");
     return id;
   }
 }

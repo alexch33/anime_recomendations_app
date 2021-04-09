@@ -64,6 +64,9 @@ class _AnimeDetailsState extends State<AnimeDetails> {
       isLoading = true;
     });
 
+    videoPlayerController?.dispose();
+    chewieController?.dispose();
+    
     videoPlayerController = VideoPlayerController.network(_animeUrl);
 
     await videoPlayerController.initialize();
@@ -350,7 +353,8 @@ class _AnimeDetailsState extends State<AnimeDetails> {
 
   _handleRadioButton(int value) {
     _animeStore.scrapperType = ParserType.values[value];
-    initVideoData(episode);
+    chewieController.pause();
+    initVideoData(episode).then((value) => initPlayer());
   }
 
   _handleLike() async {

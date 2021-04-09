@@ -34,7 +34,7 @@ flutter packages pub run build_runner watch
 Start api
 
 ```
-https://github.com/i3po/anime_recomeder_api
+https://github.com/i3po/anime_recomender_api
 ```
 
 ## Hide Generated Files

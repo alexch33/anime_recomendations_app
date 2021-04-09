@@ -53,7 +53,7 @@ abstract class _AnimeStore with Store {
   bool isLoading = false;
 
   @observable
-  ParserType scrapperType = ParserType.AniVost;
+  ParserType scrapperType = ParserType.Gogo;
 
   // actions:-------------------------------------------------------------------
   @action

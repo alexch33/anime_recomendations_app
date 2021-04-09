@@ -149,7 +149,11 @@ class _AnimeDetailsState extends State<AnimeDetails> {
             Column(
               children: [
                 Expanded(
-                    flex: 31,
+                  flex: 10,
+                  child: _buildRadioButtons(),
+                ),
+                Expanded(
+                    flex: 21,
                     child: SingleChildScrollView(
                         child: Container(
                       child: Wrap(
@@ -321,6 +325,33 @@ class _AnimeDetailsState extends State<AnimeDetails> {
             ),
           ],
         ));
+  }
+
+  _buildRadioButtons() {
+    final content = ParserType.values
+        .map((type) => Row(
+              children: [
+                Radio(
+                  value: type.index,
+                  onChanged: _handleRadioButton,
+                  groupValue: _animeStore.scrapperType.index,
+                ),
+                Text(type.toString().split(".").last)
+              ],
+            ))
+        .toList();
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: content,
+    );
+  }
+
+  _handleRadioButton(int value) {
+    _animeStore.scrapperType = ParserType.values[value];
+    setState(() {
+      initVideoData(episode);
+    });
   }
 
   _handleLike() async {

@@ -6,7 +6,7 @@ flutter version 1.22.6
 Download or clone this repo by using the link below:
 
 ```
-https://github.com/zubairehman/flutter-boilerplate-project.git
+https://github.com/i3po/anime_recomeder_app
 ```
 
 **Step 2:**
@@ -32,6 +32,10 @@ flutter packages pub run build_runner watch
 ```
 **Step 4:**
 Start api
+
+```
+https://github.com/i3po/anime_recomeder_api
+```
 
 ## Hide Generated Files
 

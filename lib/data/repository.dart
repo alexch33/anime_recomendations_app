@@ -227,8 +227,9 @@ class Repository {
 
   Future<String> get currentLanguage => _sharedPrefsHelper.currentLanguage;
 
-  Future<List<AnimeVideo>> getProviderAnimeLinks(String gogoId, int episodeNum, ParserType selectedParser) async {
-    return _animeApi.getLinksForAniById(gogoId, episodeNum, selectedParser);
+  Future<List<AnimeVideo>> getProviderAnimeLinks(
+      String animeId, int episodeNum, ParserType selectedParser) async {
+    return _animeApi.getLinksForAniById(animeId, episodeNum, selectedParser);
   }
 
   Future<String> getProviderAnimeId(

@@ -34,5 +34,5 @@ class Endpoints {
 
   static const baseGoURL = "https://gogoanime.ai/";
 
-  static const baseVostURL = "https://animevost.org/";
+  static const baseVostURL = "https://animevost.am/";
 }

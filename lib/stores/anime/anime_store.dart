@@ -53,7 +53,7 @@ abstract class _AnimeStore with Store {
   bool isLoading = false;
 
   @observable
-  ParserType scrapperType = ParserType.Gogo;
+  ParserType scrapperType = ParserType.AniVost;
 
   // actions:-------------------------------------------------------------------
   @action
@@ -111,19 +111,9 @@ abstract class _AnimeStore with Store {
   }
 
   @action
-  Future<List<AnimeVideo>> getAnimeLinks(String gogoId, int episodeNum) async {
+  Future<List<AnimeVideo>> getAnimeLinks(String animeId, int episodeNum) async {
     try {
-      return await _repository.getProviderAnimeLinks(gogoId, episodeNum, scrapperType);
-    } catch (error) {
-      errorStore.errorMessage = DioErrorUtil.handleError(error);
-      return null;
-    }
-  }
-
-  @action
-  Future<String> getScrapperAnimeId(Anime anime) async {
-    try {
-      return await _repository.getProviderAnimeId(anime, scrapperType);
+      return await _repository.getProviderAnimeLinks(animeId, episodeNum, scrapperType);
     } catch (error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
       return null;

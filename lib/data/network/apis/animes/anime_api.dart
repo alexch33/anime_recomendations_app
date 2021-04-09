@@ -5,19 +5,16 @@ import 'package:boilerplate/models/anime/anime_video.dart';
 
 import 'package:boilerplate/data/network/constants/endpoints.dart';
 import 'package:boilerplate/data/network/dio_client.dart';
-import 'package:boilerplate/data/network/rest_client.dart';
 import 'package:boilerplate/models/anime/anime_list.dart';
 import 'package:boilerplate/models/recomendation/recomendation_list.dart';
+import 'package:boilerplate/stores/anime/anime_store.dart';
 
 class AnimeApi {
   // dio instance
   final DioClient _dioClient;
 
-  // rest-client instance
-  final RestClient _restClient;
-
   // injecting dio instance
-  AnimeApi(this._dioClient, this._restClient);
+  AnimeApi(this._dioClient);
 
   /// Returns list of post in response
   Future<AnimeList> getAnimes() async {
@@ -60,14 +57,15 @@ class AnimeApi {
     }
   }
 
-  Future<List<AnimeVideo>> getLinksForAniById(String id, int episode) async {
-    AnimeScrapper scrapper = GogoAnimeScrapper(_dioClient);
+  Future<List<AnimeVideo>> getLinksForAniById(
+      String id, int episode, ParserType scrapperType) async {
+    AnimeScrapper scrapper = AnimeScrapper.fromType(_dioClient, scrapperType);
 
     return await scrapper.getLinksForAniById(id, episode);
   }
 
-  Future<String> searchAnime(String name) async {
-    AnimeScrapper scrapper = GogoAnimeScrapper(_dioClient);
+  Future<String> searchAnime(String name, ParserType scrapperType) async {
+    AnimeScrapper scrapper = AnimeScrapper.fromType(_dioClient, scrapperType);
 
     return await scrapper.searchAnime(name);
   }

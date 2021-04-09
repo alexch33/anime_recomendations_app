@@ -11,6 +11,7 @@ import 'package:boilerplate/models/anime/anime_video.dart';
 import 'package:boilerplate/models/recomendation/recomendation_list.dart';
 import 'package:boilerplate/models/user/user.dart';
 import 'package:boilerplate/models/user/user_token.dart';
+import 'package:boilerplate/stores/anime/anime_store.dart';
 import 'package:sembast/sembast.dart';
 
 import 'local/constants/db_constants.dart';
@@ -226,13 +227,13 @@ class Repository {
 
   Future<String> get currentLanguage => _sharedPrefsHelper.currentLanguage;
 
-  Future<List<AnimeVideo>> getAnimeLinks(String gogoId, int episodeNum) async {
-    return _animeApi.getLinksForAniById(gogoId, episodeNum);
+  Future<List<AnimeVideo>> getProviderAnimeLinks(
+      String animeId, int episodeNum, ParserType selectedParser) async {
+    return _animeApi.getLinksForAniById(animeId, episodeNum, selectedParser);
   }
 
-  Future<String> getGogoAnimeId(Anime anime) async {
-    final result = await  _animeApi.searchAnime(anime.name);
-
-    return result;
+  Future<String> getProviderAnimeId(
+      Anime anime, ParserType selectedParser) async {
+    return _animeApi.searchAnime(anime.name, selectedParser);
   }
 }

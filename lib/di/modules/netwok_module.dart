@@ -116,7 +116,7 @@ class NetworkModule extends PreferenceModule {
   @provide
   @singleton
   AnimeApi providePostApi(DioClient dioClient, RestClient restClient) =>
-      AnimeApi(dioClient, restClient);
+      AnimeApi(dioClient);
 
   @provide
   @singleton

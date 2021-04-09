@@ -2,7 +2,7 @@ class Endpoints {
   Endpoints._();
 
   // base url
-  static const String baseUrl = "http://192.168.43.174:3000/v1";
+  static const String baseUrl = "http://192.168.43.116:3000/v1";
 
   // receiveTimeout
   static const int receiveTimeout = 20000;
@@ -33,4 +33,6 @@ class Endpoints {
       baseUrl + "/users/updateSelf";
 
   static const baseGoURL = "https://gogoanime.ai/";
+
+  static const baseVostURL = "https://animevost.am/";
 }

@@ -9,6 +9,10 @@ import 'package:boilerplate/models/recomendation/recomendation_list.dart';
 
 part 'anime_store.g.dart';
 
+enum ParserType {  
+   Gogo,
+   AniVost
+}
 class AnimeStore = _AnimeStore with _$AnimeStore;
 
 abstract class _AnimeStore with Store {
@@ -47,6 +51,9 @@ abstract class _AnimeStore with Store {
 
   @observable
   bool isLoading = false;
+
+  @observable
+  ParserType scrapperType = ParserType.Gogo;
 
   // actions:-------------------------------------------------------------------
   @action
@@ -104,12 +111,22 @@ abstract class _AnimeStore with Store {
   }
 
   @action
-  Future<List<AnimeVideo>> getAnimeLinks(String gogoId, int episodeNum) async {
-    return await _repository.getAnimeLinks(gogoId, episodeNum);
+  Future<List<AnimeVideo>> getAnimeLinks(String animeId, int episodeNum) async {
+    try {
+      return await _repository.getProviderAnimeLinks(animeId, episodeNum, scrapperType);
+    } catch (error) {
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+      return null;
+    }
   }
 
   @action
-  Future<String> getGogoAnimeId(Anime anime) async {
-    return await _repository.getGogoAnimeId(anime);
+  Future<String> getAnimeId(Anime anime) async {
+    try {
+      return await _repository.getProviderAnimeId(anime, scrapperType);
+    } catch (error) {
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+      return null;
+    }
   }
 }

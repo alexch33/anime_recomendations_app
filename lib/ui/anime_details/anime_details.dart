@@ -1,4 +1,3 @@
-import 'package:boilerplate/models/anime/anime_video.dart';
 import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/stores/language/language_store.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
@@ -29,7 +28,6 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   Anime _anime;
 
   String _animeUrl;
-  List<AnimeVideo> _videos;
   int _totalEpisodes = 0;
   bool isLoading = true;
   int episode = 1;
@@ -45,8 +43,8 @@ class _AnimeDetailsState extends State<AnimeDetails> {
       if (initedOnStart = false) initedOnStart = true;
     });
     _anime = ModalRoute.of(context).settings.arguments;
-    String gogoId = await _animeStore?.getGogoAnimeId(_anime);
-    final res = await _animeStore?.getAnimeLinks(gogoId, episode);
+    String id = await _animeStore?.getAnimeId(_anime);
+    final res = await _animeStore?.getAnimeLinks(id, episode);
 
     setState(() {
       _totalEpisodes = int.parse(res.first.totalEpisodes);
@@ -66,6 +64,9 @@ class _AnimeDetailsState extends State<AnimeDetails> {
       isLoading = true;
     });
 
+    videoPlayerController?.dispose();
+    chewieController?.dispose();
+    
     videoPlayerController = VideoPlayerController.network(_animeUrl);
 
     await videoPlayerController.initialize();
@@ -151,7 +152,11 @@ class _AnimeDetailsState extends State<AnimeDetails> {
             Column(
               children: [
                 Expanded(
-                    flex: 31,
+                  flex: 10,
+                  child: _buildRadioButtons(),
+                ),
+                Expanded(
+                    flex: 21,
                     child: SingleChildScrollView(
                         child: Container(
                       child: Wrap(
@@ -323,6 +328,33 @@ class _AnimeDetailsState extends State<AnimeDetails> {
             ),
           ],
         ));
+  }
+
+  _buildRadioButtons() {
+    final content = ParserType.values
+        .map((type) => Observer(
+            builder: (contet) => Row(
+                  children: [
+                    Radio(
+                      value: type.index,
+                      onChanged: _handleRadioButton,
+                      groupValue: _animeStore.scrapperType.index,
+                    ),
+                    Text(type.toString().split(".").last)
+                  ],
+                )))
+        .toList();
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: content,
+    );
+  }
+
+  _handleRadioButton(int value) {
+    _animeStore.scrapperType = ParserType.values[value];
+    chewieController.pause();
+    initVideoData(episode).then((value) => initPlayer());
   }
 
   _handleLike() async {

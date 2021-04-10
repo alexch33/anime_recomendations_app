@@ -22,6 +22,16 @@ class UsersApi {
     return [user, token];
   }
 
+  Future<List> signUp(String email, String password) async {
+    final payload = {"email": email, "password": password, "name": "user"};
+    final res = await _dioClient.post(Endpoints.signUp, data: payload);
+
+    User user = User.fromMap(res["user"]);
+    UserToken token = UserToken.fromServerMap(res["tokens"]);
+
+    return [user, token];
+  }
+
   Future logout(String refreshToken) async {
     if (refreshToken != null)
       await _dioClient

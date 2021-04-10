@@ -113,6 +113,21 @@ abstract class _FormStore with Store {
   @action
   Future register() async {
     loading = true;
+
+    try {
+      await userStore.signUp(userEmail, password);
+    } catch(e){
+      errorStore.errorMessage = e.toString().contains("Http status error [400]")
+          ? "emal musst be valid or password must contain password must contain at least 1 letter and 1 number"
+          : "Something went wrong, please check your internet connection and try again";
+    }
+    if (userStore.success) {
+      loading = false;
+      success = true;
+    } else {
+      loading = false;
+      success = false;
+    }
   }
 
   @action

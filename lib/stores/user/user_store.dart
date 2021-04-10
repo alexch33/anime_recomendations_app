@@ -106,6 +106,27 @@ abstract class _UserStore with Store {
   }
 
   @action
+  Future signUp(String email, String password) async {
+    final future = _repository.signUp(email, password);
+    loginFuture = ObservableFuture(future);
+    await future.then((value) async {
+      if (value) {
+        this.user = await _repository.getUser();
+        this.isLoggedIn = true;
+        this.success = true;
+      } else {
+        this.isLoggedIn = false;
+        this.success = false;
+      }
+    }).catchError((e) {
+      print(e);
+      this.isLoggedIn = false;
+      this.success = false;
+      throw e;
+    });
+  }
+
+  @action
   Future initUser() async {
     loading = true;
     try {

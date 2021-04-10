@@ -2,7 +2,7 @@ class Endpoints {
   Endpoints._();
 
   // base url
-  static const String baseUrl = "http://192.168.43.116:3000/v1";
+  static const String baseUrl = "http://192.168.43.160:3000/v1";
 
   // receiveTimeout
   static const int receiveTimeout = 20000;
@@ -14,6 +14,8 @@ class Endpoints {
   static const String getAnimes = baseUrl + "/animes";
 
   static const String login = baseUrl + "/auth/login";
+
+  static const String signUp = baseUrl + "/auth/register";
 
   static const String logout = baseUrl + "/auth/logout";
 
@@ -29,8 +31,7 @@ class Endpoints {
   static const String deleteAllUsersAnimeEvents =
       baseUrl + "/ur/deleteAllUsersAnimeEvents";
 
-  static const String userUpdateSelf =
-      baseUrl + "/users/updateSelf";
+  static const String userUpdateSelf = baseUrl + "/users/updateSelf";
 
   static const baseGoURL = "https://gogoanime.ai/";
 

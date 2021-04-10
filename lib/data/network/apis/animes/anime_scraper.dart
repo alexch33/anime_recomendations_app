@@ -116,8 +116,7 @@ class AnimeVostScrapper extends AnimeScrapper {
 
       return nl;
     } catch (e) {
-      // throw e;
-      print(e); 
+      throw e;
     }
   }
 

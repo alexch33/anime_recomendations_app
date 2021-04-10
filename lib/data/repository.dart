@@ -150,6 +150,26 @@ class Repository {
     return success;
   }
 
+  // Register
+  Future<bool> signUp(String email, String password) async {
+    List data = await _usersApi.signUp(email, password);
+
+    User user = data[0];
+    UserToken token = data[1];
+
+    bool success = false;
+    if (user != null && token != null) {
+      await _userDataSource.insertUser(user);
+      _sharedPrefsHelper.saveAuthToken(token.accessToken);
+      _sharedPrefsHelper.saveRefreshToken(token.refreshToken);
+      success = true;
+    }
+
+    await this.saveIsLoggedIn(success);
+
+    return success;
+  }
+
   Future logout() async {
     saveIsLoggedIn(false);
     _usersApi

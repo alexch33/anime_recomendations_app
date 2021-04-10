@@ -48,7 +48,9 @@ abstract class _FormStore with Store {
 
   @computed
   bool get canLogin =>
-      !formErrorStore.hasErrorsInLogin && userEmail.isNotEmpty && password.isNotEmpty;
+      !formErrorStore.hasErrorsInLogin &&
+      userEmail.isNotEmpty &&
+      password.isNotEmpty;
 
   @computed
   bool get canRegister =>
@@ -92,8 +94,10 @@ abstract class _FormStore with Store {
   void validatePassword(String value) {
     if (value.isEmpty) {
       formErrorStore.password = "Password can't be empty";
-    } else if (value.length < 6) {
-      formErrorStore.password = "Password must be at-least 6 characters long";
+    } else if (value.length < 8) {
+      formErrorStore.password = "Password must be at-least 8 characters long";
+    } else if (value.contains(new RegExp(r'[0-9]+')) == false) {
+      formErrorStore.password = "Password must contain at-least 1 number";
     } else {
       formErrorStore.password = null;
     }
@@ -113,6 +117,21 @@ abstract class _FormStore with Store {
   @action
   Future register() async {
     loading = true;
+
+    try {
+      await userStore.signUp(userEmail, password);
+    } catch (e) {
+      errorStore.errorMessage = e.toString().contains("Http status error [400]")
+          ? "emal musst be valid or password must contain password must contain at least 1 letter and 1 number"
+          : "Something went wrong, please check your internet connection and try again";
+    }
+    if (userStore.success) {
+      loading = false;
+      success = true;
+    } else {
+      loading = false;
+      success = false;
+    }
   }
 
   @action
@@ -121,7 +140,7 @@ abstract class _FormStore with Store {
 
     try {
       await userStore.login(userEmail, password);
-    } catch(e){
+    } catch (e) {
       errorStore.errorMessage = e.toString().contains("ERROR_USER_NOT_FOUND")
           ? "Username and password doesn't match"
           : "Something went wrong, please check your internet connection and try again";

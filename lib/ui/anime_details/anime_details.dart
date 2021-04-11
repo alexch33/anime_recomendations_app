@@ -36,37 +36,35 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   VideoPlayerController videoPlayerController;
   ChewieController chewieController;
 
-  Future initVideoData(int episode) async {
+  Future<void> initVideoData(int episode) async {
     setState(() {
       isLoading = true;
       this.episode = episode;
-      if (initedOnStart = false) initedOnStart = true;
+      if (initedOnStart == false) initedOnStart = true;
     });
     _anime = ModalRoute.of(context).settings.arguments;
     String id = await _animeStore?.getAnimeId(_anime);
     final res = await _animeStore?.getAnimeLinks(id, episode);
 
+    if (initedOnStart == false) return;
+
     setState(() {
       _totalEpisodes = int.parse(res.first.totalEpisodes);
       _animeUrl = res.first.src;
-    });
-
-    await Future.delayed(Duration(milliseconds: 30));
-
-    setState(() {
       isLoading = false;
     });
-    return;
   }
 
   Future initPlayer() async {
+    if (initedOnStart == false) return;
+
     setState(() {
       isLoading = true;
     });
 
     videoPlayerController?.dispose();
     chewieController?.dispose();
-    
+
     videoPlayerController = VideoPlayerController.network(_animeUrl);
 
     await videoPlayerController.initialize();
@@ -353,7 +351,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
 
   _handleRadioButton(int value) {
     _animeStore.scrapperType = ParserType.values[value];
-    chewieController.pause();
+    chewieController?.pause();
     initVideoData(episode).then((value) => initPlayer());
   }
 
@@ -381,6 +379,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
 
   @override
   void dispose() {
+    initedOnStart = false;
     videoPlayerController?.dispose();
     chewieController?.dispose();
     super.dispose();

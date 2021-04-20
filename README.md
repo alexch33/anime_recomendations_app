@@ -1,6 +1,6 @@
 Work in progress...
 
-flutter version 1.22.6
+flutter version 2.0.5
 **Step 1:**
 
 Download or clone this repo by using the link below:
@@ -18,8 +18,6 @@ flutter pub get
 ```
 
 **Step 3:**
-
-This project uses `inject` library that works with code generation, execute the following command to generate files:
 
 ```
 flutter packages pub run build_runner build --delete-conflicting-outputs

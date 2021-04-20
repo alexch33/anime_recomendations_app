@@ -1,8 +1,0 @@
-{
-  "asset": "asset:boilerplate/lib/stores/theme/theme_store.dart",
-  "summary": {
-    "injector": [],
-    "module": [],
-    "injectable": []
-  }
-}

@@ -7,9 +7,9 @@ import '../routes.dart';
 class AnimeListTile extends StatelessWidget {
   final Anime anime;
   final bool isLiked;
-  final Widget buttons;
+  final Widget? buttons;
 
-  const AnimeListTile({Key key, this.anime, this.isLiked, this.buttons})
+  const AnimeListTile({Key? key, required this.anime, this.isLiked = false, this.buttons})
       : super(key: key);
 
   @override
@@ -70,7 +70,7 @@ class AnimeListTile extends StatelessWidget {
                                 ],
                               ),
                               buildGenres(anime.genre),
-                              this.buttons != null ? this.buttons : Container(),
+                              this.buttons ?? Container(),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,

@@ -3,28 +3,28 @@ class Anime {
   int dataId;
   String name;
   List<String> genre;
-  String type;
-  String episodes;
-  double rating;
-  int members;
+  String? type;
+  String? episodes;
+  double? rating;
+  int? members;
   String imgUrl;
   String url;
   String synopsis;
   String nameEng;
 
   Anime({
-    this.id,
-    this.dataId,
-    this.name,
-    this.genre,
+    this.id = "-1",
+    this.dataId = -1,
+    this.name = "no name",
+    this.genre = const [],
     this.type,
     this.episodes,
     this.rating,
     this.members,
-    this.imgUrl,
-    this.url,
-    this.synopsis,
-    this.nameEng
+    this.imgUrl = "",
+    this.url = "",
+    this.synopsis = "",
+    this.nameEng = ""
   });
 
   factory Anime.fromMap(Map<String, dynamic> json) => Anime(

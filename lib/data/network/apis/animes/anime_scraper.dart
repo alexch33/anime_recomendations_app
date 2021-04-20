@@ -15,25 +15,25 @@ class GogoAnimeScrapper extends AnimeScrapper {
       final uri = '${Endpoints.baseGoURL}$id-episode-$episode';
 
       final resp = await _dioClient.get(uri);
-      Document doc = parse(resp);
+      Document? doc = parse(resp);
 
       bool notFound =
-          doc.querySelector('.entry-title')?.text?.contains('404') ?? false;
+          doc.querySelector('.entry-title')?.text.contains('404') ?? false;
 
       if (notFound == true) return [];
 
       final totalepisodes =
-          doc.querySelector('#episode_page > li > a').text.split("-").last;
+          doc.querySelector('#episode_page > li > a')!.text.split("-").last;
       final link = doc
-          .querySelector("li.anime > a[data-video]")
+          .querySelector("li.anime > a[data-video]")!
           .attributes['data-video'];
 
       doc = null;
 
-      final urr = "http:${link.replaceAll("streaming.php", "download")}";
+      final urr = "http:${link!.replaceAll("streaming.php", "download")}";
       final resp2 = await _dioClient.get(urr);
 
-      Document newPage = parse(resp2);
+      Document? newPage = parse(resp2);
 
       var nl = <AnimeVideo>[];
 
@@ -48,7 +48,7 @@ class GogoAnimeScrapper extends AnimeScrapper {
 
           nl.add(AnimeVideo(
               totalEpisodes: totalepisodes,
-              src: element.attributes["href"],
+              src: element.attributes["href"] ?? "",
               size: li == "HDP" ? "High Speed" : li));
         }
       });
@@ -71,7 +71,7 @@ class GogoAnimeScrapper extends AnimeScrapper {
         .first
         .children
         .first
-        .attributes['href']
+        .attributes['href']!
         .substring(10);
 
     return id;
@@ -86,7 +86,7 @@ class AnimeVostScrapper extends AnimeScrapper {
     try {
       var resp = await _dioClient.get(id);
       Document doc = parse(resp);
-      
+
       var script = doc.querySelectorAll("script").firstWhere(
           (element) =>
               element.innerHtml.contains("\$.each(data, function(val, key)"),
@@ -95,7 +95,7 @@ class AnimeVostScrapper extends AnimeScrapper {
       final regex = new RegExp(r'\{.+\}');
       final match = regex.firstMatch(script.innerHtml);
 
-      final data = json.decode(match.group(0).replaceAll(",}", "}"));
+      final data = json.decode(match!.group(0)!.replaceAll(",}", "}"));
 
       var episodeId = data['$episode серия'];
       if (episodeId == null) episodeId = data['Фильм'];
@@ -104,7 +104,7 @@ class AnimeVostScrapper extends AnimeScrapper {
       resp = await _dioClient.get(uri);
 
       final links = resp.split("or").map((el) => el.trim()).toList();
-      
+
       var nl = <AnimeVideo>[];
 
       links.forEach((link) {
@@ -145,7 +145,7 @@ class AnimeVostScrapper extends AnimeScrapper {
         doc = parse(resp);
       }
       idsUrls = doc.querySelectorAll("div.shortstoryHead h2 a");
-      if (idsUrls.isEmpty == true) return null;
+      if (idsUrls.isEmpty == true) return "";
     }
 
     var idsHrefs = idsUrls.map((e) => e.attributes["href"]).toList();
@@ -158,9 +158,10 @@ class AnimeVostScrapper extends AnimeScrapper {
             .toLowerCase())
         .toList();
 
-    if (idsNames.isEmpty == true) return null;
+    if (idsNames.isEmpty == true) return "";
 
-    return idsHrefs[name.toLowerCase().bestMatch(idsNames).bestMatchIndex];
+    return idsHrefs[name.toLowerCase().bestMatch(idsNames).bestMatchIndex] ??
+        "";
   }
 }
 

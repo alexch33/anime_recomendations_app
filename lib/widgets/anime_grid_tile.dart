@@ -12,7 +12,11 @@ class AnimeGridTile extends StatelessWidget {
   final bool isBlack;
 
   const AnimeGridTile(
-      {Key key, this.anime, this.isLiked, this.isLater, this.isBlack})
+      {Key? key,
+      required this.anime,
+      this.isLiked = false,
+      this.isLater = false,
+      this.isBlack = false})
       : super(key: key);
 
   @override
@@ -28,7 +32,7 @@ class AnimeGridTile extends StatelessWidget {
               Expanded(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
-                    child: this.anime.imgUrl != null
+                    child: this.anime.imgUrl.isNotEmpty
                         ? Image.network(this.anime.imgUrl, fit: BoxFit.fill)
                         : Container(),
                   ),
@@ -64,12 +68,12 @@ class AnimeGridTile extends StatelessWidget {
                                 : Container(),
                           ],
                         ),
-                        Text(this.anime.name ?? "no title",
+                        Text(this.anime.name,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             softWrap: false,
                             style: Theme.of(context).textTheme.headline6),
-                        this.anime.nameEng != null
+                        this.anime.nameEng.isNotEmpty
                             ? Text(this.anime.nameEng,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -77,7 +81,7 @@ class AnimeGridTile extends StatelessWidget {
                                 style: Theme.of(context).textTheme.bodyText1)
                             : Container(),
                       ]),
-                      this.anime.genre != null
+                      this.anime.genre.isNotEmpty
                           ? buildGenres(this.anime.genre)
                           : Container()
                     ],

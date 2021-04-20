@@ -1,9 +1,9 @@
 class UserToken {
-  String id;
-  String accessToken;
-  String refreshToken;
-  String accessExpiresDate;
-  String refreshExpiresDate;
+  String? id;
+  String? accessToken;
+  String? refreshToken;
+  String? accessExpiresDate;
+  String? refreshExpiresDate;
 
   UserToken({
     this.id,

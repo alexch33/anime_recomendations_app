@@ -31,16 +31,16 @@ abstract class _UserStore with Store {
 
     // checking if user is logged in
     repository.isLoggedIn.then((value) {
-      this.isLoggedIn = value ?? false;
+      this.isLoggedIn = value;
 
       if (this.isLoggedIn) {
-        _repository.getUser().then((user) => this.user = user);
+        _repository.getUser().then((user) => this.user = user!);
       }
     });
   }
 
   // disposers:-----------------------------------------------------------------
-  List<ReactionDisposer> _disposers;
+  late List<ReactionDisposer> _disposers;
 
   void _setupDisposers() {
     _disposers = [
@@ -54,7 +54,7 @@ abstract class _UserStore with Store {
 
   // store variables:-----------------------------------------------------------
   @observable
-  User user;
+  User user = User(email: "");
 
   @observable
   bool success = false;
@@ -90,7 +90,7 @@ abstract class _UserStore with Store {
     loginFuture = ObservableFuture(future);
     await future.then((value) async {
       if (value) {
-        this.user = await _repository.getUser();
+        this.user = (await _repository.getUser())!;
         this.isLoggedIn = true;
         this.success = true;
       } else {
@@ -111,7 +111,7 @@ abstract class _UserStore with Store {
     loginFuture = ObservableFuture(future);
     await future.then((value) async {
       if (value) {
-        this.user = await _repository.getUser();
+        this.user = (await _repository.getUser())!;
         this.isLoggedIn = true;
         this.success = true;
       } else {
@@ -130,7 +130,7 @@ abstract class _UserStore with Store {
   Future initUser() async {
     loading = true;
     try {
-      this.user = await _repository.getUser();
+      this.user = (await _repository.getUser())!;
     } catch (e) {
       errorStore.errorMessage = DioErrorUtil.handleError(e);
     }
@@ -153,7 +153,7 @@ abstract class _UserStore with Store {
     } catch (e) {
       loading = false;
       errorStore.errorMessage = DioErrorUtil.handleError(e);
-      return null;
+      return RecomendationList(recomendations: []);
     }
   }
 

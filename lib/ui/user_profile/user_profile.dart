@@ -18,10 +18,11 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   //stores:---------------------------------------------------------------------
-  AnimeStore _animeStore;
-  ThemeStore _themeStore;
-  LanguageStore _languageStore;
-  UserStore _userStore;
+  late AnimeStore _animeStore;
+  late ThemeStore _themeStore;
+  late LanguageStore _languageStore;
+  late UserStore _userStore;
+  bool isInited = false;
   List<Anime> likedAnimes = [];
   List<Anime> laterAnimes = [];
   List<Anime> blackAnimes = [];
@@ -35,10 +36,7 @@ class _UserProfileState extends State<UserProfile> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (_animeStore == null &&
-        _themeStore == null &&
-        _languageStore == null &&
-        _userStore == null) {
+    if (!isInited) {
       // initializing stores
       _languageStore = Provider.of<LanguageStore>(context);
       _themeStore = Provider.of<ThemeStore>(context);
@@ -58,6 +56,7 @@ class _UserProfileState extends State<UserProfile> {
             .where((anime) =>
                 _userStore.user.blackListAnimes.contains(anime.dataId))
             .toList();
+        isInited = true;
       });
     }
 
@@ -151,7 +150,7 @@ class _UserProfileState extends State<UserProfile> {
           )
         : Center(
             child: Text(
-              AppLocalizations.of(context).translate('home_tv_no_post_found'),
+              AppLocalizations.of(context)!.translate('home_tv_no_post_found'),
             ),
           );
   }
@@ -169,7 +168,7 @@ class _UserProfileState extends State<UserProfile> {
           )
         : Center(
             child: Text(
-              AppLocalizations.of(context).translate('home_tv_no_post_found'),
+              AppLocalizations.of(context)!.translate('home_tv_no_post_found'),
             ),
           );
   }
@@ -187,7 +186,7 @@ class _UserProfileState extends State<UserProfile> {
           )
         : Center(
             child: Text(
-              AppLocalizations.of(context).translate('home_tv_no_post_found'),
+              AppLocalizations.of(context)!.translate('home_tv_no_post_found'),
             ),
           );
   }

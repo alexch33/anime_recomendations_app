@@ -19,10 +19,11 @@ class AnimeRecomendations extends StatefulWidget {
 
 class _AnimeRecomendationsState extends State<AnimeRecomendations> {
   //stores:---------------------------------------------------------------------
-  AnimeStore _animeStore;
-  ThemeStore _themeStore;
-  LanguageStore _languageStore;
-  UserStore _userStore;
+  late AnimeStore _animeStore;
+  late ThemeStore _themeStore;
+  late LanguageStore _languageStore;
+  late UserStore _userStore;
+  bool isInited = false;
 
   // Search block start
   final key = new GlobalKey<ScaffoldState>();
@@ -32,7 +33,7 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
   bool _isSearching = false;
   String _searchText = "";
 
-  RecomendationList _recomendationsList;
+  RecomendationList _recomendationsList = RecomendationList(recomendations: []);
 
   @override
   void initState() {
@@ -57,15 +58,14 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (_animeStore == null &&
-        _themeStore == null &&
-        _languageStore == null &&
-        _userStore == null) {
+    if (!isInited) {
       // initializing stores
       _languageStore = Provider.of<LanguageStore>(context);
       _themeStore = Provider.of<ThemeStore>(context);
       _userStore = Provider.of<UserStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
+
+      isInited = true;
     }
 
     refreshRecs();
@@ -86,7 +86,7 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
   }
 
   // app bar methods:-----------------------------------------------------------
-  Widget _buildAppBar() {
+  PreferredSizeWidget _buildAppBar() {
     return AppBar(
       title: appBarTitle,
       actions: _buildActions(context),
@@ -161,7 +161,7 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
   }
 
   Widget _buildGridView() {
-    if (_recomendationsList == null) return Container();
+    if (_recomendationsList.recomendations.isEmpty) return Container();
 
     if (_searchText.isEmpty) {
       _recomendationsList.cachedRecomendations =
@@ -169,10 +169,10 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
     } else {
       _recomendationsList.cachedRecomendations =
           _recomendationsList.recomendations.where((recomendation) {
-        var element = _animeStore.animeList.animes.firstWhere(
+        Anime element = _animeStore.animeList.animes.firstWhere(
             (anime) => anime.dataId.toString() == recomendation.item,
-            orElse: () => null);
-        if (element == null) return false;
+            orElse: () => Anime());
+        if (element.id == Anime().id) return false;
         return element.nameEng
                 .toLowerCase()
                 .contains(_searchText.toLowerCase()) ||
@@ -180,7 +180,7 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
       }).toList();
     }
 
-    return _recomendationsList != null
+    return _recomendationsList.recomendations.isNotEmpty
         ? RefreshIndicator(
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -196,7 +196,7 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
             onRefresh: () => refreshRecs())
         : Center(
             child: Text(
-              AppLocalizations.of(context).translate('home_tv_no_post_found'),
+              AppLocalizations.of(context)!.translate('home_tv_no_post_found'),
             ),
           );
   }
@@ -206,9 +206,8 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
         (anime) =>
             anime.dataId.toString() ==
             _recomendationsList.cachedRecomendations[position].item.toString(),
-        orElse: () => null);
+        orElse: () => Anime());
 
-    if (animeItem == null) animeItem = Anime(dataId: 0);
     final isLiked = _userStore.isLikedAnime(animeItem.dataId);
     final isLater = _userStore.isLaterAnime(animeItem.dataId);
     final isBlack = _userStore.isBlackListedAnime(animeItem.dataId);

@@ -4,9 +4,9 @@ class AnimeVideo {
   String totalEpisodes;
 
   AnimeVideo({
-    this.src,
-    this.size,
-    this.totalEpisodes
+    required this.src,
+    this.size = "",
+    required this.totalEpisodes
   });
 
   factory AnimeVideo.fromMap(Map<String, dynamic> json) => AnimeVideo(

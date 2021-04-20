@@ -48,7 +48,10 @@ class _AnimeDetailsState extends State<AnimeDetails> {
     });
 
     _anime = ModalRoute.of(context)!.settings.arguments as Anime;
+    if (!mounted) return;
     String id = await _animeStore.getAnimeId(_anime);
+    if (!mounted) return;
+
     final res = await _animeStore.getAnimeLinks(id, episode);
 
     if (initedOnStart == false) return;

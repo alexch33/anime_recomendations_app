@@ -31,7 +31,7 @@ dependencies:
   http: ^0.12.2
 
   # Flogs, a powerful logging framework
-  f_logs: ^1.2.2
+  # f_logs: ^1.2.2
 
   # MobX is a library for reactively managing the state of your applications. Use the power of
   # observables, actions, and reactions to supercharge your Dart and Flutter apps.
@@ -56,7 +56,7 @@ dependencies:
 
   # This package provides internationalization and localization facilities, including message
   # translation, plurals and genders, date/number formatting and parsing, and bidirectional text.
-  intl: ^0.16.1
+  intl: ^0.17.0
 
   # Animated nav bar
   curved_navigation_bar: ^0.3.7

@@ -7,10 +7,8 @@ import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/di/modules/preference_module.dart';
 import 'package:dio/dio.dart';
-import 'package:inject/inject.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-@module
 class NetworkModule extends PreferenceModule {
   // ignore: non_constant_identifier_names
   final String TAG = "NetworkModule";
@@ -19,8 +17,7 @@ class NetworkModule extends PreferenceModule {
   /// A singleton dio provider.
   ///
   /// Calling it multiple times will return the same instance.
-  @provide
-  @singleton
+  
   Dio provideDio(SharedPreferenceHelper sharedPrefHelper) {
     final dio = Dio();
 
@@ -97,15 +94,13 @@ class NetworkModule extends PreferenceModule {
   /// A singleton dio_client provider.
   ///
   /// Calling it multiple times will return the same instance.
-  @provide
-  @singleton
+
   DioClient provideDioClient(Dio dio) => DioClient(dio);
 
   /// A singleton dio_client provider.
   ///
   /// Calling it multiple times will return the same instance.
-  @provide
-  @singleton
+
   RestClient provideRestClient() => RestClient();
 
   // Api Providers:-------------------------------------------------------------
@@ -113,13 +108,10 @@ class NetworkModule extends PreferenceModule {
   /// A singleton post_api provider.
   ///
   /// Calling it multiple times will return the same instance.
-  @provide
-  @singleton
+ 
   AnimeApi providePostApi(DioClient dioClient, RestClient restClient) =>
       AnimeApi(dioClient);
 
-  @provide
-  @singleton
   UsersApi provideUsersApi(DioClient dioClient) => UsersApi(dioClient);
 // Api Providers End:---------------------------------------------------------
 

@@ -1,8 +1,6 @@
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
-import 'package:inject/inject.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-@module
 class PreferenceModule {
   // DI variables:--------------------------------------------------------------
   Future<SharedPreferences> sharedPref;
@@ -18,9 +16,7 @@ class PreferenceModule {
   /// A singleton preference provider.
   ///
   /// Calling it multiple times will return the same instance.
-  @provide
-  @singleton
-  @asynchronous
+
   Future<SharedPreferences> provideSharedPreferences() {
     return SharedPreferences.getInstance();
   }
@@ -28,8 +24,7 @@ class PreferenceModule {
   /// A singleton preference helper provider.
   ///
   /// Calling it multiple times will return the same instance.
-  @provide
-  @singleton
+
   SharedPreferenceHelper provideSharedPreferenceHelper() {
     return SharedPreferenceHelper(sharedPref);
   }

@@ -1,5 +1,6 @@
 import 'package:boilerplate/constants/app_theme.dart';
 import 'package:boilerplate/constants/strings.dart';
+import 'package:boilerplate/data/repository.dart';
 import 'package:boilerplate/di/components/app_component.dart';
 import 'package:boilerplate/di/modules/local_module.dart';
 import 'package:boilerplate/di/modules/netwok_module.dart';
@@ -16,11 +17,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:inject/inject.dart';
 import 'package:provider/provider.dart';
 
 // global instance for app component
-AppComponent appComponent;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,31 +29,34 @@ void main() {
     DeviceOrientation.landscapeRight,
     DeviceOrientation.landscapeLeft,
   ]).then((_) async {
-    appComponent = await AppComponent.create(
+    Repository repo = AppComponent.getReposInstance(
       NetworkModule(),
       LocalModule(),
       PreferenceModule(),
     );
-    runApp(appComponent.app);
+    runApp(MyApp(repo));
   });
 }
 
-@provide
 class MyApp extends StatelessWidget {
+  final Repository repo;
   // This widget is the root of your application.
   // Create your store as a final variable in a base Widget. This works better
   // with Hot Reload than creating it directly in the `build` function.
-  final ThemeStore _themeStore = ThemeStore(appComponent.getRepository());
-  final AnimeStore _postStore = AnimeStore(appComponent.getRepository());
-  final LanguageStore _languageStore = LanguageStore(appComponent.getRepository());
-  final UserStore _userStore = UserStore(appComponent.getRepository());
+
+  MyApp(this.repo);
 
   @override
   Widget build(BuildContext context) {
+    final ThemeStore _themeStore = ThemeStore(repo);
+    final AnimeStore _animeStore = AnimeStore(repo);
+    final LanguageStore _languageStore = LanguageStore(repo);
+    final UserStore _userStore = UserStore(repo);
+
     return MultiProvider(
       providers: [
         Provider<ThemeStore>(create: (_) => _themeStore),
-        Provider<AnimeStore>(create: (_) => _postStore),
+        Provider<AnimeStore>(create: (_) => _animeStore),
         Provider<LanguageStore>(create: (_) => _languageStore),
         Provider<UserStore>(create: (_) => _userStore),
       ],

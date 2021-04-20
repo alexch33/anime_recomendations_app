@@ -1,8 +1,0 @@
-{
-  "asset": "asset:boilerplate/lib/models/post/post.dart",
-  "summary": {
-    "injector": [],
-    "module": [],
-    "injectable": []
-  }
-}

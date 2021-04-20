@@ -1,8 +1,0 @@
-{
-  "asset": "asset:boilerplate/lib/utils/encryption/xxtea.dart",
-  "summary": {
-    "injector": [],
-    "module": [],
-    "injectable": []
-  }
-}

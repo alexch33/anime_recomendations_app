@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:meta/meta.dart';
 import 'package:sembast/sembast.dart';
 import 'package:xxtea/xxtea.dart';
 

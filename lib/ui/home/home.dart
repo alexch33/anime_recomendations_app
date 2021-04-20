@@ -1,7 +1,5 @@
 import 'package:another_flushbar/flushbar_helper.dart';
-import 'package:boilerplate/stores/language/language_store.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
-import 'package:boilerplate/stores/theme/theme_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
 import 'package:boilerplate/ui/anime_recomendations/anime_recomendations.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
@@ -20,8 +18,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   //stores:---------------------------------------------------------------------
   late AnimeStore _animeStore;
-  late ThemeStore _themeStore;
-  late LanguageStore _languageStore;
   late UserStore _userStore;
   bool isInited = false;
 
@@ -39,9 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.didChangeDependencies();
 
     if (!isInited) {
-      // initializing stores
-      _languageStore = Provider.of<LanguageStore>(context);
-      _themeStore = Provider.of<ThemeStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
       _userStore = Provider.of<UserStore>(context);
       isInited = true;
@@ -105,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // General Methods:-----------------------------------------------------------
   _showErrorMessage(String message) {
     Future.delayed(Duration(milliseconds: 0), () {
-      if (message != null && message.isNotEmpty) {
+      if (message.isNotEmpty) {
         FlushbarHelper.createError(
           message: message,
           title: AppLocalizations.of(context)!.translate('home_tv_error'),

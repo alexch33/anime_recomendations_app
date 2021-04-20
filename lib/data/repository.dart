@@ -100,10 +100,8 @@ class Repository {
     List<Filter> filters = [];
 
     //check to see if dataLogsType is not null
-    if (id != null) {
-      Filter dataLogTypeFilter = Filter.equals(DBConstants.FIELD_ID, id);
-      filters.add(dataLogTypeFilter);
-    }
+    Filter dataLogTypeFilter = Filter.equals(DBConstants.FIELD_ID, id);
+    filters.add(dataLogTypeFilter);
 
     //making db call
     return _animeDataSource
@@ -153,12 +151,10 @@ class Repository {
     UserToken token = data[1];
 
     bool success = false;
-    if (user != null && token != null) {
-      await _userDataSource.insertUser(user);
-      _sharedPrefsHelper.saveAuthToken(token.accessToken!);
-      _sharedPrefsHelper.saveRefreshToken(token.refreshToken!);
-      success = true;
-    }
+    await _userDataSource.insertUser(user);
+    _sharedPrefsHelper.saveAuthToken(token.accessToken!);
+    _sharedPrefsHelper.saveRefreshToken(token.refreshToken!);
+    success = true;
 
     await this.saveIsLoggedIn(success);
 

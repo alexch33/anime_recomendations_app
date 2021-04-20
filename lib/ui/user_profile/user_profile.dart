@@ -1,7 +1,5 @@
 import 'package:boilerplate/models/anime/anime.dart';
-import 'package:boilerplate/stores/language/language_store.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
-import 'package:boilerplate/stores/theme/theme_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/widgets/anime_list_tile.dart';
@@ -19,8 +17,6 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   //stores:---------------------------------------------------------------------
   late AnimeStore _animeStore;
-  late ThemeStore _themeStore;
-  late LanguageStore _languageStore;
   late UserStore _userStore;
   bool isInited = false;
   List<Anime> likedAnimes = [];
@@ -37,9 +33,6 @@ class _UserProfileState extends State<UserProfile> {
     super.didChangeDependencies();
 
     if (!isInited) {
-      // initializing stores
-      _languageStore = Provider.of<LanguageStore>(context);
-      _themeStore = Provider.of<ThemeStore>(context);
       _userStore = Provider.of<UserStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
 
@@ -208,14 +201,14 @@ class _UserProfileState extends State<UserProfile> {
               title: new Text("Favorites reset"),
               content: new Text("Do you want to remove all favorites?"),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text('Remove'),
                   onPressed: () async {
                     await deleteFavoritesAll();
                     Navigator.of(context).pop();
                   },
                 ),
-                FlatButton(
+                TextButton(
                   child: Text('Close'),
                   onPressed: () {
                     Navigator.of(context).pop();

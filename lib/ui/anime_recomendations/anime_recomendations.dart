@@ -1,5 +1,4 @@
 import 'package:boilerplate/models/recomendation/recomendation_list.dart';
-import 'package:boilerplate/stores/language/language_store.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
 import 'package:boilerplate/stores/theme/theme_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
@@ -21,7 +20,6 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
   //stores:---------------------------------------------------------------------
   late AnimeStore _animeStore;
   late ThemeStore _themeStore;
-  late LanguageStore _languageStore;
   late UserStore _userStore;
   bool isInited = false;
 
@@ -60,7 +58,6 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
 
     if (!isInited) {
       // initializing stores
-      _languageStore = Provider.of<LanguageStore>(context);
       _themeStore = Provider.of<ThemeStore>(context);
       _userStore = Provider.of<UserStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);

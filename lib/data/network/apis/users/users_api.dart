@@ -33,9 +33,8 @@ class UsersApi {
   }
 
   Future logout(String refreshToken) async {
-    if (refreshToken != null)
-      await _dioClient
-          .post(Endpoints.logout, data: {"refreshToken": refreshToken});
+    await _dioClient
+        .post(Endpoints.logout, data: {"refreshToken": refreshToken});
   }
 
   Future<bool> deleteAllUserEvents() async {

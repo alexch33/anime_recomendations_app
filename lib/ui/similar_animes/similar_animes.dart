@@ -1,7 +1,5 @@
 import 'package:boilerplate/models/recomendation/recomendation_list.dart';
-import 'package:boilerplate/stores/language/language_store.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
-import 'package:boilerplate/stores/theme/theme_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/widgets/anime_grid_tile.dart';
@@ -19,8 +17,6 @@ class SimilarAnimes extends StatefulWidget {
 class _SimilarAnimesState extends State<SimilarAnimes> {
   //stores:---------------------------------------------------------------------
   late AnimeStore _animeStore;
-  late ThemeStore _themeStore;
-  late LanguageStore _languageStore;
   late UserStore _userStore;
   late Anime _anime;
   bool isInited = false;
@@ -38,8 +34,6 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
 
     if (!isInited) {
       // initializing stores
-      _languageStore = Provider.of<LanguageStore>(context);
-      _themeStore = Provider.of<ThemeStore>(context);
       _userStore = Provider.of<UserStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
 
@@ -72,7 +66,7 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
   }
 
   Widget _buildGridView() {
-    return _recomendationsList != null
+    return _recomendationsList.recomendations.isNotEmpty
         ? GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,

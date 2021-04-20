@@ -185,8 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildForgotPasswordButton() {
     return Align(
       alignment: FractionalOffset.centerRight,
-      child: FlatButton(
-        padding: EdgeInsets.all(0.0),
+      child: TextButton(
         child: Text(
           AppLocalizations.of(context)!.translate('login_btn_forgot_password'),
           style: Theme.of(context)
@@ -247,7 +246,7 @@ class _LoginScreenState extends State<LoginScreen> {
   // General Methods:-----------------------------------------------------------
   _showErrorMessage(String message) {
     Future.delayed(Duration(milliseconds: 0), () {
-      if (message != null && message.isNotEmpty) {
+      if (message.isNotEmpty) {
         FlushbarHelper.createError(
           message: message,
           title: AppLocalizations.of(context)!.translate('home_tv_error'),

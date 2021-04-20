@@ -32,7 +32,7 @@ class AnimeListTile extends StatelessWidget {
                       padding: EdgeInsets.symmetric(vertical: 2, horizontal: 8),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: this.anime.imgUrl != null
+                        child: this.anime.imgUrl.isNotEmpty
                             ? Image.network(this.anime.imgUrl,
                                 fit: BoxFit.fitHeight)
                             : Container(),

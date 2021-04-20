@@ -1,7 +1,5 @@
 import 'package:boilerplate/routes.dart';
-import 'package:boilerplate/stores/language/language_store.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
-import 'package:boilerplate/stores/theme/theme_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
 import 'package:boilerplate/widgets/build_ganres.dart';
 import 'package:boilerplate/widgets/progress_indicator_widget.dart';
@@ -22,8 +20,6 @@ class AnimeDetails extends StatefulWidget {
 class _AnimeDetailsState extends State<AnimeDetails> {
   //stores:---------------------------------------------------------------------
   late AnimeStore _animeStore;
-  late ThemeStore _themeStore;
-  late LanguageStore _languageStore;
   late UserStore _userStore;
   late Anime _anime;
   bool isInited = false;
@@ -96,8 +92,6 @@ class _AnimeDetailsState extends State<AnimeDetails> {
 
     if (!isInited) {
       // initializing stores
-      _languageStore = Provider.of<LanguageStore>(context);
-      _themeStore = Provider.of<ThemeStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
       _userStore = Provider.of<UserStore>(context);
 

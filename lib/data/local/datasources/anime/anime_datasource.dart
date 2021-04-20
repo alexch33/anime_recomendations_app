@@ -19,17 +19,17 @@ class AnimeDataSource {
   AnimeDataSource(this._db);
 
   // DB functions:--------------------------------------------------------------
-  Future<int> insert(Anime anime) async {
+  Future<int?> insert(Anime anime) async {
     final result =
         await _animesStore.record(anime.dataId).put(await _db, anime.toMap());
-    return result["dataId"];
+    return int.parse(result["dataId"].toString());
   }
 
   Future<int> count() async {
     return await _animesStore.count(await _db);
   }
 
-  Future<List<Anime>> getAllSortedByFilter({List<Filter> filters}) async {
+  Future<List<Anime>> getAllSortedByFilter({required List<Filter> filters}) async {
     //creating finder
     final finder = Finder(
         filter: Filter.and(filters),

@@ -19,6 +19,6 @@ void main() {
       NetworkModule(),
       LocalModule(),
       PreferenceModule(),
-    )));
+    )!));
   });
 }

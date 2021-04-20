@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 
 class TextFieldWidget extends StatelessWidget {
-  final IconData icon;
-  final String hint;
-  final String errorText;
+  final IconData? icon;
+  final String? hint;
+  final String? errorText;
   final bool isObscure;
   final bool isIcon;
-  final TextInputType inputType;
-  final TextEditingController textController;
+  final TextInputType? inputType;
+  final TextEditingController? textController;
   final EdgeInsets padding;
   final Color hintColor;
   final Color iconColor;
-  final FocusNode focusNode;
-  final ValueChanged onFieldSubmitted;
-  final ValueChanged onChanged;
+  final FocusNode? focusNode;
+  final ValueChanged? onFieldSubmitted;
+  final ValueChanged? onChanged;
   final bool autoFocus;
-  final TextInputAction inputAction;
+  final TextInputAction? inputAction;
 
   const TextFieldWidget({
-    Key key,
+    Key? key,
     this.icon,
     this.hint,
     this.errorText,
@@ -54,7 +54,7 @@ class TextFieldWidget extends StatelessWidget {
         decoration: InputDecoration(
             hintText: this.hint,
             hintStyle:
-                Theme.of(context).textTheme.bodyText2.copyWith(color: hintColor),
+                Theme.of(context).textTheme.bodyText2!.copyWith(color: hintColor),
             errorText: errorText,
             counterText: '',
             icon: this.isIcon ? Icon(this.icon, color: iconColor) : null),

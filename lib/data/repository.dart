@@ -44,10 +44,7 @@ class Repository {
 
   Future<RecomendationList> getSimilarItems(String itemId) async {
     return await _animeApi.querrySimilarItems(itemId).then((list) async {
-      if (list != null) {
-        return list;
-      }
-      return null;
+      return list;
     }).catchError((error) => throw error);
   }
 
@@ -88,9 +85,9 @@ class Repository {
   Future<bool> likeAnime(int animeId) async {
     return await _animeApi.likeAnime(animeId).then((boolVal) async {
       if (boolVal) {
-        User user = await _userDataSource.getUserFromDb();
+        User? user = await _userDataSource.getUserFromDb();
 
-        user.pushLikedAnime(animeId);
+        user!.pushLikedAnime(animeId);
         print(user.likedAnimes);
         await _userDataSource.update(user);
       }
@@ -100,7 +97,7 @@ class Repository {
 
   Future<List<Anime>> findPostById(int id) {
     //creating filter
-    List<Filter> filters = List();
+    List<Filter> filters = [];
 
     //check to see if dataLogsType is not null
     if (id != null) {
@@ -115,7 +112,7 @@ class Repository {
         .catchError((error) => throw error);
   }
 
-  Future<int> insert(Anime post) => _animeDataSource
+  Future<int?> insert(Anime post) => _animeDataSource
       .insert(post)
       .then((id) => id)
       .catchError((error) => throw error);
@@ -138,12 +135,10 @@ class Repository {
     UserToken token = data[1];
 
     bool success = false;
-    if (user != null && token != null) {
-      await _userDataSource.insertUser(user);
-      _sharedPrefsHelper.saveAuthToken(token.accessToken);
-      _sharedPrefsHelper.saveRefreshToken(token.refreshToken);
-      success = true;
-    }
+    await _userDataSource.insertUser(user);
+    _sharedPrefsHelper.saveAuthToken(token.accessToken!);
+    _sharedPrefsHelper.saveRefreshToken(token.refreshToken!);
+    success = true;
 
     await this.saveIsLoggedIn(success);
 
@@ -160,8 +155,8 @@ class Repository {
     bool success = false;
     if (user != null && token != null) {
       await _userDataSource.insertUser(user);
-      _sharedPrefsHelper.saveAuthToken(token.accessToken);
-      _sharedPrefsHelper.saveRefreshToken(token.refreshToken);
+      _sharedPrefsHelper.saveAuthToken(token.accessToken!);
+      _sharedPrefsHelper.saveRefreshToken(token.refreshToken!);
       success = true;
     }
 
@@ -173,7 +168,7 @@ class Repository {
   Future logout() async {
     saveIsLoggedIn(false);
     _usersApi
-        .logout(await _sharedPrefsHelper.refreshToken)
+        .logout((await _sharedPrefsHelper.refreshToken)!)
         .catchError((error) => throw error);
     deleteToken();
     deleteUser();
@@ -185,11 +180,11 @@ class Repository {
   Future<bool> get isLoggedIn => _sharedPrefsHelper.isLoggedIn;
 
   // User:----------------------------------------------------------------------
-  Future<User> getUser() async {
+  Future<User?> getUser() async {
     return await _userDataSource.getUserFromDb();
   }
 
-  Future<User> updateUser(User user) async {
+  Future<User?> updateUser(User user) async {
     try {
       User updatedUser = await _usersApi.userUpdateSelf(user);
       await _userDataSource.update(updatedUser);
@@ -205,7 +200,7 @@ class Repository {
 
   Future<bool> deleteAllUserEvents() async {
     await _usersApi.deleteAllUserEvents();
-    User currentUser = await _userDataSource.getUserFromDb();
+    User currentUser = (await _userDataSource.getUserFromDb())!;
     currentUser.clearLikes();
     _userDataSource.update(currentUser);
     return true;
@@ -213,15 +208,12 @@ class Repository {
 
   Future<RecomendationList> getUserRecomendations(String userId) async {
     return await _animeApi.querryUserRecomendations(userId).then((list) async {
-      if (list != null) {
-        return list;
-      }
-      return null;
+      return list;
     }).catchError((error) => throw error);
   }
 
   // Token:---------------------------------------------------------------------
-  Future<UserToken> getToken() async {
+  Future<UserToken?> getToken() async {
     return await _tokenDataSource.getTokenFromDb();
   }
 
@@ -245,7 +237,7 @@ class Repository {
   Future<void> changeLanguage(String value) =>
       _sharedPrefsHelper.changeLanguage(value);
 
-  Future<String> get currentLanguage => _sharedPrefsHelper.currentLanguage;
+  Future<String?> get currentLanguage => _sharedPrefsHelper.currentLanguage;
 
   Future<List<AnimeVideo>> getProviderAnimeLinks(
       String animeId, int episodeNum, ParserType selectedParser) async {

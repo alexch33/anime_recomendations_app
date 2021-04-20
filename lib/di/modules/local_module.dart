@@ -18,7 +18,7 @@ import 'netwok_module.dart';
 
 class LocalModule extends NetworkModule {
   // DI variables:--------------------------------------------------------------
-  Future<Database> database;
+  late Future<Database> database;
 
   // constructor
   // Note: Do not change the order in which providers are called, it might cause

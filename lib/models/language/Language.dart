@@ -9,7 +9,7 @@ class Language {
   String language;
 
   /// map of keys used based on industry type (service worker, route etc)
-  Map<String, String> dictionary;
+  Map<String, String>? dictionary;
 
-  Language({this.code, this.locale, this.language, this.dictionary});
+  Language({required this.code, required this.locale, required this.language, this.dictionary});
 }

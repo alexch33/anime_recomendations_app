@@ -27,7 +27,7 @@ abstract class _AnimeStore with Store {
 
   // store variables:-----------------------------------------------------------
   static ObservableFuture<AnimeList> emptyPostResponse =
-      ObservableFuture.value(null);
+      ObservableFuture.value(AnimeList(animes: []));
 
   static ObservableFuture<bool> emptyLikeResponse =
       ObservableFuture.value(false);
@@ -41,7 +41,7 @@ abstract class _AnimeStore with Store {
       ObservableFuture<bool>(emptyLikeResponse);
 
   @observable
-  AnimeList animeList;
+  late AnimeList animeList;
 
   @observable
   bool success = false;
@@ -116,7 +116,7 @@ abstract class _AnimeStore with Store {
       return await _repository.getProviderAnimeLinks(animeId, episodeNum, scrapperType);
     } catch (error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
-      return null;
+      return [];
     }
   }
 
@@ -126,7 +126,7 @@ abstract class _AnimeStore with Store {
       return await _repository.getProviderAnimeId(anime, scrapperType);
     } catch (error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
-      return null;
+      return "";
     }
   }
 }

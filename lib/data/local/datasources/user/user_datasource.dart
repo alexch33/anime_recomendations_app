@@ -23,7 +23,7 @@ class UserDataSource {
     return await _userStore.add(await _db, user.toMap());
   }
 
-  Future<User> getUserFromDb() async {
+  Future<User?> getUserFromDb() async {
 
     print('Loading from database');
 
@@ -32,7 +32,7 @@ class UserDataSource {
       await _db,
     );
 
-    User user;
+    User? user;
     // Making a List<Post> out of List<RecordSnapshot>
     if(recordSnapshots.length > 0) {
       user = User.fromMap(recordSnapshots.first.value);

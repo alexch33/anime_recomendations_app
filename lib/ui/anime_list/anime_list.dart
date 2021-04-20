@@ -17,10 +17,10 @@ class AnimeList extends StatefulWidget {
 
 class _AnimeListState extends State<AnimeList> {
   //stores:---------------------------------------------------------------------
-  AnimeStore _animeStore;
-  ThemeStore _themeStore;
-  LanguageStore _languageStore;
-  UserStore _userStore;
+  late AnimeStore _animeStore;
+  late ThemeStore _themeStore;
+  late LanguageStore _languageStore;
+  late UserStore _userStore;
 
   // Search block start
   final key = new GlobalKey<ScaffoldState>();
@@ -76,7 +76,7 @@ class _AnimeListState extends State<AnimeList> {
           )
         : Center(
             child: Text(
-              AppLocalizations.of(context).translate('home_tv_no_post_found'),
+              AppLocalizations.of(context)!.translate('home_tv_no_post_found'),
             ),
           );
   }
@@ -107,7 +107,7 @@ class _AnimeListState extends State<AnimeList> {
   }
 
   // app bar methods:-----------------------------------------------------------
-  Widget _buildAppBar() {
+  PreferredSizeWidget _buildAppBar() {
     return AppBar(
       title: appBarTitle,
       actions: _buildActions(context),

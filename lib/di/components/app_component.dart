@@ -13,13 +13,13 @@ import 'package:boilerplate/data/network/apis/animes/anime_api.dart';
 /// The top level injector that stitches together multiple app features into
 /// a complete app.
 abstract class AppComponent {
-  static Repository _repository;
+  static Repository? _repository;
   static bool isInited = false;
-  NetworkModule networkModule;
-  LocalModule localModule;
-  PreferenceModule preferenceModule;
+  NetworkModule? networkModule;
+  LocalModule? localModule;
+  PreferenceModule? preferenceModule;
 
-  static Repository getReposInstance(NetworkModule networkModule,
+  static Repository? getReposInstance(NetworkModule networkModule,
       LocalModule localModule, PreferenceModule preferenceModule) {
     if (isInited) return _repository;
 

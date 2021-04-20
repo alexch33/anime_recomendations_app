@@ -18,13 +18,13 @@ class SimilarAnimes extends StatefulWidget {
 
 class _SimilarAnimesState extends State<SimilarAnimes> {
   //stores:---------------------------------------------------------------------
-  AnimeStore _animeStore;
-  ThemeStore _themeStore;
-  LanguageStore _languageStore;
-  UserStore _userStore;
-  Anime _anime;
+  late AnimeStore _animeStore;
+  late ThemeStore _themeStore;
+  late LanguageStore _languageStore;
+  late UserStore _userStore;
+  late Anime _anime;
 
-  RecomendationList _recomendationsList;
+  RecomendationList _recomendationsList = RecomendationList(recomendations: []);
 
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
       _userStore = Provider.of<UserStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
 
-      _anime = ModalRoute.of(context).settings.arguments;
+      _anime = ModalRoute.of(context)!.settings.arguments as Anime;
 
       _animeStore
           .querrySImilarItems(_anime.dataId.toString())
@@ -86,7 +86,7 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
           )
         : Center(
             child: Text(
-              AppLocalizations.of(context).translate('home_tv_no_post_found'),
+              AppLocalizations.of(context)!.translate('home_tv_no_post_found'),
             ),
           );
   }
@@ -96,10 +96,8 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
         (anime) =>
             anime.dataId.toString() ==
             _recomendationsList.recomendations[position].item.toString(),
-        orElse: () => null);
+        orElse: () => Anime());
 
-    if (animeItem == null)
-      animeItem = Anime(id: "0", dataId: 0, name: "noname", imgUrl: "");
     final isLiked = _userStore.isLikedAnime(animeItem.dataId);
     final isLater = _userStore.isLaterAnime(animeItem.dataId);
     final isBlack = _userStore.isBlackListedAnime(animeItem.dataId);

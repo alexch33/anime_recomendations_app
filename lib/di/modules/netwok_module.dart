@@ -2,7 +2,6 @@ import 'package:boilerplate/data/network/apis/animes/anime_api.dart';
 import 'package:boilerplate/data/network/apis/users/users_api.dart';
 import 'package:boilerplate/data/network/constants/endpoints.dart';
 import 'package:boilerplate/data/network/dio_client.dart';
-import 'package:boilerplate/data/network/rest_client.dart';
 import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/di/modules/preference_module.dart';
@@ -17,7 +16,7 @@ class NetworkModule extends PreferenceModule {
   /// A singleton dio provider.
   ///
   /// Calling it multiple times will return the same instance.
-  
+
   Dio provideDio(SharedPreferenceHelper sharedPrefHelper) {
     final dio = Dio();
 
@@ -33,7 +32,8 @@ class NetworkModule extends PreferenceModule {
         requestHeader: true,
       ))
       ..interceptors.add(InterceptorsWrapper(
-        onRequest: (Options options) async {
+        onRequest:
+            (RequestOptions options, RequestInterceptorHandler handler) async {
           // getting shared pref instance
           var prefs = await SharedPreferences.getInstance();
 
@@ -47,13 +47,13 @@ class NetworkModule extends PreferenceModule {
             print('Auth token is null');
           }
         },
-        onError: ((DioError error) async {
+        onError: ((DioError error, ErrorInterceptorHandler handler) async {
           if (error.response?.statusCode == 401) {
             final prefs = await SharedPreferences.getInstance();
             final refreshToken = prefs.getString(Preferences.refresh_token);
 
             if (refreshToken != null) {
-              RequestOptions options = error.response.request;
+              RequestOptions options = error.response!.requestOptions;
 
               final res = await dio.post(Endpoints.refreshTokens,
                   data: {"refreshToken": refreshToken});
@@ -72,18 +72,29 @@ class NetworkModule extends PreferenceModule {
 
                 dio.interceptors.requestLock.unlock();
                 dio.interceptors.responseLock.unlock();
-                return dio.request(options.path, options: options);
+
+                Options opt = Options(
+                    contentType: options.contentType,
+                    headers: options.headers,
+                    method: options.method,
+                    sendTimeout: options.sendTimeout,
+                    receiveTimeout: options.receiveTimeout);
+                await dio.request(options.path,
+                    options: opt,
+                    data: options.data,
+                    queryParameters: options.queryParameters);
+                return;
               }
             }
             dio.interceptors.requestLock.unlock();
             dio.interceptors.responseLock.unlock();
 
-            return error;
+            return;
           } else {
             dio.interceptors.requestLock.unlock();
             dio.interceptors.responseLock.unlock();
 
-            return error;
+            return;
           }
         }),
       ));
@@ -101,16 +112,13 @@ class NetworkModule extends PreferenceModule {
   ///
   /// Calling it multiple times will return the same instance.
 
-  RestClient provideRestClient() => RestClient();
-
   // Api Providers:-------------------------------------------------------------
   // Define all your api providers here
   /// A singleton post_api provider.
   ///
   /// Calling it multiple times will return the same instance.
- 
-  AnimeApi providePostApi(DioClient dioClient, RestClient restClient) =>
-      AnimeApi(dioClient);
+
+  AnimeApi providePostApi(DioClient dioClient) => AnimeApi(dioClient);
 
   UsersApi provideUsersApi(DioClient dioClient) => UsersApi(dioClient);
 // Api Providers End:---------------------------------------------------------

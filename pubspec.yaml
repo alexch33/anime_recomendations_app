@@ -10,7 +10,7 @@ description: Anime recomendation app
 version: 0.0.1+1
 
 environment:
-  sdk: ">=2.6.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -32,6 +32,10 @@ dependencies:
   mobx: ^2.0.1
   flutter_mobx: ^2.0.0
 
+  sembast: ^3.0.1
+  path_provider: ^2.0.1
+  xxtea: ^2.1.0
+
   # An helper to easily exposes a value using InheritedWidget without having to write one.
   provider: ^5.0.0
 
@@ -39,11 +43,11 @@ dependencies:
   validators: ^3.0.0
 
   # A powerful Http client for Dart
-  dio: ^3.0.10
+  dio: ^4.0.0
 
   # A flexible widget for user notification. Customize your text, button, duration, animations
   # and much more. For Android devs, it is made to replace Snackbars and Toasts.
-  flushbar: ^1.10.4
+  another_flushbar: ^1.10.18
 
   # Material Dialog
   material_dialog: ^0.0.9
@@ -53,7 +57,7 @@ dependencies:
   intl: ^0.17.0
 
   # Animated nav bar
-  curved_navigation_bar: ^0.3.7
+  curved_navigation_bar: ^0.4.0-nullsafety.0
 
   url_launcher: ^6.0.3
 

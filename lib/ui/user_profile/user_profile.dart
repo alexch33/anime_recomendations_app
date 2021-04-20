@@ -18,10 +18,10 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   //stores:---------------------------------------------------------------------
-  AnimeStore _animeStore;
-  ThemeStore _themeStore;
-  LanguageStore _languageStore;
-  UserStore _userStore;
+  late AnimeStore _animeStore;
+  late ThemeStore _themeStore;
+  late LanguageStore _languageStore;
+  late UserStore _userStore;
   List<Anime> likedAnimes = [];
   List<Anime> laterAnimes = [];
   List<Anime> blackAnimes = [];
@@ -151,7 +151,7 @@ class _UserProfileState extends State<UserProfile> {
           )
         : Center(
             child: Text(
-              AppLocalizations.of(context).translate('home_tv_no_post_found'),
+              AppLocalizations.of(context)!.translate('home_tv_no_post_found'),
             ),
           );
   }
@@ -169,7 +169,7 @@ class _UserProfileState extends State<UserProfile> {
           )
         : Center(
             child: Text(
-              AppLocalizations.of(context).translate('home_tv_no_post_found'),
+              AppLocalizations.of(context)!.translate('home_tv_no_post_found'),
             ),
           );
   }
@@ -187,7 +187,7 @@ class _UserProfileState extends State<UserProfile> {
           )
         : Center(
             child: Text(
-              AppLocalizations.of(context).translate('home_tv_no_post_found'),
+              AppLocalizations.of(context)!.translate('home_tv_no_post_found'),
             ),
           );
   }

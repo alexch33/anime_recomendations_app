@@ -33,7 +33,7 @@ void main() {
       NetworkModule(),
       LocalModule(),
       PreferenceModule(),
-    );
+    )!;
     runApp(MyApp(repo));
   });
 }

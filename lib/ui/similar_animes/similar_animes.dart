@@ -23,6 +23,7 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
   late LanguageStore _languageStore;
   late UserStore _userStore;
   late Anime _anime;
+  bool isInited = false;
 
   RecomendationList _recomendationsList = RecomendationList(recomendations: []);
 
@@ -35,10 +36,7 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (_animeStore == null &&
-        _themeStore == null &&
-        _languageStore == null &&
-        _userStore == null) {
+    if (!isInited) {
       // initializing stores
       _languageStore = Provider.of<LanguageStore>(context);
       _themeStore = Provider.of<ThemeStore>(context);
@@ -50,6 +48,7 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
       _animeStore
           .querrySImilarItems(_anime.dataId.toString())
           .then((value) => setState(() => _recomendationsList = value));
+      isInited = true;
     }
   }
 

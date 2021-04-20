@@ -38,6 +38,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   late UserStore _userStore;
 
+  late bool isInited = false;
+
   @override
   void initState() {
     super.initState();
@@ -47,9 +49,13 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _themeStore = Provider.of<ThemeStore>(context);
-    _userStore = Provider.of<UserStore>(context);
-    _store = FormStore(_userStore);
+    if (!isInited) {
+      _themeStore = Provider.of<ThemeStore>(context);
+      _userStore = Provider.of<UserStore>(context);
+      _store = FormStore(_userStore);
+
+      isInited = true;
+    }
   }
 
   @override

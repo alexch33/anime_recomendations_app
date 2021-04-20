@@ -26,6 +26,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   late LanguageStore _languageStore;
   late UserStore _userStore;
   late Anime _anime;
+  bool isInited = false;
 
   late String _animeUrl;
   int _totalEpisodes = 0;
@@ -36,34 +37,38 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   late VideoPlayerController videoPlayerController;
   late ChewieController chewieController;
 
+  bool playerInited = false;
+
   Future<void> initVideoData(int episode) async {
+    if (!mounted) return;
     setState(() {
       isLoading = true;
       this.episode = episode;
       if (initedOnStart == false) initedOnStart = true;
     });
+
     _anime = ModalRoute.of(context)!.settings.arguments as Anime;
     String id = await _animeStore.getAnimeId(_anime);
     final res = await _animeStore.getAnimeLinks(id, episode);
 
     if (initedOnStart == false) return;
 
+    if (!mounted) return;
     setState(() {
       _totalEpisodes = int.parse(res.first.totalEpisodes);
       _animeUrl = res.first.src;
       isLoading = false;
     });
+    await initPlayer();
   }
 
   Future initPlayer() async {
     if (initedOnStart == false) return;
 
+    if (!mounted) return;
     setState(() {
       isLoading = true;
     });
-
-    videoPlayerController.dispose();
-    chewieController.dispose();
 
     videoPlayerController = VideoPlayerController.network(_animeUrl);
 
@@ -71,11 +76,14 @@ class _AnimeDetailsState extends State<AnimeDetails> {
 
     chewieController = ChewieController(
       videoPlayerController: videoPlayerController,
-      autoPlay: true,
-      looping: true,
+      autoPlay: false,
+      looping: false,
     );
+
+    if (!mounted) return;
     setState(() {
       isLoading = false;
+      playerInited = true;
     });
   }
 
@@ -83,15 +91,14 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (_animeStore == null &&
-        _themeStore == null &&
-        _languageStore == null &&
-        _userStore == null) {
+    if (!isInited) {
       // initializing stores
       _languageStore = Provider.of<LanguageStore>(context);
       _themeStore = Provider.of<ThemeStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
       _userStore = Provider.of<UserStore>(context);
+
+      isInited = true;
     }
 
     if (!this.initedOnStart) {
@@ -164,18 +171,13 @@ class _AnimeDetailsState extends State<AnimeDetails> {
                 Divider(),
                 Expanded(
                     flex: 69,
-                    child: chewieController != null
-                        ? isLoading
-                            ? Container()
-                            : Chewie(
+                    child: playerInited
+                        ? !isLoading
+                            ? Chewie(
                                 controller: chewieController,
                               )
-                        : Center(
-                            child: isLoading
-                                ? Container()
-                                : IconButton(
-                                    icon: Icon(Icons.play_arrow),
-                                    onPressed: () => initPlayer())))
+                            : Container()
+                        : Container())
               ],
             )
           ],
@@ -194,7 +196,6 @@ class _AnimeDetailsState extends State<AnimeDetails> {
                 child: Text("$e"),
                 onPressed: () async {
                   await initVideoData(e);
-                  initPlayer();
                 },
               ),
             ))
@@ -379,9 +380,10 @@ class _AnimeDetailsState extends State<AnimeDetails> {
 
   @override
   void dispose() {
-    initedOnStart = false;
-    videoPlayerController.dispose();
-    chewieController.dispose();
+    if (playerInited) {
+      videoPlayerController.dispose();
+      chewieController.dispose();
+    }
     super.dispose();
   }
 }

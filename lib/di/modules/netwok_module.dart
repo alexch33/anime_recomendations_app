@@ -36,6 +36,7 @@ class NetworkModule extends PreferenceModule {
             (RequestOptions options, RequestInterceptorHandler handler) async {
           // getting shared pref instance
           var prefs = await SharedPreferences.getInstance();
+          await prefs.reload();
 
           // getting token
           var token = prefs.getString(Preferences.auth_token);
@@ -46,6 +47,7 @@ class NetworkModule extends PreferenceModule {
           } else {
             print('Auth token is null');
           }
+          return handler.next(options);
         },
         onError: ((DioError error, ErrorInterceptorHandler handler) async {
           if (error.response?.statusCode == 401) {
@@ -79,22 +81,23 @@ class NetworkModule extends PreferenceModule {
                     method: options.method,
                     sendTimeout: options.sendTimeout,
                     receiveTimeout: options.receiveTimeout);
-                await dio.request(options.path,
+                var a = await dio.request(options.path,
                     options: opt,
                     data: options.data,
                     queryParameters: options.queryParameters);
-                return;
+                    handler.resolve(a);
+                // return handler.next(DioError(requestOptions: options));
               }
             }
             dio.interceptors.requestLock.unlock();
             dio.interceptors.responseLock.unlock();
 
-            return;
+            return handler.next(error);
           } else {
             dio.interceptors.requestLock.unlock();
             dio.interceptors.responseLock.unlock();
 
-            return;
+            return handler.next(error);
           }
         }),
       ));

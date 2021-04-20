@@ -23,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late ThemeStore _themeStore;
   late LanguageStore _languageStore;
   late UserStore _userStore;
+  bool isInited = false;
 
   List<Widget> pages = [UserProfile(), AnimeList(), AnimeRecomendations()];
   int _page = 1;
@@ -37,15 +38,13 @@ class _HomeScreenState extends State<HomeScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (_animeStore == null &&
-        _themeStore == null &&
-        _languageStore == null &&
-        _userStore == null) {
+    if (!isInited) {
       // initializing stores
       _languageStore = Provider.of<LanguageStore>(context);
       _themeStore = Provider.of<ThemeStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
       _userStore = Provider.of<UserStore>(context);
+      isInited = true;
     }
     _animeStore.getAnimes();
     _userStore.initUser();

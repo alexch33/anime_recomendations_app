@@ -22,6 +22,7 @@ class _UserProfileState extends State<UserProfile> {
   late ThemeStore _themeStore;
   late LanguageStore _languageStore;
   late UserStore _userStore;
+  bool isInited = false;
   List<Anime> likedAnimes = [];
   List<Anime> laterAnimes = [];
   List<Anime> blackAnimes = [];
@@ -35,10 +36,7 @@ class _UserProfileState extends State<UserProfile> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (_animeStore == null &&
-        _themeStore == null &&
-        _languageStore == null &&
-        _userStore == null) {
+    if (!isInited) {
       // initializing stores
       _languageStore = Provider.of<LanguageStore>(context);
       _themeStore = Provider.of<ThemeStore>(context);
@@ -58,6 +56,7 @@ class _UserProfileState extends State<UserProfile> {
             .where((anime) =>
                 _userStore.user.blackListAnimes.contains(anime.dataId))
             .toList();
+        isInited = true;
       });
     }
 

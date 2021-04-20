@@ -194,7 +194,7 @@ class Repository {
     }
   }
 
-  Future<int> deleteUser() async {
+  Future<void> deleteUser() async {
     return await _userDataSource.deleteAll();
   }
 
@@ -221,7 +221,7 @@ class Repository {
     return await _tokenDataSource.update(token);
   }
 
-  Future<int> deleteToken() async {
+  Future<void> deleteToken() async {
     _sharedPrefsHelper.removeAuthToken();
     _sharedPrefsHelper.removeRefreshToken();
     return await _tokenDataSource.deleteAll();

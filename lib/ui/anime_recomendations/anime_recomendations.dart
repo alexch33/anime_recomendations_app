@@ -23,6 +23,7 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
   late ThemeStore _themeStore;
   late LanguageStore _languageStore;
   late UserStore _userStore;
+  bool isInited = false;
 
   // Search block start
   final key = new GlobalKey<ScaffoldState>();
@@ -57,15 +58,14 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (_animeStore == null &&
-        _themeStore == null &&
-        _languageStore == null &&
-        _userStore == null) {
+    if (!isInited) {
       // initializing stores
       _languageStore = Provider.of<LanguageStore>(context);
       _themeStore = Provider.of<ThemeStore>(context);
       _userStore = Provider.of<UserStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
+
+      isInited = true;
     }
 
     refreshRecs();

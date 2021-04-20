@@ -21,6 +21,7 @@ class _AnimeListState extends State<AnimeList> {
   late ThemeStore _themeStore;
   late LanguageStore _languageStore;
   late UserStore _userStore;
+  bool isInited = false;
 
   // Search block start
   final key = new GlobalKey<ScaffoldState>();
@@ -86,15 +87,14 @@ class _AnimeListState extends State<AnimeList> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (_animeStore == null &&
-        _themeStore == null &&
-        _languageStore == null &&
-        _userStore == null) {
+    if (!isInited) {
       // initializing stores
       _languageStore = Provider.of<LanguageStore>(context);
       _themeStore = Provider.of<ThemeStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
       _userStore = Provider.of<UserStore>(context);
+
+      isInited = true;
     }
 
     _userStore.initUser();

@@ -54,7 +54,7 @@ abstract class _UserStore with Store {
 
   // store variables:-----------------------------------------------------------
   @observable
-  late User user;
+  User user = User(email: "");
 
   @observable
   bool success = false;

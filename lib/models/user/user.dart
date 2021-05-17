@@ -1,6 +1,6 @@
 class User {
   String id;
-  String name;
+  String? name;
   String role;
   String email;
   List<int> likedAnimes;
@@ -8,13 +8,13 @@ class User {
   List<int> blackListAnimes;
 
   User(
-      {this.id,
+      {this.id = "",
       this.name,
-      this.email,
-      this.role,
-      this.likedAnimes,
-      this.watchLaterAnimes,
-      this.blackListAnimes});
+      required this.email,
+      this.role = "user",
+      this.likedAnimes = const [],
+      this.watchLaterAnimes = const [],
+      this.blackListAnimes = const []});
 
   factory User.fromMap(Map<String, dynamic> json) => User(
         id: json["id"],
@@ -31,9 +31,9 @@ class User {
         "name": name,
         "email": email,
         "role": role,
-        "likedAnimes": likedAnimes ?? [],
-        "watchLaterAnimes": watchLaterAnimes ?? [],
-        "blackListAnimes": blackListAnimes ?? [],
+        "likedAnimes": likedAnimes,
+        "watchLaterAnimes": watchLaterAnimes,
+        "blackListAnimes": blackListAnimes,
       };
 
   bool pushWatchLaterAnime(int animeId) {

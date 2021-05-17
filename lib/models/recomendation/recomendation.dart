@@ -3,8 +3,8 @@ class Recomendation {
   double score;
 
   Recomendation({
-    this.item,
-    this.score,
+    required this.item,
+    required this.score,
   });
 
   factory Recomendation.fromMap(Map<String, dynamic> json) => Recomendation(

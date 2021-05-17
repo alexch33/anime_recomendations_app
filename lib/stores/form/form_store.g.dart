@@ -9,20 +9,20 @@ part of 'form_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$FormStore on _FormStore, Store {
-  Computed<bool> _$canLoginComputed;
+  Computed<bool>? _$canLoginComputed;
 
   @override
   bool get canLogin => (_$canLoginComputed ??=
           Computed<bool>(() => super.canLogin, name: '_FormStore.canLogin'))
       .value;
-  Computed<bool> _$canRegisterComputed;
+  Computed<bool>? _$canRegisterComputed;
 
   @override
   bool get canRegister =>
       (_$canRegisterComputed ??= Computed<bool>(() => super.canRegister,
               name: '_FormStore.canRegister'))
           .value;
-  Computed<bool> _$canForgetPasswordComputed;
+  Computed<bool>? _$canForgetPasswordComputed;
 
   @override
   bool get canForgetPassword => (_$canForgetPasswordComputed ??= Computed<bool>(
@@ -217,21 +217,21 @@ canForgetPassword: ${canForgetPassword}
 }
 
 mixin _$FormErrorStore on _FormErrorStore, Store {
-  Computed<bool> _$hasErrorsInLoginComputed;
+  Computed<bool>? _$hasErrorsInLoginComputed;
 
   @override
   bool get hasErrorsInLogin => (_$hasErrorsInLoginComputed ??= Computed<bool>(
           () => super.hasErrorsInLogin,
           name: '_FormErrorStore.hasErrorsInLogin'))
       .value;
-  Computed<bool> _$hasErrorsInRegisterComputed;
+  Computed<bool>? _$hasErrorsInRegisterComputed;
 
   @override
   bool get hasErrorsInRegister => (_$hasErrorsInRegisterComputed ??=
           Computed<bool>(() => super.hasErrorsInRegister,
               name: '_FormErrorStore.hasErrorsInRegister'))
       .value;
-  Computed<bool> _$hasErrorInForgotPasswordComputed;
+  Computed<bool>? _$hasErrorInForgotPasswordComputed;
 
   @override
   bool get hasErrorInForgotPassword => (_$hasErrorInForgotPasswordComputed ??=
@@ -242,13 +242,13 @@ mixin _$FormErrorStore on _FormErrorStore, Store {
   final _$userEmailAtom = Atom(name: '_FormErrorStore.userEmail');
 
   @override
-  String get userEmail {
+  String? get userEmail {
     _$userEmailAtom.reportRead();
     return super.userEmail;
   }
 
   @override
-  set userEmail(String value) {
+  set userEmail(String? value) {
     _$userEmailAtom.reportWrite(value, super.userEmail, () {
       super.userEmail = value;
     });
@@ -257,13 +257,13 @@ mixin _$FormErrorStore on _FormErrorStore, Store {
   final _$passwordAtom = Atom(name: '_FormErrorStore.password');
 
   @override
-  String get password {
+  String? get password {
     _$passwordAtom.reportRead();
     return super.password;
   }
 
   @override
-  set password(String value) {
+  set password(String? value) {
     _$passwordAtom.reportWrite(value, super.password, () {
       super.password = value;
     });
@@ -272,13 +272,13 @@ mixin _$FormErrorStore on _FormErrorStore, Store {
   final _$confirmPasswordAtom = Atom(name: '_FormErrorStore.confirmPassword');
 
   @override
-  String get confirmPassword {
+  String? get confirmPassword {
     _$confirmPasswordAtom.reportRead();
     return super.confirmPassword;
   }
 
   @override
-  set confirmPassword(String value) {
+  set confirmPassword(String? value) {
     _$confirmPasswordAtom.reportWrite(value, super.confirmPassword, () {
       super.confirmPassword = value;
     });

@@ -7,22 +7,24 @@ class RoundedButtonWidget extends StatelessWidget {
   final VoidCallback onPressed;
 
   const RoundedButtonWidget({
-    Key key,
-    this.buttonText,
-    this.buttonColor,
+    Key? key,
+    this.buttonText = "",
+    this.buttonColor = Colors.blue,
     this.textColor = Colors.white,
-    this.onPressed,
+    required this.onPressed,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
-      color: buttonColor,
-      shape: StadiumBorder(),
+    return TextButton(
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all<OutlinedBorder>(StadiumBorder()),
+        backgroundColor: MaterialStateProperty.all<Color>(buttonColor),
+      ),
       onPressed: onPressed,
       child: Text(
         buttonText,
-        style: Theme.of(context).textTheme.button.copyWith(color: textColor),
+        style: Theme.of(context).textTheme.button!.copyWith(color: textColor),
       ),
     );
   }

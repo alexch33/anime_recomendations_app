@@ -70,7 +70,7 @@ abstract class _LanguageStore with Store {
   // general:-------------------------------------------------------------------
   void init() async {
     // getting current language from shared preference
-    _repository?.currentLanguage?.then((locale) {
+    _repository.currentLanguage.then((locale) {
       if (locale != null) {
         _locale = locale;
       }

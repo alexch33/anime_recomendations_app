@@ -23,7 +23,7 @@ class TokenDataSource {
     return await _tokenStore.add(await _db, token.toMap());
   }
 
-  Future<UserToken> getTokenFromDb() async {
+  Future<UserToken?> getTokenFromDb() async {
 
     print('Loading from database');
 
@@ -32,7 +32,7 @@ class TokenDataSource {
       await _db,
     );
 
-    UserToken token;
+    UserToken? token;
     // Making a List<Post> out of List<RecordSnapshot>
     if(recordSnapshots.length > 0) {
       token = UserToken.fromMap(recordSnapshots.first.value);

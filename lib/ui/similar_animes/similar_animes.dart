@@ -1,7 +1,5 @@
 import 'package:boilerplate/models/recomendation/recomendation_list.dart';
-import 'package:boilerplate/stores/language/language_store.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
-import 'package:boilerplate/stores/theme/theme_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/widgets/anime_grid_tile.dart';
@@ -18,13 +16,12 @@ class SimilarAnimes extends StatefulWidget {
 
 class _SimilarAnimesState extends State<SimilarAnimes> {
   //stores:---------------------------------------------------------------------
-  AnimeStore _animeStore;
-  ThemeStore _themeStore;
-  LanguageStore _languageStore;
-  UserStore _userStore;
-  Anime _anime;
+  late AnimeStore _animeStore;
+  late UserStore _userStore;
+  late Anime _anime;
+  bool isInited = false;
 
-  RecomendationList _recomendationsList;
+  RecomendationList _recomendationsList = RecomendationList(recomendations: []);
 
   @override
   void initState() {
@@ -35,21 +32,17 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (_animeStore == null &&
-        _themeStore == null &&
-        _languageStore == null &&
-        _userStore == null) {
+    if (!isInited) {
       // initializing stores
-      _languageStore = Provider.of<LanguageStore>(context);
-      _themeStore = Provider.of<ThemeStore>(context);
       _userStore = Provider.of<UserStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
 
-      _anime = ModalRoute.of(context).settings.arguments;
+      _anime = ModalRoute.of(context)!.settings.arguments as Anime;
 
       _animeStore
           .querrySImilarItems(_anime.dataId.toString())
           .then((value) => setState(() => _recomendationsList = value));
+      isInited = true;
     }
   }
 
@@ -73,7 +66,7 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
   }
 
   Widget _buildGridView() {
-    return _recomendationsList != null
+    return _recomendationsList.recomendations.isNotEmpty
         ? GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
@@ -86,7 +79,7 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
           )
         : Center(
             child: Text(
-              AppLocalizations.of(context).translate('home_tv_no_post_found'),
+              AppLocalizations.of(context)!.translate('home_tv_no_post_found'),
             ),
           );
   }
@@ -96,10 +89,8 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
         (anime) =>
             anime.dataId.toString() ==
             _recomendationsList.recomendations[position].item.toString(),
-        orElse: () => null);
+        orElse: () => Anime());
 
-    if (animeItem == null)
-      animeItem = Anime(id: "0", dataId: 0, name: "noname", imgUrl: "");
     final isLiked = _userStore.isLikedAnime(animeItem.dataId);
     final isLater = _userStore.isLaterAnime(animeItem.dataId);
     final isBlack = _userStore.isBlackListedAnime(animeItem.dataId);

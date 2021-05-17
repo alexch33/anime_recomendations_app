@@ -1,10 +1,8 @@
-import 'package:boilerplate/stores/language/language_store.dart';
+import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
-import 'package:boilerplate/stores/theme/theme_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
 import 'package:boilerplate/ui/anime_recomendations/anime_recomendations.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
-import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
@@ -19,10 +17,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   //stores:---------------------------------------------------------------------
-  AnimeStore _animeStore;
-  ThemeStore _themeStore;
-  LanguageStore _languageStore;
-  UserStore _userStore;
+  late AnimeStore _animeStore;
+  late UserStore _userStore;
+  bool isInited = false;
 
   List<Widget> pages = [UserProfile(), AnimeList(), AnimeRecomendations()];
   int _page = 1;
@@ -37,15 +34,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (_animeStore == null &&
-        _themeStore == null &&
-        _languageStore == null &&
-        _userStore == null) {
-      // initializing stores
-      _languageStore = Provider.of<LanguageStore>(context);
-      _themeStore = Provider.of<ThemeStore>(context);
+    if (!isInited) {
       _animeStore = Provider.of<AnimeStore>(context);
       _userStore = Provider.of<UserStore>(context);
+      isInited = true;
     }
     _animeStore.getAnimes();
     _userStore.initUser();
@@ -106,10 +98,10 @@ class _HomeScreenState extends State<HomeScreen> {
   // General Methods:-----------------------------------------------------------
   _showErrorMessage(String message) {
     Future.delayed(Duration(milliseconds: 0), () {
-      if (message != null && message.isNotEmpty) {
+      if (message.isNotEmpty) {
         FlushbarHelper.createError(
           message: message,
-          title: AppLocalizations.of(context).translate('home_tv_error'),
+          title: AppLocalizations.of(context)!.translate('home_tv_error'),
           duration: Duration(seconds: 3),
         )..show(context);
       }

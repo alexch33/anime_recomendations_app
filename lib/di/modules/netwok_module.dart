@@ -2,15 +2,12 @@ import 'package:boilerplate/data/network/apis/animes/anime_api.dart';
 import 'package:boilerplate/data/network/apis/users/users_api.dart';
 import 'package:boilerplate/data/network/constants/endpoints.dart';
 import 'package:boilerplate/data/network/dio_client.dart';
-import 'package:boilerplate/data/network/rest_client.dart';
 import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/di/modules/preference_module.dart';
 import 'package:dio/dio.dart';
-import 'package:inject/inject.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-@module
 class NetworkModule extends PreferenceModule {
   // ignore: non_constant_identifier_names
   final String TAG = "NetworkModule";
@@ -19,8 +16,7 @@ class NetworkModule extends PreferenceModule {
   /// A singleton dio provider.
   ///
   /// Calling it multiple times will return the same instance.
-  @provide
-  @singleton
+
   Dio provideDio(SharedPreferenceHelper sharedPrefHelper) {
     final dio = Dio();
 
@@ -36,9 +32,11 @@ class NetworkModule extends PreferenceModule {
         requestHeader: true,
       ))
       ..interceptors.add(InterceptorsWrapper(
-        onRequest: (Options options) async {
+        onRequest:
+            (RequestOptions options, RequestInterceptorHandler handler) async {
           // getting shared pref instance
           var prefs = await SharedPreferences.getInstance();
+          await prefs.reload();
 
           // getting token
           var token = prefs.getString(Preferences.auth_token);
@@ -49,14 +47,15 @@ class NetworkModule extends PreferenceModule {
           } else {
             print('Auth token is null');
           }
+          return handler.next(options);
         },
-        onError: ((DioError error) async {
+        onError: ((DioError error, ErrorInterceptorHandler handler) async {
           if (error.response?.statusCode == 401) {
             final prefs = await SharedPreferences.getInstance();
             final refreshToken = prefs.getString(Preferences.refresh_token);
 
             if (refreshToken != null) {
-              RequestOptions options = error.response.request;
+              RequestOptions options = error.response!.requestOptions;
 
               final res = await dio.post(Endpoints.refreshTokens,
                   data: {"refreshToken": refreshToken});
@@ -75,18 +74,30 @@ class NetworkModule extends PreferenceModule {
 
                 dio.interceptors.requestLock.unlock();
                 dio.interceptors.responseLock.unlock();
-                return dio.request(options.path, options: options);
+
+                Options opt = Options(
+                    contentType: options.contentType,
+                    headers: options.headers,
+                    method: options.method,
+                    sendTimeout: options.sendTimeout,
+                    receiveTimeout: options.receiveTimeout);
+                var a = await dio.request(options.path,
+                    options: opt,
+                    data: options.data,
+                    queryParameters: options.queryParameters);
+                    handler.resolve(a);
+                // return handler.next(DioError(requestOptions: options));
               }
             }
             dio.interceptors.requestLock.unlock();
             dio.interceptors.responseLock.unlock();
 
-            return error;
+            return handler.next(error);
           } else {
             dio.interceptors.requestLock.unlock();
             dio.interceptors.responseLock.unlock();
 
-            return error;
+            return handler.next(error);
           }
         }),
       ));
@@ -97,29 +108,21 @@ class NetworkModule extends PreferenceModule {
   /// A singleton dio_client provider.
   ///
   /// Calling it multiple times will return the same instance.
-  @provide
-  @singleton
+
   DioClient provideDioClient(Dio dio) => DioClient(dio);
 
   /// A singleton dio_client provider.
   ///
   /// Calling it multiple times will return the same instance.
-  @provide
-  @singleton
-  RestClient provideRestClient() => RestClient();
 
   // Api Providers:-------------------------------------------------------------
   // Define all your api providers here
   /// A singleton post_api provider.
   ///
   /// Calling it multiple times will return the same instance.
-  @provide
-  @singleton
-  AnimeApi providePostApi(DioClient dioClient, RestClient restClient) =>
-      AnimeApi(dioClient);
 
-  @provide
-  @singleton
+  AnimeApi providePostApi(DioClient dioClient) => AnimeApi(dioClient);
+
   UsersApi provideUsersApi(DioClient dioClient) => UsersApi(dioClient);
 // Api Providers End:---------------------------------------------------------
 

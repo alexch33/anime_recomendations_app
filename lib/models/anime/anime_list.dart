@@ -5,11 +5,11 @@ class AnimeList {
   List<Anime> cashedAnimes = [];
 
   AnimeList({
-    this.animes,
+    required this.animes,
   });
 
   factory AnimeList.fromJson(List<dynamic> json) {
-    List<Anime> posts = List<Anime>();
+    List<Anime> posts = <Anime>[];
     posts = json.map((anime) => Anime.fromMap(anime)).toList();
 
     return AnimeList(

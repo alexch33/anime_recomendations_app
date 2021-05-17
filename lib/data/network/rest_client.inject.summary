@@ -1,8 +1,0 @@
-{
-  "asset": "asset:boilerplate/lib/data/network/rest_client.dart",
-  "summary": {
-    "injector": [],
-    "module": [],
-    "injectable": []
-  }
-}

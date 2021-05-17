@@ -75,3 +75,6 @@ build/
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 .flutter-plugins-dependencies
 ios/Flutter/flutter_export_environment.sh
+
+key.properties
+upload-keystore.jks

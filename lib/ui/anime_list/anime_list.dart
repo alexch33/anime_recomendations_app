@@ -65,8 +65,8 @@ class _AnimeListState extends State<AnimeList> {
         ? GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 0.4,
-              crossAxisSpacing: 4,
+              childAspectRatio: 0.5,
+              crossAxisSpacing: 2,
             ),
             itemCount: _animeStore.animeList.cashedAnimes.length,
             itemBuilder: (context, index) {
@@ -212,10 +212,12 @@ class _AnimeListState extends State<AnimeList> {
   Widget _buildGridItem(int position) {
     final anime = _animeStore.animeList.cashedAnimes[position];
 
-    return AnimeGridTile(
-        anime: anime,
-        isLiked: _userStore.user.likedAnimes.contains(anime.dataId),
-        isLater: _userStore.user.watchLaterAnimes.contains(anime.dataId),
-        isBlack: _userStore.user.blackListAnimes.contains(anime.dataId));
+    return Padding(
+        padding: EdgeInsets.all(8),
+        child: AnimeGridTile(
+            anime: anime,
+            isLiked: _userStore.user.likedAnimes.contains(anime.dataId),
+            isLater: _userStore.user.watchLaterAnimes.contains(anime.dataId),
+            isBlack: _userStore.user.blackListAnimes.contains(anime.dataId)));
   }
 }

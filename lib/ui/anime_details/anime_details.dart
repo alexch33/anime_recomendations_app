@@ -111,16 +111,18 @@ class _AnimeDetailsState extends State<AnimeDetails> {
         appBar: AppBar(
           title: Text("Info"),
         ),
-        body: Stack(
-          children: [
-            _buildMainContent(),
-            Observer(
-                builder: (context) =>
-                    (_userStore.loading || _animeStore.isLoading)
-                        ? CustomProgressIndicatorWidget()
-                        : Container())
-          ],
-        ));
+        body: Padding(
+            padding: EdgeInsets.all(16),
+            child: Stack(
+              children: [
+                _buildMainContent(),
+                Observer(
+                    builder: (context) =>
+                        (_userStore.loading || _animeStore.isLoading)
+                            ? CustomProgressIndicatorWidget()
+                            : Container())
+              ],
+            )));
   }
 
   Widget _buildMainContent() {

@@ -1,4 +1,4 @@
-package com.iotecksolutions.todoapp;
+package com.anime.recomender;
 
 import io.flutter.embedding.android.FlutterActivity;
 

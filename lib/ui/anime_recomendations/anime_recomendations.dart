@@ -182,8 +182,8 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 0.4,
-                crossAxisSpacing: 4,
+                childAspectRatio: 0.5,
+                crossAxisSpacing: 2
               ),
               itemCount: _recomendationsList.cachedRecomendations.length,
               itemBuilder: (context, index) {
@@ -209,7 +209,12 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
     final isLater = _userStore.isLaterAnime(animeItem.dataId);
     final isBlack = _userStore.isBlackListedAnime(animeItem.dataId);
 
-    return AnimeGridTile(
-        anime: animeItem, isLiked: isLiked, isLater: isLater, isBlack: isBlack);
+    return Padding(
+        padding: EdgeInsets.all(8),
+        child: AnimeGridTile(
+            anime: animeItem,
+            isLiked: isLiked,
+            isLater: isLater,
+            isBlack: isBlack));
   }
 }

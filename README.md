@@ -1,6 +1,8 @@
 Work in progress...
 
-flutter version 2.0.5
+flutter version 2.2.0
+
+
 **Step 1:**
 
 Download or clone this repo by using the link below:

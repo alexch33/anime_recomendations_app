@@ -52,7 +52,10 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
         appBar: AppBar(
           title: Text("Similar"),
         ),
-        body: _buildMainContent());
+        body: Padding(
+          padding: EdgeInsets.all(8),
+          child: _buildMainContent(),
+        ));
   }
 
   Widget _buildMainContent() {

@@ -29,6 +29,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   bool isLoading = true;
   int episode = 1;
   bool initedOnStart = false;
+  bool isShowPlayer = false;
 
   late VideoPlayerController videoPlayerController;
   late ChewieController chewieController;
@@ -36,6 +37,8 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   bool playerInited = false;
 
   Future<void> initVideoData(int episode) async {
+    if (isShowPlayer == false) return;
+
     if (!mounted) return;
     setState(() {
       isLoading = true;
@@ -136,7 +139,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
                   children: [
                     _buildImageBlock(),
                     _buildTextInfo(),
-                    _buildVideoBlock()
+                    isShowPlayer ? _buildVideoBlock() : Container()
                   ]),
               constraints: BoxConstraints(
                 minHeight: viewportConstraints.maxHeight,

@@ -182,22 +182,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildForgotPasswordButton() {
-    return Align(
-      alignment: FractionalOffset.centerRight,
-      child: TextButton(
-        child: Text(
-          AppLocalizations.of(context)!.translate('login_btn_forgot_password'),
-          style: Theme.of(context)
-              .textTheme
-              .caption!
-              .copyWith(color: Colors.orangeAccent),
-        ),
-        onPressed: () {},
-      ),
-    );
-  }
-
   Widget _buildSignInButton() {
     return RoundedButtonWidget(
       buttonText: AppLocalizations.of(context)!.translate('login_btn_sign_in'),

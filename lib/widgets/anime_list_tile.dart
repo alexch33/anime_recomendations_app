@@ -8,14 +8,20 @@ class AnimeListTile extends StatelessWidget {
   final Anime anime;
   final bool isLiked;
   final Widget? buttons;
+  final double? height;
 
-  const AnimeListTile({Key? key, required this.anime, this.isLiked = false, this.buttons})
+  const AnimeListTile(
+      {Key? key,
+      required this.anime,
+      this.isLiked = false,
+      this.buttons,
+      this.height = 200})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 200,
+        height: height,
         width: double.infinity,
         child: InkWell(
           onTap: () {
@@ -41,7 +47,7 @@ class AnimeListTile extends StatelessWidget {
                 Expanded(
                     flex: 69,
                     child: Padding(
-                      padding: EdgeInsets.all(8),
+                      padding: EdgeInsets.all(4),
                       child: Container(
                         height: double.infinity,
                         child: Column(
@@ -51,13 +57,23 @@ class AnimeListTile extends StatelessWidget {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    '${anime.name}',
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    softWrap: false,
-                                    style:
-                                        Theme.of(context).textTheme.headline6,
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        width: 250,
+                                        child: Text(
+                                          '${anime.name}',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          softWrap: false,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6,
+                                        ),
+                                      ),
+                                      this.buttons ?? Container(),
+                                    ],
                                   ),
                                   Text(
                                     '${anime.nameEng}',
@@ -70,7 +86,6 @@ class AnimeListTile extends StatelessWidget {
                                 ],
                               ),
                               buildGenres(anime.genre),
-                              this.buttons ?? Container(),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,

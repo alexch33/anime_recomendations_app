@@ -128,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(height: 24.0),
             _buildUserIdField(),
             _buildPasswordField(),
-            _buildForgotPasswordButton(),
+            Container(height: 32),
             _buildSignInButton(),
             Center(child: Text("Or")),
             _buildSignUpButton()

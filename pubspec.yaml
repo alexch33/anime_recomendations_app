@@ -32,7 +32,7 @@ dependencies:
   mobx: ^2.0.1
   flutter_mobx: ^2.0.0
 
-  sembast: ^3.0.1
+  sembast: ^3.0.4
   path_provider: ^2.0.1
   xxtea: ^2.1.0
 

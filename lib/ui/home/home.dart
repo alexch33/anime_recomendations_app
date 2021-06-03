@@ -1,15 +1,18 @@
 import 'package:another_flushbar/flushbar_helper.dart';
+import 'package:boilerplate/constants/strings.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
 import 'package:boilerplate/ui/anime_recomendations/anime_recomendations.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:boilerplate/ui/anime_list/anime_list.dart';
 import 'package:boilerplate/ui/user_profile/user_profile.dart';
 
+// ca-app-pub-2018524162823058/8856982199
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -24,6 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> pages = [UserProfile(), AnimeList(), AnimeRecomendations()];
   int _page = 1;
   GlobalKey _bottomNavigationKey = GlobalKey();
+
+  RewardedAd? _rewardedAd;
 
   @override
   void initState() {
@@ -41,6 +46,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     _animeStore.getAnimes();
     _userStore.initUser();
+
+    _loadRewarded();
   }
 
   @override
@@ -64,9 +71,18 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
       onTap: (index) {
         //Handle button tap
-        setState(() {
-          _page = index;
-        });
+        if (index == 2) {
+          _rewardedAd?.show(onUserEarnedReward: (ad, item) {
+            setState(() {
+              _page = index;
+            });
+          _loadRewarded();
+          });
+        } else {
+          setState(() {
+            _page = index;
+          });
+        }
       },
     );
   }
@@ -108,5 +124,39 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     return SizedBox.shrink();
+  }
+
+  Future<void> _loadRewarded() async {
+    await Future.delayed(Duration.zero);
+
+    await RewardedAd.load(
+        adUnitId: Strings.rewardedId,
+        request: AdRequest(),
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+          onAdLoaded: (RewardedAd ad) {
+            print('$ad loaded.');
+            // Keep a reference to the ad so you can show it later.
+            _rewardedAd = ad;
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            print('RewardedAd failed to load: $error');
+          },
+        ));
+
+    await Future.delayed(Duration.zero);
+
+    _rewardedAd?.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (RewardedAd ad) =>
+          print('$ad onAdShowedFullScreenContent.'),
+      onAdDismissedFullScreenContent: (RewardedAd ad) {
+        print('$ad onAdDismissedFullScreenContent.');
+        ad.dispose();
+      },
+      onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
+        print('$ad onAdFailedToShowFullScreenContent: $error');
+        ad.dispose();
+      },
+      onAdImpression: (RewardedAd ad) => print('$ad impression occurred.'),
+    );
   }
 }

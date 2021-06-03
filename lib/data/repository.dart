@@ -53,7 +53,7 @@ class Repository {
     // else make a network call to get all posts, store them into database for
     // later use
     int count = await _animeDataSource.count();
-    if (count > 0) return await _animeDataSource.getAnimesFromDb();
+    if (count > 0) return await _animeDataSource.getAnimesFromDbOrCache();
 
     return await _animeApi.getAnimes().then((animesList) {
       animesList.animes.forEach((anime) {

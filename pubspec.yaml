@@ -66,6 +66,7 @@ dependencies:
   string_similarity: ^2.0.0
 
   html: ^0.15.0
+  google_mobile_ads: ^0.13.0
 
 dev_dependencies:
   flutter_test:

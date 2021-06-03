@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "875890229568",
+    "project_id": "my-project-59639666",
+    "storage_bucket": "my-project-59639666.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:875890229568:android:055ce1de20b915b79afaa5",
+        "android_client_info": {
+          "package_name": "com.anime.recomender"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "875890229568-hr40m5nsj78l95uebjchiku89ivq5slp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALP_QFlrIM-WFfkvHDILzFmFqTZOhv4aI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "875890229568-hr40m5nsj78l95uebjchiku89ivq5slp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-2018524162823058~8586601026"
+    }
+  ],
+  "configuration_version": "1"
+}

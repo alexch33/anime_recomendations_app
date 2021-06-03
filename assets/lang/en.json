@@ -30,5 +30,8 @@
   "view_on_mal": "View on MAL",
   "no_rating": "no rating",
   "might_like": "You might like this...",
-  "recommended": "Recommended"
+  "recommended": "Recommended",
+  "favorites": "Favorites",
+  "later": "Watch Later",
+  "black_list": "Black List"
 }

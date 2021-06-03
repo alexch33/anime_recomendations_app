@@ -27,6 +27,7 @@ class _UserProfileState extends State<UserProfile>
   late Animation<double> animation;
   late AnimationController _fabController;
   late TabController _tabController;
+  late List<String> _tabTitles;
 
   @override
   void initState() {
@@ -52,6 +53,12 @@ class _UserProfileState extends State<UserProfile>
     if (!isInited) {
       _userStore = Provider.of<UserStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
+
+      _tabTitles = [
+        AppLocalizations.of(context)!.translate('favorites'),
+        AppLocalizations.of(context)!.translate('later'),
+        AppLocalizations.of(context)!.translate('black_list')
+      ];
 
       setState(() {
         likedAnimes = _animeStore.animeList.animes
@@ -79,6 +86,7 @@ class _UserProfileState extends State<UserProfile>
     } else {
       _fabController.forward();
     }
+    setState(() {});
   }
 
   @override
@@ -95,7 +103,18 @@ class _UserProfileState extends State<UserProfile>
                         angle: math.pi, child: Icon(Icons.recommend))),
               ],
             ),
-            title: Text('${_userStore.user.email}')),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  '${_userStore.user.email}',
+                  style: TextStyle(fontSize: 13),
+                ),
+                Container(height: 8),
+                Text(_tabTitles[_tabController.index])
+              ],
+            )),
         body: Stack(
           children: [
             TabBarView(
@@ -219,11 +238,14 @@ class _UserProfileState extends State<UserProfile>
     showDialog(
         context: context,
         builder: (_) => new AlertDialog(
-              title: new Text(AppLocalizations.of(context)!.translate('favorites_reset_title')),
-              content: new Text(AppLocalizations.of(context)!.translate('favorites_reset_ask')),
+              title: new Text(AppLocalizations.of(context)!
+                  .translate('favorites_reset_title')),
+              content: new Text(AppLocalizations.of(context)!
+                  .translate('favorites_reset_ask')),
               actions: <Widget>[
                 TextButton(
-                  child: Text(AppLocalizations.of(context)!.translate('remove')),
+                  child:
+                      Text(AppLocalizations.of(context)!.translate('remove')),
                   onPressed: () async {
                     await deleteFavoritesAll();
                     Navigator.of(context).pop();

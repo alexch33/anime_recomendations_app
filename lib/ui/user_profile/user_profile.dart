@@ -219,18 +219,18 @@ class _UserProfileState extends State<UserProfile>
     showDialog(
         context: context,
         builder: (_) => new AlertDialog(
-              title: new Text("Favorites reset"),
-              content: new Text("Do you want to remove all favorites?"),
+              title: new Text(AppLocalizations.of(context)!.translate('favorites_reset_title')),
+              content: new Text(AppLocalizations.of(context)!.translate('favorites_reset_ask')),
               actions: <Widget>[
                 TextButton(
-                  child: Text('Remove'),
+                  child: Text(AppLocalizations.of(context)!.translate('remove')),
                   onPressed: () async {
                     await deleteFavoritesAll();
                     Navigator.of(context).pop();
                   },
                 ),
                 TextButton(
-                  child: Text('Close'),
+                  child: Text(AppLocalizations.of(context)!.translate('close')),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },

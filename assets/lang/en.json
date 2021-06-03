@@ -9,10 +9,26 @@
   "login_end": "------------------------------------------------------------------------------------",
 
   "home_start": "Below are list of strings for home",
-  "home_tv_posts": "Posts",
+  "home_tv_posts": "Animes",
   "home_tv_error": "Error",
-  "home_tv_no_post_found": "No posts found",
+  "home_tv_no_post_found": "No animes found",
   "home_tv_choose_language": "Choose Language",
-  "home_end": "-------------------------------------------------------------------------------------"
+  "home_end": "-------------------------------------------------------------------------------------",
 
+  "or": "Or",
+  "animes": "Animes",
+  "animes_refresh_title": "Anime database refresh",
+  "animes_refresh_message": "This action will fetch fresh anime database from server. Do you want to continue?",
+  "continue": "Continue",
+  "close": "Close",
+  "remove": "Remove",
+  "search_hint": "Search...",
+  "favorites_reset_title": "Favorites reset",
+  "favorites_reset_ask": "Do you want to remove all favorites?",
+  "info": "Info",
+  "similar_button": "If You like this...",
+  "view_on_mal": "View on MAL",
+  "no_rating": "no rating",
+  "might_like": "You might like this...",
+  "recommended": "Recommended"
 }

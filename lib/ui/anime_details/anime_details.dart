@@ -1,6 +1,7 @@
 import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/widgets/build_ganres.dart';
 import 'package:boilerplate/widgets/progress_indicator_widget.dart';
 import 'package:flutter/material.dart';
@@ -112,7 +113,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("Info"),
+          title: Text(AppLocalizations.of(context)!.translate('info')),
         ),
         body: Padding(
             padding: EdgeInsets.all(16),
@@ -236,18 +237,22 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   }
 
   Widget _buildSimilarButton() {
-    return ElevatedButton(
-      child: Text("Similar Items", style: Theme.of(context).textTheme.button),
-      onPressed: () {
-        Navigator.of(context)
-            .pushNamed(Routes.similarAnimes, arguments: _anime);
-      },
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ElevatedButton(
+        child: Text(AppLocalizations.of(context)!.translate('similar_button'),
+            style: Theme.of(context).textTheme.button),
+        onPressed: () {
+          Navigator.of(context)
+              .pushNamed(Routes.similarAnimes, arguments: _anime);
+        },
+      ),
     );
   }
 
   Widget _buildMalLink() {
     return GestureDetector(
-      child: Text("View on MAL",
+      child: Text(AppLocalizations.of(context)!.translate('view_on_mal'),
           style: TextStyle(
               decoration: TextDecoration.underline, color: Colors.blue)),
       onTap: () {
@@ -263,7 +268,9 @@ class _AnimeDetailsState extends State<AnimeDetails> {
           Icons.star,
           color: Colors.yellowAccent,
         ),
-        Text(_anime.rating?.toStringAsFixed(2) ?? "no rating",
+        Text(
+            _anime.rating?.toStringAsFixed(2) ??
+                AppLocalizations.of(context)!.translate('no_rating'),
             style: Theme.of(context).textTheme.headline6),
       ],
     );

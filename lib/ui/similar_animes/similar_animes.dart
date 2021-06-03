@@ -50,7 +50,7 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Similar"),
+          title: Text('${_anime.name}'),
         ),
         body: Padding(
           padding: EdgeInsets.all(8),

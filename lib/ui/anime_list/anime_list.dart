@@ -25,14 +25,13 @@ class _AnimeListState extends State<AnimeList> {
   final key = new GlobalKey<ScaffoldState>();
   final TextEditingController _searchQuery = new TextEditingController();
   Icon actionIcon = new Icon(Icons.search);
-  Widget appBarTitle = new Text("Animes");
+  late Widget appBarTitle;
   bool _isSearching = false;
   String _searchText = "";
 
   @override
   void initState() {
     super.initState();
-
     _searchQuery.addListener(() {
       if (_searchQuery.text.isEmpty) {
         setState(() {
@@ -90,6 +89,8 @@ class _AnimeListState extends State<AnimeList> {
       _themeStore = Provider.of<ThemeStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
       _userStore = Provider.of<UserStore>(context);
+      
+      appBarTitle = Text(AppLocalizations.of(context)!.translate('animes'));
 
       isInited = true;
     }
@@ -138,19 +139,21 @@ class _AnimeListState extends State<AnimeList> {
     showDialog(
         context: context,
         builder: (_) => new AlertDialog(
-              title: new Text("Anime database refresh"),
-              content: new Text(
-                  "This action will fetch fresh anime database from server. Do you want to continue?"),
+              title: new Text(AppLocalizations.of(context)!
+                  .translate('animes_refresh_title')),
+              content: new Text(AppLocalizations.of(context)!
+                  .translate('animes_refresh_message')),
               actions: <Widget>[
                 TextButton(
-                  child: Text('Continue'),
+                  child:
+                      Text(AppLocalizations.of(context)!.translate('continue')),
                   onPressed: () {
                     _animeStore.refreshAnimes();
                     Navigator.of(context).pop();
                   },
                 ),
                 TextButton(
-                  child: Text('Close'),
+                  child: Text(AppLocalizations.of(context)!.translate('close')),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -170,7 +173,8 @@ class _AnimeListState extends State<AnimeList> {
               controller: _searchQuery,
               decoration: new InputDecoration(
                   prefixIcon: new Icon(Icons.search, size: 30),
-                  hintText: "Search..."),
+                  hintText:
+                      AppLocalizations.of(context)!.translate('search_hint')),
             );
             _handleSearchStart();
           } else {
@@ -193,7 +197,8 @@ class _AnimeListState extends State<AnimeList> {
         Icons.search,
         size: 30,
       );
-      this.appBarTitle = new Text("Animes");
+      this.appBarTitle =
+          new Text(AppLocalizations.of(context)!.translate('animes'));
       _isSearching = false;
       _searchQuery.clear();
     });

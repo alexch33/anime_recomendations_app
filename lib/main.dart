@@ -82,6 +82,23 @@ class MyApp extends StatelessWidget {
               // Built-in localization of basic text for Cupertino widgets
               GlobalCupertinoLocalizations.delegate,
             ],
+            localeResolutionCallback: (locale, supportedLocales) {
+              // Check if the current device locale is supported
+              final List<Locale> systemLocales = WidgetsBinding.instance!.window
+                  .locales; // Returns the list of locales that user defined in the system settings.
+              var currentLocaSystem = systemLocales.first;
+
+              Locale loc = supportedLocales.firstWhere(
+                  (supportedLocale) =>
+                      supportedLocale.languageCode ==
+                      currentLocaSystem.languageCode,
+                  orElse: () => supportedLocales.first);
+              Future.delayed(Duration(milliseconds: 100), () {
+                _languageStore.changeLanguage(loc.languageCode);
+              });
+
+              return loc;
+            },
             home: _userStore.isLoggedIn ? HomeScreen() : LoginScreen(),
           );
         },

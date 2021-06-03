@@ -130,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
             _buildPasswordField(),
             Container(height: 32),
             _buildSignInButton(),
-            Center(child: Text("Or")),
+            Center(child: Text(AppLocalizations.of(context)!.translate('or'))),
             _buildSignUpButton()
           ],
         ),
@@ -208,7 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
           DeviceUtils.hideKeyboard(context);
           _store.login();
         } else {
-          _showErrorMessage('Please fill in all fields');
+          _showErrorMessage(AppLocalizations.of(context)!.translate('login_error_fill_fields'));
         }
       },
     );
@@ -224,7 +224,7 @@ class _LoginScreenState extends State<LoginScreen> {
           DeviceUtils.hideKeyboard(context);
           _store.register();
         } else {
-          _showErrorMessage('Please fill in all fields');
+          _showErrorMessage(AppLocalizations.of(context)!.translate('login_error_fill_fields'));
         }
       },
     );

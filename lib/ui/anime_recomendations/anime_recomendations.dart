@@ -27,7 +27,7 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
   final key = new GlobalKey<ScaffoldState>();
   final TextEditingController _searchQuery = new TextEditingController();
   Icon actionIcon = new Icon(Icons.search);
-  Widget appBarTitle = new Text("Recomended");
+  late Widget appBarTitle;
   bool _isSearching = false;
   String _searchText = "";
 
@@ -61,6 +61,8 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
       _themeStore = Provider.of<ThemeStore>(context);
       _userStore = Provider.of<UserStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
+
+      appBarTitle = Text(AppLocalizations.of(context)!.translate('recommended'));
 
       isInited = true;
     }
@@ -115,7 +117,7 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
               controller: _searchQuery,
               decoration: new InputDecoration(
                   prefixIcon: new Icon(Icons.search, size: 30),
-                  hintText: "Search..."),
+                  hintText: AppLocalizations.of(context)!.translate('search_hint')),
             );
             _handleSearchStart();
           } else {
@@ -138,7 +140,7 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
         Icons.search,
         size: 30,
       );
-      this.appBarTitle = new Text("Recomended");
+      this.appBarTitle = new Text(AppLocalizations.of(context)!.translate('recommended'));
       _isSearching = false;
       _searchQuery.clear();
     });
@@ -181,10 +183,9 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
         ? RefreshIndicator(
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.5,
-                crossAxisSpacing: 2
-              ),
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.5,
+                  crossAxisSpacing: 2),
               itemCount: _recomendationsList.cachedRecomendations.length,
               itemBuilder: (context, index) {
                 return _buildGridItem(index);

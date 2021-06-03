@@ -1,0 +1,35 @@
+{
+    "login_start": "Ниже поля для входа",
+    "login_et_user_email": "Введите почту",
+    "login_et_user_password": "Введите пароль",
+    "login_btn_forgot_password": "Забыли пароль?",
+    "login_btn_sign_in": "Войти",
+    "login_btn_sign_up": "Зарегестрироваться",
+    "login_error_fill_fields": "Пожалуйста, заполните все поля",
+    "login_end": "------------------------------------------------------------------------------------",
+  
+    "home_start": "Below are list of strings for home",
+    "home_tv_posts": "Аниме",
+    "home_tv_error": "Ошибка",
+    "home_tv_no_post_found": "Не найдено",
+    "home_tv_choose_language": "Выберите язык",
+    "home_end": "-------------------------------------------------------------------------------------",
+  
+    "or": "Или",
+    "animes": "Аниме",
+    "animes_refresh_title": "Обновить базу данных аниме",
+    "animes_refresh_message": "Это действие скачает свежую базу аниме с сервера. Хотите продолжить?",
+    "continue": "Продолжить",
+    "close": "Закрыть",
+    "remove": "Удалить",
+    "search_hint": "Поиск...",
+    "favorites_reset_title": "Удалить любимое",
+    "favorites_reset_ask": "Хотите очистить список любимых?",
+    "info": "Информация",
+    "similar_button": "Если вам нравится это...",
+    "view_on_mal": "Смотреть на MAL",
+    "no_rating": "без рейтинга",
+    "might_like": "Вам может понравится...",
+    "recommended": "Рекоммендованно"
+  }
+  

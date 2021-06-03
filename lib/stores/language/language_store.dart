@@ -19,8 +19,7 @@ abstract class _LanguageStore with Store {
   // supported languages
   List<Language> supportedLanguages = [
     Language(code: 'US', locale: 'en', language: 'English'),
-    Language(code: 'DK', locale: 'da', language: 'Danish'),
-    Language(code: 'ES', locale: 'es', language: 'España'),
+    Language(code: 'RU', locale: 'ru', language: 'Russian'),
   ];
 
   // constructor:---------------------------------------------------------------
@@ -48,13 +47,14 @@ abstract class _LanguageStore with Store {
   @action
   String getCode() {
     var code;
-
     if (_locale == 'en') {
       code = "US";
     } else if (_locale == 'da') {
       code = "DK";
     } else if (_locale == 'es') {
       code = "ES";
+    } else if (_locale == "ru") {
+      code = "RU";
     }
 
     return code;

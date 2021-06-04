@@ -3,6 +3,7 @@ import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
+import 'package:boilerplate/widgets/ad_label.dart';
 import 'package:boilerplate/widgets/build_ganres.dart';
 import 'package:boilerplate/widgets/progress_indicator_widget.dart';
 import 'package:flutter/material.dart';
@@ -248,19 +249,35 @@ class _AnimeDetailsState extends State<AnimeDetails> {
 
   Widget _buildSimilarButton() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ElevatedButton(
-        child: Text(AppLocalizations.of(context)!.translate('similar_button'),
-            style: Theme.of(context).textTheme.button),
-        onPressed: () {
-          _rewardedAd?.show(onUserEarnedReward: (ad, item) {
-            Navigator.of(context)
-                .pushNamed(Routes.similarAnimes, arguments: _anime);
-            _loadRewarded();
-          });
-        },
-      ),
-    );
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+            width: 150,
+            height: 50,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                ElevatedButton(
+                  child: Text(
+                      AppLocalizations.of(context)!.translate('similar_button'),
+                      style: Theme.of(context).textTheme.button),
+                  onPressed: () {
+                    if (_rewardedAd == null) {
+                      _animeStore.errorStore.errorMessage =
+                          AppLocalizations.of(context)!.translate('rewarded_not_load');
+                    }
+                    _rewardedAd?.show(onUserEarnedReward: (ad, item) {
+                      Navigator.of(context)
+                          .pushNamed(Routes.similarAnimes, arguments: _anime);
+                      _loadRewarded();
+                    });
+                  },
+                ),
+                Align(
+                  child: AdLabel(padding: 5),
+                  alignment: Alignment.topRight,
+                )
+              ],
+            )));
   }
 
   Widget _buildMalLink() {
@@ -423,6 +440,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
           },
           onAdFailedToLoad: (LoadAdError error) {
             print('RewardedAd failed to load: $error');
+            _animeStore.errorStore.errorMessage = AppLocalizations.of(context)!.translate('rewarded_error');
           },
         ));
 

@@ -4,6 +4,7 @@ import 'package:boilerplate/stores/anime/anime_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
 import 'package:boilerplate/ui/anime_recomendations/anime_recomendations.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
+import 'package:boilerplate/widgets/ad_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -67,17 +68,22 @@ class _HomeScreenState extends State<HomeScreen> {
       items: <Widget>[
         Icon(Icons.person, size: 30),
         Icon(Icons.list, size: 30),
-        Icon(Icons.recommend, size: 30),
+        _buildAdRecommended()
       ],
       onTap: (index) {
         //Handle button tap
         if (index == 2) {
-          _rewardedAd?.show(onUserEarnedReward: (ad, item) {
-            setState(() {
-              _page = index;
+          if (_rewardedAd == null) {
+            _animeStore.errorStore.errorMessage =
+                AppLocalizations.of(context)!.translate('rewarded_not_load');
+          } else {
+            _rewardedAd?.show(onUserEarnedReward: (ad, item) {
+              setState(() {
+                _page = index;
+              });
+              _loadRewarded();
             });
-          _loadRewarded();
-          });
+          }
         } else {
           setState(() {
             _page = index;
@@ -140,6 +146,8 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           onAdFailedToLoad: (LoadAdError error) {
             print('RewardedAd failed to load: $error');
+            _animeStore.errorStore.errorMessage =
+                AppLocalizations.of(context)!.translate('rewarded_error');
           },
         ));
 
@@ -158,5 +166,21 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       onAdImpression: (RewardedAd ad) => print('$ad impression occurred.'),
     );
+  }
+
+  Widget _buildAdRecommended() {
+    return SizedBox(
+        width: 45,
+        height: 45,
+        child: Stack(
+          children: [
+            Icon(Icons.recommend, size: 30),
+            Align(
+              child: AdLabel(padding: 2),
+              alignment: Alignment.topRight,
+            )
+          ],
+          alignment: Alignment.center,
+        ));
   }
 }

@@ -33,5 +33,7 @@
   "recommended": "Recommended",
   "favorites": "Favorites",
   "later": "Watch Later",
-  "black_list": "Black List"
+  "black_list": "Black List",
+  "rewarded_error": "Error Rewarded Ad Loading",
+  "rewarded_not_load": "Rewarded ad not loaded"
 }

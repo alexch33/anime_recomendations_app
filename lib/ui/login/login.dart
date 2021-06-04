@@ -128,9 +128,9 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(height: 24.0),
             _buildUserIdField(),
             _buildPasswordField(),
-            _buildForgotPasswordButton(),
+            Container(height: 32),
             _buildSignInButton(),
-            Center(child: Text("Or")),
+            Center(child: Text(AppLocalizations.of(context)!.translate('or'))),
             _buildSignUpButton()
           ],
         ),
@@ -182,22 +182,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildForgotPasswordButton() {
-    return Align(
-      alignment: FractionalOffset.centerRight,
-      child: TextButton(
-        child: Text(
-          AppLocalizations.of(context)!.translate('login_btn_forgot_password'),
-          style: Theme.of(context)
-              .textTheme
-              .caption!
-              .copyWith(color: Colors.orangeAccent),
-        ),
-        onPressed: () {},
-      ),
-    );
-  }
-
   Widget _buildSignInButton() {
     return RoundedButtonWidget(
       buttonText: AppLocalizations.of(context)!.translate('login_btn_sign_in'),
@@ -208,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
           DeviceUtils.hideKeyboard(context);
           _store.login();
         } else {
-          _showErrorMessage('Please fill in all fields');
+          _showErrorMessage(AppLocalizations.of(context)!.translate('login_error_fill_fields'));
         }
       },
     );
@@ -224,7 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
           DeviceUtils.hideKeyboard(context);
           _store.register();
         } else {
-          _showErrorMessage('Please fill in all fields');
+          _showErrorMessage(AppLocalizations.of(context)!.translate('login_error_fill_fields'));
         }
       },
     );

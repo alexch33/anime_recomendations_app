@@ -14,7 +14,8 @@ class UserProfile extends StatefulWidget {
   _UserProfileState createState() => _UserProfileState();
 }
 
-class _UserProfileState extends State<UserProfile> {
+class _UserProfileState extends State<UserProfile>
+    with TickerProviderStateMixin {
   //stores:---------------------------------------------------------------------
   late AnimeStore _animeStore;
   late UserStore _userStore;
@@ -22,10 +23,27 @@ class _UserProfileState extends State<UserProfile> {
   List<Anime> likedAnimes = [];
   List<Anime> laterAnimes = [];
   List<Anime> blackAnimes = [];
+  static const double _LIST_TILE_HEIGHT = 150;
+  late Animation<double> animation;
+  late AnimationController _fabController;
+  late TabController _tabController;
+  late List<String> _tabTitles;
 
   @override
   void initState() {
     super.initState();
+    _fabController = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    );
+    _fabController.addListener(() {
+      setState(() {});
+    });
+    animation = Tween<double>(begin: 0, end: 1).animate(_fabController);
+
+    _tabController = TabController(vsync: this, length: 3);
+    _tabController.addListener(_handleTabSelection);
+    _fabController.forward();
   }
 
   @override
@@ -35,6 +53,12 @@ class _UserProfileState extends State<UserProfile> {
     if (!isInited) {
       _userStore = Provider.of<UserStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
+
+      _tabTitles = [
+        AppLocalizations.of(context)!.translate('favorites'),
+        AppLocalizations.of(context)!.translate('later'),
+        AppLocalizations.of(context)!.translate('black_list')
+      ];
 
       setState(() {
         likedAnimes = _animeStore.animeList.animes
@@ -56,39 +80,58 @@ class _UserProfileState extends State<UserProfile> {
     _userStore.initUser();
   }
 
+  void _handleTabSelection() {
+    if (_tabController.index > 0) {
+      _fabController.reverse();
+    } else {
+      _fabController.forward();
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-          appBar: AppBar(
-              bottom: TabBar(
-                tabs: [
-                  Tab(icon: Icon(Icons.favorite)),
-                  Tab(icon: Icon(Icons.watch_later)),
-                  Tab(
-                      icon: Transform.rotate(
-                          angle: math.pi, child: Icon(Icons.recommend))),
-                ],
-              ),
-              title: Text('Profile lists')),
-          body: Stack(
-            children: [
-              TabBarView(
-                children: [
-                  _buildFavoriteContent(),
-                  _buildWatchLaterContent(),
-                  _buildBlackListContent(),
-                ],
-              ),
-              Observer(
-                  builder: (context) =>
-                      (_userStore.loading || _userStore.isLoading)
-                          ? CustomProgressIndicatorWidget()
-                          : Container())
-            ],
-          )),
-    );
+    return Scaffold(
+        appBar: AppBar(
+            bottom: TabBar(
+              controller: _tabController,
+              tabs: [
+                Tab(icon: Icon(Icons.favorite)),
+                Tab(icon: Icon(Icons.watch_later)),
+                Tab(
+                    icon: Transform.rotate(
+                        angle: math.pi, child: Icon(Icons.recommend))),
+              ],
+            ),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  '${_userStore.user.email}',
+                  style: TextStyle(fontSize: 13),
+                ),
+                Container(height: 8),
+                Text(_tabTitles[_tabController.index])
+              ],
+            )),
+        body: Stack(
+          children: [
+            TabBarView(
+              controller: _tabController,
+              children: [
+                _buildFavoriteContent(),
+                _buildWatchLaterContent(),
+                _buildBlackListContent(),
+              ],
+            ),
+            Observer(
+                builder: (context) =>
+                    (_userStore.loading || _userStore.isLoading)
+                        ? CustomProgressIndicatorWidget()
+                        : Container())
+          ],
+        ));
   }
 
   Widget _buildWatchLaterContent() {
@@ -96,8 +139,8 @@ class _UserProfileState extends State<UserProfile> {
       builder: (context) {
         return _userStore.isLoading
             ? CustomProgressIndicatorWidget()
-            : Material(
-                child: Center(
+            : Scaffold(
+                body: Center(
                 child: _buildListViewLater(),
               ));
       },
@@ -109,8 +152,8 @@ class _UserProfileState extends State<UserProfile> {
       builder: (context) {
         return _userStore.isLoading
             ? CustomProgressIndicatorWidget()
-            : Material(
-                child: Center(
+            : Scaffold(
+                body: Center(
                 child: _buildListViewBlack(),
               ));
       },
@@ -122,21 +165,24 @@ class _UserProfileState extends State<UserProfile> {
       builder: (context) {
         return _userStore.isLoading
             ? CustomProgressIndicatorWidget()
-            : Material(
-                child: Center(
-                child: _buildListViewLiked(),
-              ));
+            : Scaffold(
+                floatingActionButton: Transform.scale(
+                  scale: animation.value,
+                  child: FloatingActionButton(
+                      child: Icon(Icons.delete),
+                      onPressed: _showMaterialDialog),
+                ),
+                body: Center(
+                  child: _buildListViewLiked(),
+                ));
       },
     ));
   }
 
   Widget _buildListViewLiked() {
     return likedAnimes.length > 0
-        ? ListView.separated(
+        ? ListView.builder(
             itemCount: likedAnimes.length,
-            separatorBuilder: (context, position) {
-              return Divider();
-            },
             itemBuilder: (context, position) {
               return _buildListItemLiked(position);
             },
@@ -150,11 +196,8 @@ class _UserProfileState extends State<UserProfile> {
 
   Widget _buildListViewLater() {
     return laterAnimes.length > 0
-        ? ListView.separated(
+        ? ListView.builder(
             itemCount: laterAnimes.length,
-            separatorBuilder: (context, position) {
-              return Divider();
-            },
             itemBuilder: (context, position) {
               return _buildListItemLater(position);
             },
@@ -168,11 +211,8 @@ class _UserProfileState extends State<UserProfile> {
 
   Widget _buildListViewBlack() {
     return blackAnimes.length > 0
-        ? ListView.separated(
+        ? ListView.builder(
             itemCount: blackAnimes.length,
-            separatorBuilder: (context, position) {
-              return Divider();
-            },
             itemBuilder: (context, position) {
               return _buildListItemBlack(position);
             },
@@ -198,18 +238,21 @@ class _UserProfileState extends State<UserProfile> {
     showDialog(
         context: context,
         builder: (_) => new AlertDialog(
-              title: new Text("Favorites reset"),
-              content: new Text("Do you want to remove all favorites?"),
+              title: new Text(AppLocalizations.of(context)!
+                  .translate('favorites_reset_title')),
+              content: new Text(AppLocalizations.of(context)!
+                  .translate('favorites_reset_ask')),
               actions: <Widget>[
                 TextButton(
-                  child: Text('Remove'),
+                  child:
+                      Text(AppLocalizations.of(context)!.translate('remove')),
                   onPressed: () async {
                     await deleteFavoritesAll();
                     Navigator.of(context).pop();
                   },
                 ),
                 TextButton(
-                  child: Text('Close'),
+                  child: Text(AppLocalizations.of(context)!.translate('close')),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -248,7 +291,10 @@ class _UserProfileState extends State<UserProfile> {
   Widget _buildListItemLiked(int position) {
     return GestureDetector(
       onLongPress: _showMaterialDialog,
-      child: AnimeListTile(anime: likedAnimes[position], isLiked: true),
+      child: AnimeListTile(
+          anime: likedAnimes[position],
+          isLiked: true,
+          height: _LIST_TILE_HEIGHT),
     );
   }
 
@@ -257,7 +303,8 @@ class _UserProfileState extends State<UserProfile> {
       child: AnimeListTile(
           anime: laterAnimes[position],
           isLiked: _userStore.user.isAnimeLiked(laterAnimes[position].dataId),
-          buttons: _buildListItemLaterButtonsBlock(position)),
+          buttons: _buildListItemLaterButtonsBlock(position),
+          height: _LIST_TILE_HEIGHT),
     );
   }
 
@@ -266,7 +313,14 @@ class _UserProfileState extends State<UserProfile> {
       child: AnimeListTile(
           anime: blackAnimes[position],
           isLiked: _userStore.user.isAnimeLiked(blackAnimes[position].dataId),
-          buttons: _buildListItemBlackButtonsBlock(position)),
+          buttons: _buildListItemBlackButtonsBlock(position),
+          height: _LIST_TILE_HEIGHT),
     );
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 }

@@ -15,7 +15,11 @@
     <application
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
+        android:name="androidx.multidex.MultiDexApplication" 
         android:label="Anime Recomender">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-2018524162823058~8586601026"/>
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
@@ -45,5 +49,5 @@
     </application>
     <meta-data
         android:name="flutterEmbedding"
-        android:value="2" />
+        android:value="2" />    
 </manifest>

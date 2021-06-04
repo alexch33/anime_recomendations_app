@@ -1,10 +1,14 @@
+import 'package:boilerplate/constants/strings.dart';
 import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
 import 'package:boilerplate/stores/user/user_store.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
+import 'package:boilerplate/widgets/ad_label.dart';
 import 'package:boilerplate/widgets/build_ganres.dart';
 import 'package:boilerplate/widgets/progress_indicator_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:boilerplate/models/anime/anime.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -35,6 +39,8 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   late ChewieController chewieController;
 
   bool playerInited = false;
+
+  RewardedAd? _rewardedAd;
 
   Future<void> initVideoData(int episode) async {
     if (isShowPlayer == false) return;
@@ -90,6 +96,12 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   }
 
   @override
+  void initState() {
+    _loadRewarded();
+    super.initState();
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
@@ -112,7 +124,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("Info"),
+          title: Text(AppLocalizations.of(context)!.translate('info')),
         ),
         body: Padding(
             padding: EdgeInsets.all(16),
@@ -236,18 +248,41 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   }
 
   Widget _buildSimilarButton() {
-    return ElevatedButton(
-      child: Text("Similar Items", style: Theme.of(context).textTheme.button),
-      onPressed: () {
-        Navigator.of(context)
-            .pushNamed(Routes.similarAnimes, arguments: _anime);
-      },
-    );
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+            width: 150,
+            height: 50,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                ElevatedButton(
+                  child: Text(
+                      AppLocalizations.of(context)!.translate('similar_button'),
+                      style: Theme.of(context).textTheme.button),
+                  onPressed: () {
+                    if (_rewardedAd == null) {
+                      _animeStore.errorStore.errorMessage =
+                          AppLocalizations.of(context)!.translate('rewarded_not_load');
+                    }
+                    _rewardedAd?.show(onUserEarnedReward: (ad, item) {
+                      Navigator.of(context)
+                          .pushNamed(Routes.similarAnimes, arguments: _anime);
+                      _loadRewarded();
+                    });
+                  },
+                ),
+                Align(
+                  child: AdLabel(padding: 5),
+                  alignment: Alignment.topRight,
+                )
+              ],
+            )));
   }
 
   Widget _buildMalLink() {
     return GestureDetector(
-      child: Text("View on MAL",
+      child: Text(AppLocalizations.of(context)!.translate('view_on_mal'),
           style: TextStyle(
               decoration: TextDecoration.underline, color: Colors.blue)),
       onTap: () {
@@ -263,7 +298,9 @@ class _AnimeDetailsState extends State<AnimeDetails> {
           Icons.star,
           color: Colors.yellowAccent,
         ),
-        Text(_anime.rating?.toStringAsFixed(2) ?? "no rating",
+        Text(
+            _anime.rating?.toStringAsFixed(2) ??
+                AppLocalizations.of(context)!.translate('no_rating'),
             style: Theme.of(context).textTheme.headline6),
       ],
     );
@@ -387,5 +424,40 @@ class _AnimeDetailsState extends State<AnimeDetails> {
       chewieController.dispose();
     }
     super.dispose();
+  }
+
+  Future<void> _loadRewarded() async {
+    await Future.delayed(Duration.zero);
+
+    await RewardedAd.load(
+        adUnitId: Strings.rewardedId,
+        request: AdRequest(),
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+          onAdLoaded: (RewardedAd ad) {
+            print('$ad loaded.');
+            // Keep a reference to the ad so you can show it later.
+            _rewardedAd = ad;
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            print('RewardedAd failed to load: $error');
+            _animeStore.errorStore.errorMessage = AppLocalizations.of(context)!.translate('rewarded_error');
+          },
+        ));
+
+    await Future.delayed(Duration.zero);
+
+    _rewardedAd?.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (RewardedAd ad) =>
+          print('$ad onAdShowedFullScreenContent.'),
+      onAdDismissedFullScreenContent: (RewardedAd ad) {
+        print('$ad onAdDismissedFullScreenContent.');
+        ad.dispose();
+      },
+      onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
+        print('$ad onAdFailedToShowFullScreenContent: $error');
+        ad.dispose();
+      },
+      onAdImpression: (RewardedAd ad) => print('$ad impression occurred.'),
+    );
   }
 }

@@ -18,6 +18,8 @@ class AnimeDataSource {
   // Constructor
   AnimeDataSource(this._db);
 
+  AnimeList? _animeListCached;
+
   // DB functions:--------------------------------------------------------------
   Future<int?> insert(Anime anime) async {
     final result =
@@ -29,7 +31,8 @@ class AnimeDataSource {
     return await _animesStore.count(await _db);
   }
 
-  Future<List<Anime>> getAllSortedByFilter({required List<Filter> filters}) async {
+  Future<List<Anime>> getAllSortedByFilter(
+      {required List<Filter> filters}) async {
     //creating finder
     final finder = Finder(
         filter: Filter.and(filters),
@@ -49,9 +52,17 @@ class AnimeDataSource {
     }).toList();
   }
 
-  Future<AnimeList> getAnimesFromDb() async {
-    print('Loading from database');
+  Future<AnimeList> getAnimesFromDbOrCache() async {
+    if (_animeListCached == null) {
+      return getAnimesFromDb();
+    } else {
+      print('Loading from anime cache');
+      return _animeListCached ?? AnimeList(animes: []);
+    }
+  }
 
+  Future<AnimeList> getAnimesFromDb() async {
+    print('Loading from database animes');
     // anime list
     var animesList;
     final finder =
@@ -70,6 +81,8 @@ class AnimeDataSource {
         return anime;
       }).toList());
     }
+
+    _animeListCached = animesList;
 
     return animesList;
   }

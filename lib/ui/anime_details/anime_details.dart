@@ -33,7 +33,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   bool isLoading = true;
   int episode = 1;
   bool initedOnStart = false;
-  bool isShowPlayer = false;
+  bool isShowPlayer = true;
 
   late VideoPlayerController videoPlayerController;
   late ChewieController chewieController;

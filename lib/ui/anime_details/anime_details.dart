@@ -210,7 +210,10 @@ class _AnimeDetailsState extends State<AnimeDetails> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     primary: e == episode ? Colors.red : Colors.black),
-                child: Text("$e"),
+                child: Text(
+                  "$e",
+                  style: TextStyle(color: Colors.white),
+                ),
                 onPressed: () async {
                   await initVideoData(e);
                 },

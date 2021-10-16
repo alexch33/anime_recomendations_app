@@ -97,7 +97,6 @@ class _AnimeDetailsState extends State<AnimeDetails> {
 
   @override
   void initState() {
-    _loadRewarded();
     super.initState();
   }
 
@@ -111,6 +110,10 @@ class _AnimeDetailsState extends State<AnimeDetails> {
       _userStore = Provider.of<UserStore>(context);
 
       isInited = true;
+
+      if (_userStore.isAdsOn) {
+        _loadRewarded();
+      }
     }
 
     if (!this.initedOnStart) {
@@ -261,19 +264,25 @@ class _AnimeDetailsState extends State<AnimeDetails> {
                       AppLocalizations.of(context)!.translate('similar_button'),
                       style: Theme.of(context).textTheme.button),
                   onPressed: () {
-                    if (_rewardedAd == null) {
-                      _animeStore.errorStore.errorMessage =
-                          AppLocalizations.of(context)!.translate('rewarded_not_load');
-                    }
-                    _rewardedAd?.show(onUserEarnedReward: (ad, item) {
+                    if (_userStore.isAdsOn) {
+                      if (_rewardedAd == null) {
+                        _animeStore.errorStore.errorMessage =
+                            AppLocalizations.of(context)!
+                                .translate('rewarded_not_load');
+                      }
+                      _rewardedAd?.show(onUserEarnedReward: (ad, item) {
+                        Navigator.of(context)
+                            .pushNamed(Routes.similarAnimes, arguments: _anime);
+                        _loadRewarded();
+                      });
+                    } else {
                       Navigator.of(context)
                           .pushNamed(Routes.similarAnimes, arguments: _anime);
-                      _loadRewarded();
-                    });
+                    }
                   },
                 ),
                 Align(
-                  child: AdLabel(padding: 5),
+                  child: _userStore.isAdsOn ? AdLabel(padding: 5) : Container(),
                   alignment: Alignment.topRight,
                 )
               ],
@@ -440,7 +449,8 @@ class _AnimeDetailsState extends State<AnimeDetails> {
           },
           onAdFailedToLoad: (LoadAdError error) {
             print('RewardedAd failed to load: $error');
-            _animeStore.errorStore.errorMessage = AppLocalizations.of(context)!.translate('rewarded_error');
+            _animeStore.errorStore.errorMessage =
+                AppLocalizations.of(context)!.translate('rewarded_error');
           },
         ));
 

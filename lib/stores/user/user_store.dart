@@ -68,6 +68,9 @@ abstract class _UserStore with Store {
   @observable
   bool loading = false;
 
+  @observable
+  bool isAdsOn = false;
+
   @action
   bool isLikedAnime(int dataId) {
     return user.likedAnimes.contains(dataId);

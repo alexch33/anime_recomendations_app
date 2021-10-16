@@ -24,19 +24,19 @@ import 'package:boilerplate/constants/font_family.dart';
 
 import 'package:flutter/material.dart';
 
+final Color primaryLight = Colors.purple[300] ?? Colors.grey;
+final Color primaryDark = Colors.black;
+
+final Color secondary = Colors.purple[600] ?? Colors.grey;
+
 final ThemeData themeData = new ThemeData(
     fontFamily: FontFamily.productSans,
-    brightness: Brightness.light,
-    primaryColor: Colors.purple[300],
-    primaryColorBrightness: Brightness.light,
-    accentColor: Colors.purple[600],
-    accentColorBrightness: Brightness.light);
+    primaryColor: primaryLight,
+    colorScheme:
+        ColorScheme.light(primary: primaryLight, secondary: secondary));
 
 final ThemeData themeDataDark = ThemeData(
-  fontFamily: FontFamily.productSans,
-  brightness: Brightness.dark,
-  primaryColor: Colors.purple[700],
-  primaryColorBrightness: Brightness.dark,
-  accentColor: Colors.purple[600],
-  accentColorBrightness: Brightness.dark,
-);
+    fontFamily: FontFamily.productSans,
+    primaryColor: primaryDark,
+    colorScheme: ColorScheme.dark(
+        primary: primaryDark, surface: primaryDark, secondary: secondary));

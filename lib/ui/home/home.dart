@@ -44,11 +44,13 @@ class _HomeScreenState extends State<HomeScreen> {
       _animeStore = Provider.of<AnimeStore>(context);
       _userStore = Provider.of<UserStore>(context);
       isInited = true;
+
+      if (_userStore.isAdsOn) {
+        _loadRewarded();
+      }
     }
     _animeStore.getAnimes();
     _userStore.initUser();
-
-    _loadRewarded();
   }
 
   @override
@@ -73,15 +75,21 @@ class _HomeScreenState extends State<HomeScreen> {
       onTap: (index) {
         //Handle button tap
         if (index == 2) {
-          if (_rewardedAd == null) {
-            _animeStore.errorStore.errorMessage =
-                AppLocalizations.of(context)!.translate('rewarded_not_load');
-          } else {
-            _rewardedAd?.show(onUserEarnedReward: (ad, item) {
-              setState(() {
-                _page = index;
+          if (_userStore.isAdsOn) {
+            if (_rewardedAd == null) {
+              _animeStore.errorStore.errorMessage =
+                  AppLocalizations.of(context)!.translate('rewarded_not_load');
+            } else {
+              _rewardedAd?.show(onUserEarnedReward: (ad, item) {
+                setState(() {
+                  _page = index;
+                });
+                _loadRewarded();
               });
-              _loadRewarded();
+            }
+          } else {
+            setState(() {
+              _page = index;
             });
           }
         } else {
@@ -176,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Icon(Icons.recommend, size: 30),
             Align(
-              child: AdLabel(padding: 2),
+              child: _userStore.isAdsOn ? AdLabel(padding: 2) : Container(),
               alignment: Alignment.topRight,
             )
           ],

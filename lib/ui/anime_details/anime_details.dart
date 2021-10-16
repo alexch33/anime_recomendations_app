@@ -401,9 +401,9 @@ class _AnimeDetailsState extends State<AnimeDetails> {
     );
   }
 
-  _handleRadioButton(int? value) {
+  _handleRadioButton(int? value) async {
     _animeStore.scrapperType = ParserType.values[value ?? 0];
-    chewieController.pause();
+    await chewieController.pause();
     initVideoData(episode).then((value) => initPlayer());
   }
 

@@ -14,7 +14,6 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:icon="@mipmap/ic_launcher"
-        android:usesCleartextTraffic="true"
         android:name="androidx.multidex.MultiDexApplication" 
         android:label="Anime Recomender">
         <meta-data

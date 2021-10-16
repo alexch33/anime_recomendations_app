@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:boilerplate/data/network/apis/animes/anime_scraper.dart';
+import 'package:boilerplate/data/network/apis/animes/scrappers/anime_scraper.dart';
 import 'package:boilerplate/models/anime/anime_video.dart';
 
 import 'package:boilerplate/data/network/constants/endpoints.dart';

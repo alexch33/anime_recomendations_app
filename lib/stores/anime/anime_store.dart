@@ -9,7 +9,7 @@ import 'package:boilerplate/models/recomendation/recomendation_list.dart';
 
 part 'anime_store.g.dart';
 
-enum ParserType { Gogo, AniVost }
+enum ParserType { Anilibria, Gogo, AniVost }
 class AnimeStore = _AnimeStore with _$AnimeStore;
 
 abstract class _AnimeStore with Store {
@@ -50,7 +50,7 @@ abstract class _AnimeStore with Store {
   bool isLoading = false;
 
   @observable
-  ParserType scrapperType = ParserType.Gogo;
+  ParserType scrapperType = ParserType.Anilibria;
 
   // actions:-------------------------------------------------------------------
   @action

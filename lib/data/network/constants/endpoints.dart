@@ -36,4 +36,6 @@ class Endpoints {
   static const baseGoURL = "https://gogoanime.ai/";
 
   static const baseVostURL = "https://animevost.am/";
+
+  static const baseAnilibriaURL = "https://www.anilibria.tv/public/api/index.php";
 }

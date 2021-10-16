@@ -43,6 +43,12 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   RewardedAd? _rewardedAd;
 
   Future<void> initVideoData(int episode) async {
+    if (playerInited) {
+      await chewieController.pause();
+      chewieController.dispose();
+      videoPlayerController.dispose();
+    }
+
     if (isShowPlayer == false) return;
 
     if (!mounted) return;
@@ -403,8 +409,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
 
   _handleRadioButton(int? value) async {
     _animeStore.scrapperType = ParserType.values[value ?? 0];
-    await chewieController.pause();
-    initVideoData(episode).then((value) => initPlayer());
+    initVideoData(episode);
   }
 
   _handleLike() async {

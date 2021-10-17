@@ -3,7 +3,7 @@ import 'package:boilerplate/widgets/build_ganres.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-import '../routes.dart';
+import 'package:boilerplate/routes.dart';
 
 class AnimeGridTile extends StatelessWidget {
   final Anime anime;

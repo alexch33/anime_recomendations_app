@@ -14,7 +14,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
-import 'netwok_module.dart';
+import 'package:boilerplate/di/modules/netwok_module.dart';
 
 class LocalModule extends NetworkModule {
   // DI variables:--------------------------------------------------------------

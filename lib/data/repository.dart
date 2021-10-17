@@ -14,8 +14,8 @@ import 'package:boilerplate/models/user/user_token.dart';
 import 'package:boilerplate/stores/anime/anime_store.dart';
 import 'package:sembast/sembast.dart';
 
-import 'local/constants/db_constants.dart';
-import 'network/apis/animes/anime_api.dart';
+import 'package:boilerplate/data/local/constants/db_constants.dart';
+import 'package:boilerplate/data/network/apis/animes/anime_api.dart';
 
 class Repository {
   // data source object

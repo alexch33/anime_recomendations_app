@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'ui/home/home.dart';
-import 'ui/login/login.dart';
-import 'ui/splash/splash.dart';
-import 'ui/anime_details/anime_details.dart';
-import 'ui/similar_animes/similar_animes.dart';
+import 'package:boilerplate/ui/home/home.dart';
+import 'package:boilerplate/ui/login/login.dart';
+import 'package:boilerplate/ui/splash/splash.dart';
+import 'package:boilerplate/ui/anime_details/anime_details.dart';
+import 'package:boilerplate/ui/similar_animes/similar_animes.dart';
 
 class Routes {
   Routes._();

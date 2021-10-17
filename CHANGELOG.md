@@ -1,4 +1,4 @@
-## June 11, 2019
+## October 17, 2021
 
-* Added dependency injection
-* Refactored dio client
+* Removed google_mobile_ads module
+* Imports replaced with absolute imports

@@ -1,6 +1,4 @@
-Work in progress...
-
-flutter version 2.2.0
+flutter version 2.5.2
 
 
 **Step 1:**

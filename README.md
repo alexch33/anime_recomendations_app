@@ -1,7 +1,23 @@
-**Anime recommendations app**
+### Anime recommendations app
 
-flutter version 2.5.2
-
+<table>
+    <tr>
+        <td>
+        <img src="https://github.com/lexch13/anime_recomeder_app/blob/master/assets/screenshots/1.png?raw=true"/>
+        </td>
+        <td>
+        <img src="https://github.com/lexch13/anime_recomeder_app/blob/master/assets/screenshots/2.png?raw=true"/>
+        </td>
+    </tr>
+    <tr>
+        <td>
+        <img src="https://github.com/lexch13/anime_recomeder_app/blob/master/assets/screenshots/3.png?raw=true"/>
+        </td>
+        <td>
+        <img src="https://github.com/lexch13/anime_recomeder_app/blob/master/assets/screenshots/4.png?raw=true"/>
+        </td>
+    </tr>
+</table>
 
 **Step 1:**
 

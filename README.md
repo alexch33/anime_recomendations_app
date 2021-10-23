@@ -17,6 +17,14 @@
         <img src="https://github.com/lexch13/anime_recomeder_app/blob/master/assets/screenshots/4.png?raw=true"/>
         </td>
     </tr>
+    <tr>
+        <td>
+        <img src="https://github.com/lexch13/anime_recomeder_app/blob/master/assets/screenshots/5.png?raw=true"/>
+        </td>
+        <td>
+        <img src="https://github.com/lexch13/anime_recomeder_app/blob/master/assets/screenshots/6.png?raw=true"/>
+        </td>
+    </tr>
 </table>
 
 **Step 1:**

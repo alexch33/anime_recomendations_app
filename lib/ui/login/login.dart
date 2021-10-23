@@ -1,5 +1,4 @@
 import 'package:another_flushbar/flushbar_helper.dart';
-import 'package:boilerplate/constants/assets.dart';
 import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
 import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/stores/form/form_store.dart';
@@ -72,20 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Material(
       child: Stack(
         children: <Widget>[
-          MediaQuery.of(context).orientation == Orientation.landscape
-              ? Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: _buildLeftSide(),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: _buildRightSide(),
-                    ),
-                  ],
-                )
-              : Center(child: _buildRightSide()),
+          Center(child: _buildRightSide()),
           Observer(
             builder: (context) {
               return _store.success
@@ -102,15 +88,6 @@ class _LoginScreenState extends State<LoginScreen> {
             },
           )
         ],
-      ),
-    );
-  }
-
-  Widget _buildLeftSide() {
-    return SizedBox.expand(
-      child: Image.asset(
-        Assets.carBackground,
-        fit: BoxFit.cover,
       ),
     );
   }
@@ -192,7 +169,8 @@ class _LoginScreenState extends State<LoginScreen> {
           DeviceUtils.hideKeyboard(context);
           _store.login();
         } else {
-          _showErrorMessage(AppLocalizations.of(context)!.translate('login_error_fill_fields'));
+          _showErrorMessage(AppLocalizations.of(context)!
+              .translate('login_error_fill_fields'));
         }
       },
     );
@@ -208,7 +186,8 @@ class _LoginScreenState extends State<LoginScreen> {
           DeviceUtils.hideKeyboard(context);
           _store.register();
         } else {
-          _showErrorMessage(AppLocalizations.of(context)!.translate('login_error_fill_fields'));
+          _showErrorMessage(AppLocalizations.of(context)!
+              .translate('login_error_fill_fields'));
         }
       },
     );

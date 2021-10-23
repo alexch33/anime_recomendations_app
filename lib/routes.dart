@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:boilerplate/ui/home/home.dart';
 import 'package:boilerplate/ui/login/login.dart';
-import 'package:boilerplate/ui/splash/splash.dart';
 import 'package:boilerplate/ui/anime_details/anime_details.dart';
 import 'package:boilerplate/ui/similar_animes/similar_animes.dart';
 
@@ -17,7 +16,6 @@ class Routes {
   static const String similarAnimes = '/similarAnimes';
 
   static final routes = <String, WidgetBuilder>{
-    splash: (BuildContext context) => SplashScreen(),
     login: (BuildContext context) => LoginScreen(),
     home: (BuildContext context) => HomeScreen(),
     animeDetails: (BuildContext context) => AnimeDetails(),

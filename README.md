@@ -1,3 +1,5 @@
+**Anime recommendations app**
+
 flutter version 2.5.2
 
 

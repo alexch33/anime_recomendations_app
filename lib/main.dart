@@ -26,8 +26,6 @@ void main() {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
-    DeviceOrientation.landscapeRight,
-    DeviceOrientation.landscapeLeft,
   ]).then((_) async {
     Repository repo = AppComponent.getReposInstance(
       NetworkModule(),

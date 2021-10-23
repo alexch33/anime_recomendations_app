@@ -1,6 +1,6 @@
-import 'package:boilerplate/data/local/constants/db_constants.dart';
-import 'package:boilerplate/models/anime/anime.dart';
-import 'package:boilerplate/models/anime/anime_list.dart';
+import 'package:anime_recommendations_app/data/local/constants/db_constants.dart';
+import 'package:anime_recommendations_app/models/anime/anime.dart';
+import 'package:anime_recommendations_app/models/anime/anime_list.dart';
 import 'package:sembast/sembast.dart';
 
 class AnimeDataSource {

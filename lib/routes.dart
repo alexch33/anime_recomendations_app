@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:boilerplate/ui/home/home.dart';
-import 'package:boilerplate/ui/login/login.dart';
-import 'package:boilerplate/ui/anime_details/anime_details.dart';
-import 'package:boilerplate/ui/similar_animes/similar_animes.dart';
+import 'package:anime_recommendations_app/ui/home/home.dart';
+import 'package:anime_recommendations_app/ui/login/login.dart';
+import 'package:anime_recommendations_app/ui/anime_details/anime_details.dart';
+import 'package:anime_recommendations_app/ui/similar_animes/similar_animes.dart';
 
 class Routes {
   Routes._();

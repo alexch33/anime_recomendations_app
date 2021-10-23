@@ -1,14 +1,14 @@
-import 'package:boilerplate/data/local/datasources/anime/anime_datasource.dart';
-import 'package:boilerplate/data/local/datasources/user/user_datasource.dart';
-import 'package:boilerplate/data/local/datasources/token/token_datasource.dart';
-import 'package:boilerplate/data/network/apis/users/users_api.dart';
-import 'package:boilerplate/data/network/dio_client.dart';
-import 'package:boilerplate/data/repository.dart';
-import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
-import 'package:boilerplate/di/modules/local_module.dart';
-import 'package:boilerplate/di/modules/netwok_module.dart';
-import 'package:boilerplate/di/modules/preference_module.dart';
-import 'package:boilerplate/data/network/apis/animes/anime_api.dart';
+import 'package:anime_recommendations_app/data/local/datasources/anime/anime_datasource.dart';
+import 'package:anime_recommendations_app/data/local/datasources/user/user_datasource.dart';
+import 'package:anime_recommendations_app/data/local/datasources/token/token_datasource.dart';
+import 'package:anime_recommendations_app/data/network/apis/users/users_api.dart';
+import 'package:anime_recommendations_app/data/network/dio_client.dart';
+import 'package:anime_recommendations_app/data/repository.dart';
+import 'package:anime_recommendations_app/data/sharedpref/shared_preference_helper.dart';
+import 'package:anime_recommendations_app/di/modules/local_module.dart';
+import 'package:anime_recommendations_app/di/modules/netwok_module.dart';
+import 'package:anime_recommendations_app/di/modules/preference_module.dart';
+import 'package:anime_recommendations_app/data/network/apis/animes/anime_api.dart';
 
 /// The top level injector that stitches together multiple app features into
 /// a complete app.

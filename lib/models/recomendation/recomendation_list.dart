@@ -1,4 +1,4 @@
-import 'package:boilerplate/models/recomendation/recomendation.dart';
+import 'package:anime_recommendations_app/models/recomendation/recomendation.dart';
 
 class RecomendationList {
   final List<Recomendation> recomendations;

@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:boilerplate/data/network/apis/animes/scrappers/anime_scraper.dart';
-import 'package:boilerplate/models/anime/anime_video.dart';
+import 'package:anime_recommendations_app/data/network/apis/animes/scrappers/anime_scraper.dart';
+import 'package:anime_recommendations_app/models/anime/anime_video.dart';
 
-import 'package:boilerplate/data/network/constants/endpoints.dart';
-import 'package:boilerplate/data/network/dio_client.dart';
-import 'package:boilerplate/models/anime/anime_list.dart';
-import 'package:boilerplate/models/recomendation/recomendation_list.dart';
-import 'package:boilerplate/stores/anime/anime_store.dart';
+import 'package:anime_recommendations_app/data/network/constants/endpoints.dart';
+import 'package:anime_recommendations_app/data/network/dio_client.dart';
+import 'package:anime_recommendations_app/models/anime/anime_list.dart';
+import 'package:anime_recommendations_app/models/recomendation/recomendation_list.dart';
+import 'package:anime_recommendations_app/stores/anime/anime_store.dart';
 
 class AnimeApi {
   // dio instance

@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:boilerplate/data/network/constants/endpoints.dart';
-import 'package:boilerplate/data/network/dio_client.dart';
-import 'package:boilerplate/models/user/user.dart';
-import 'package:boilerplate/models/user/user_token.dart';
+import 'package:anime_recommendations_app/data/network/constants/endpoints.dart';
+import 'package:anime_recommendations_app/data/network/dio_client.dart';
+import 'package:anime_recommendations_app/models/user/user.dart';
+import 'package:anime_recommendations_app/models/user/user_token.dart';
 
 class UsersApi {
   // dio instance

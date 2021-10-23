@@ -1,5 +1,5 @@
-import 'package:boilerplate/data/repository.dart';
-import 'package:boilerplate/stores/error/error_store.dart';
+import 'package:anime_recommendations_app/data/repository.dart';
+import 'package:anime_recommendations_app/stores/error/error_store.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 

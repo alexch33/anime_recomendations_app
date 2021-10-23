@@ -1,6 +1,6 @@
-import 'package:boilerplate/routes.dart';
-import 'package:boilerplate/stores/theme/theme_store.dart';
-import 'package:boilerplate/stores/user/user_store.dart';
+import 'package:anime_recommendations_app/routes.dart';
+import 'package:anime_recommendations_app/stores/theme/theme_store.dart';
+import 'package:anime_recommendations_app/stores/user/user_store.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';

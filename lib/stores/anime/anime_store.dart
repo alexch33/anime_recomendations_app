@@ -1,11 +1,11 @@
-import 'package:boilerplate/data/repository.dart';
-import 'package:boilerplate/models/anime/anime.dart';
-import 'package:boilerplate/models/anime/anime_list.dart';
-import 'package:boilerplate/models/anime/anime_video.dart';
-import 'package:boilerplate/stores/error/error_store.dart';
-import 'package:boilerplate/utils/dio/dio_error_util.dart';
+import 'package:anime_recommendations_app/data/repository.dart';
+import 'package:anime_recommendations_app/models/anime/anime.dart';
+import 'package:anime_recommendations_app/models/anime/anime_list.dart';
+import 'package:anime_recommendations_app/models/anime/anime_video.dart';
+import 'package:anime_recommendations_app/stores/error/error_store.dart';
+import 'package:anime_recommendations_app/utils/dio/dio_error_util.dart';
 import 'package:mobx/mobx.dart';
-import 'package:boilerplate/models/recomendation/recomendation_list.dart';
+import 'package:anime_recommendations_app/models/recomendation/recomendation_list.dart';
 
 part 'anime_store.g.dart';
 

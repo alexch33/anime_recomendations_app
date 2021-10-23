@@ -1,5 +1,5 @@
-import 'package:boilerplate/data/local/constants/db_constants.dart';
-import 'package:boilerplate/models/user/user.dart';
+import 'package:anime_recommendations_app/data/local/constants/db_constants.dart';
+import 'package:anime_recommendations_app/models/user/user.dart';
 import 'package:sembast/sembast.dart';
 
 class UserDataSource {

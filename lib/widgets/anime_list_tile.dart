@@ -1,8 +1,8 @@
-import 'package:boilerplate/models/anime/anime.dart';
-import 'package:boilerplate/widgets/build_ganres.dart';
+import 'package:anime_recommendations_app/models/anime/anime.dart';
+import 'package:anime_recommendations_app/widgets/build_ganres.dart';
 import 'package:flutter/material.dart';
 
-import 'package:boilerplate/routes.dart';
+import 'package:anime_recommendations_app/routes.dart';
 
 class AnimeListTile extends StatelessWidget {
   final Anime anime;

@@ -1,9 +1,9 @@
-import 'package:boilerplate/data/network/apis/animes/scrappers/anilibria_anime_scrapper.dart';
-import 'package:boilerplate/data/network/apis/animes/scrappers/animevost_anime_scrapper.dart';
-import 'package:boilerplate/data/network/apis/animes/scrappers/gogo_anime_scrapper.dart';
-import 'package:boilerplate/data/network/dio_client.dart';
-import 'package:boilerplate/models/anime/anime_video.dart';
-import 'package:boilerplate/stores/anime/anime_store.dart';
+import 'package:anime_recommendations_app/data/network/apis/animes/scrappers/anilibria_anime_scrapper.dart';
+import 'package:anime_recommendations_app/data/network/apis/animes/scrappers/animevost_anime_scrapper.dart';
+import 'package:anime_recommendations_app/data/network/apis/animes/scrappers/gogo_anime_scrapper.dart';
+import 'package:anime_recommendations_app/data/network/dio_client.dart';
+import 'package:anime_recommendations_app/models/anime/anime_video.dart';
+import 'package:anime_recommendations_app/stores/anime/anime_store.dart';
 
 abstract class AnimeScrapper {
   DioClient dioClient;

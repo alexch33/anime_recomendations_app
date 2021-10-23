@@ -1,4 +1,4 @@
-import 'package:boilerplate/models/anime/anime.dart';
+import 'package:anime_recommendations_app/models/anime/anime.dart';
 
 class AnimeList {
   final List<Anime> animes;

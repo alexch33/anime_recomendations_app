@@ -1,10 +1,10 @@
-import 'package:boilerplate/data/network/apis/animes/anime_api.dart';
-import 'package:boilerplate/data/network/apis/users/users_api.dart';
-import 'package:boilerplate/data/network/constants/endpoints.dart';
-import 'package:boilerplate/data/network/dio_client.dart';
-import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
-import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
-import 'package:boilerplate/di/modules/preference_module.dart';
+import 'package:anime_recommendations_app/data/network/apis/animes/anime_api.dart';
+import 'package:anime_recommendations_app/data/network/apis/users/users_api.dart';
+import 'package:anime_recommendations_app/data/network/constants/endpoints.dart';
+import 'package:anime_recommendations_app/data/network/dio_client.dart';
+import 'package:anime_recommendations_app/data/sharedpref/constants/preferences.dart';
+import 'package:anime_recommendations_app/data/sharedpref/shared_preference_helper.dart';
+import 'package:anime_recommendations_app/di/modules/preference_module.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

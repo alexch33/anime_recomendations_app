@@ -1,6 +1,6 @@
-import 'package:boilerplate/data/repository.dart';
-import 'package:boilerplate/models/language/Language.dart';
-import 'package:boilerplate/stores/error/error_store.dart';
+import 'package:anime_recommendations_app/data/repository.dart';
+import 'package:anime_recommendations_app/models/language/Language.dart';
+import 'package:anime_recommendations_app/stores/error/error_store.dart';
 import 'package:mobx/mobx.dart';
 
 part 'language_store.g.dart';

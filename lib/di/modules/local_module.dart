@@ -1,20 +1,20 @@
 import 'dart:async';
 
-import 'package:boilerplate/data/local/constants/db_constants.dart';
-import 'package:boilerplate/data/local/datasources/anime/anime_datasource.dart';
-import 'package:boilerplate/data/local/datasources/token/token_datasource.dart';
-import 'package:boilerplate/data/local/datasources/user/user_datasource.dart';
-import 'package:boilerplate/data/network/apis/animes/anime_api.dart';
-import 'package:boilerplate/data/network/apis/users/users_api.dart';
-import 'package:boilerplate/data/repository.dart';
-import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
-import 'package:boilerplate/utils/encryption/xxtea.dart';
+import 'package:anime_recommendations_app/data/local/constants/db_constants.dart';
+import 'package:anime_recommendations_app/data/local/datasources/anime/anime_datasource.dart';
+import 'package:anime_recommendations_app/data/local/datasources/token/token_datasource.dart';
+import 'package:anime_recommendations_app/data/local/datasources/user/user_datasource.dart';
+import 'package:anime_recommendations_app/data/network/apis/animes/anime_api.dart';
+import 'package:anime_recommendations_app/data/network/apis/users/users_api.dart';
+import 'package:anime_recommendations_app/data/repository.dart';
+import 'package:anime_recommendations_app/data/sharedpref/shared_preference_helper.dart';
+import 'package:anime_recommendations_app/utils/encryption/xxtea.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
-import 'package:boilerplate/di/modules/netwok_module.dart';
+import 'package:anime_recommendations_app/di/modules/netwok_module.dart';
 
 class LocalModule extends NetworkModule {
   // DI variables:--------------------------------------------------------------

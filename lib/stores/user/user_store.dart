@@ -1,7 +1,7 @@
-import 'package:boilerplate/models/recomendation/recomendation_list.dart';
-import 'package:boilerplate/models/user/user.dart';
-import 'package:boilerplate/stores/error/error_store.dart';
-import 'package:boilerplate/utils/dio/dio_error_util.dart';
+import 'package:anime_recommendations_app/models/recomendation/recomendation_list.dart';
+import 'package:anime_recommendations_app/models/user/user.dart';
+import 'package:anime_recommendations_app/stores/error/error_store.dart';
+import 'package:anime_recommendations_app/utils/dio/dio_error_util.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../data/repository.dart';

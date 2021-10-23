@@ -1,7 +1,7 @@
-import 'package:boilerplate/data/network/apis/animes/scrappers/anime_scraper.dart';
-import 'package:boilerplate/data/network/constants/endpoints.dart';
-import 'package:boilerplate/data/network/dio_client.dart';
-import 'package:boilerplate/models/anime/anime_video.dart';
+import 'package:anime_recommendations_app/data/network/apis/animes/scrappers/anime_scraper.dart';
+import 'package:anime_recommendations_app/data/network/constants/endpoints.dart';
+import 'package:anime_recommendations_app/data/network/dio_client.dart';
+import 'package:anime_recommendations_app/models/anime/anime_video.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 

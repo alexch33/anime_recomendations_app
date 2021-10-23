@@ -1,21 +1,21 @@
 import 'dart:async';
 
-import 'package:boilerplate/data/local/datasources/anime/anime_datasource.dart';
-import 'package:boilerplate/data/local/datasources/token/token_datasource.dart';
-import 'package:boilerplate/data/local/datasources/user/user_datasource.dart';
-import 'package:boilerplate/data/network/apis/users/users_api.dart';
-import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
-import 'package:boilerplate/models/anime/anime.dart';
-import 'package:boilerplate/models/anime/anime_list.dart';
-import 'package:boilerplate/models/anime/anime_video.dart';
-import 'package:boilerplate/models/recomendation/recomendation_list.dart';
-import 'package:boilerplate/models/user/user.dart';
-import 'package:boilerplate/models/user/user_token.dart';
-import 'package:boilerplate/stores/anime/anime_store.dart';
+import 'package:anime_recommendations_app/data/local/datasources/anime/anime_datasource.dart';
+import 'package:anime_recommendations_app/data/local/datasources/token/token_datasource.dart';
+import 'package:anime_recommendations_app/data/local/datasources/user/user_datasource.dart';
+import 'package:anime_recommendations_app/data/network/apis/users/users_api.dart';
+import 'package:anime_recommendations_app/data/sharedpref/shared_preference_helper.dart';
+import 'package:anime_recommendations_app/models/anime/anime.dart';
+import 'package:anime_recommendations_app/models/anime/anime_list.dart';
+import 'package:anime_recommendations_app/models/anime/anime_video.dart';
+import 'package:anime_recommendations_app/models/recomendation/recomendation_list.dart';
+import 'package:anime_recommendations_app/models/user/user.dart';
+import 'package:anime_recommendations_app/models/user/user_token.dart';
+import 'package:anime_recommendations_app/stores/anime/anime_store.dart';
 import 'package:sembast/sembast.dart';
 
-import 'package:boilerplate/data/local/constants/db_constants.dart';
-import 'package:boilerplate/data/network/apis/animes/anime_api.dart';
+import 'package:anime_recommendations_app/data/local/constants/db_constants.dart';
+import 'package:anime_recommendations_app/data/network/apis/animes/anime_api.dart';
 
 class Repository {
   // data source object

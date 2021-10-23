@@ -1,15 +1,15 @@
 import 'package:another_flushbar/flushbar_helper.dart';
-import 'package:boilerplate/stores/anime/anime_store.dart';
-import 'package:boilerplate/stores/user/user_store.dart';
-import 'package:boilerplate/ui/anime_recomendations/anime_recomendations.dart';
-import 'package:boilerplate/utils/locale/app_localization.dart';
-import 'package:boilerplate/widgets/ad_label.dart';
+import 'package:anime_recommendations_app/stores/anime/anime_store.dart';
+import 'package:anime_recommendations_app/stores/user/user_store.dart';
+import 'package:anime_recommendations_app/ui/anime_recomendations/anime_recomendations.dart';
+import 'package:anime_recommendations_app/utils/locale/app_localization.dart';
+import 'package:anime_recommendations_app/widgets/ad_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:boilerplate/ui/anime_list/anime_list.dart';
-import 'package:boilerplate/ui/user_profile/user_profile.dart';
+import 'package:anime_recommendations_app/ui/anime_list/anime_list.dart';
+import 'package:anime_recommendations_app/ui/user_profile/user_profile.dart';
 
 class HomeScreen extends StatefulWidget {
   @override

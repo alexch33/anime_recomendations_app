@@ -1,5 +1,5 @@
-name: boilerplate
-description: Anime recomendation app
+name: anime_recommendations_app
+description: Anime recomendations app
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43

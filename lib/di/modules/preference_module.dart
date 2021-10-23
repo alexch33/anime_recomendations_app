@@ -1,4 +1,4 @@
-import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
+import 'package:anime_recommendations_app/data/sharedpref/shared_preference_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceModule {

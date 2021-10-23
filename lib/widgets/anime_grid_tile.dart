@@ -1,9 +1,9 @@
-import 'package:boilerplate/models/anime/anime.dart';
-import 'package:boilerplate/widgets/build_ganres.dart';
+import 'package:anime_recommendations_app/models/anime/anime.dart';
+import 'package:anime_recommendations_app/widgets/build_ganres.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-import 'package:boilerplate/routes.dart';
+import 'package:anime_recommendations_app/routes.dart';
 
 class AnimeGridTile extends StatelessWidget {
   final Anime anime;

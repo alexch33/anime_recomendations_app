@@ -5,11 +5,11 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:boilerplate/di/components/app_component.dart';
-import 'package:boilerplate/di/modules/local_module.dart';
-import 'package:boilerplate/di/modules/netwok_module.dart';
-import 'package:boilerplate/di/modules/preference_module.dart';
-import 'package:boilerplate/main.dart';
+import 'package:anime_recommendations_app/di/components/app_component.dart';
+import 'package:anime_recommendations_app/di/modules/local_module.dart';
+import 'package:anime_recommendations_app/di/modules/netwok_module.dart';
+import 'package:anime_recommendations_app/di/modules/preference_module.dart';
+import 'package:anime_recommendations_app/main.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

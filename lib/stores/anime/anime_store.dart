@@ -41,6 +41,9 @@ abstract class _AnimeStore with Store {
   AnimeList animeList = AnimeList(animes: []);
 
   @observable
+  RecomendationList similarList = RecomendationList(recomendations: []);
+
+  @observable
   bool success = false;
 
   @computed
@@ -96,15 +99,17 @@ abstract class _AnimeStore with Store {
   @action
   Future<RecomendationList> querrySImilarItems(String itemDataId) async {
     isLoading = true;
-    var res;
+    similarList = RecomendationList(recomendations: []);
+
     try {
-      res = await _repository.getSimilarItems(itemDataId);
+      similarList = await _repository.getSimilarItems(itemDataId);
     } catch (error) {
+      similarList = RecomendationList(recomendations: []);
       errorStore.errorMessage = DioErrorUtil.handleError(error);
     }
     isLoading = false;
 
-    return res;
+    return similarList;
   }
 
   @action

@@ -73,11 +73,11 @@ class _UserProfileState extends State<UserProfile>
             .where((anime) =>
                 _userStore.user.blackListAnimes.contains(anime.dataId))
             .toList();
+        _userStore.initUser();
+
         isInited = true;
       });
     }
-
-    _userStore.initUser();
   }
 
   void _handleTabSelection() {

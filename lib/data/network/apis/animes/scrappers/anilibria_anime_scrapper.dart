@@ -60,6 +60,8 @@ class AnilibriaAnimeScrapper extends AnimeScrapper {
 
   @override
   Future<String> getAnimeUrl(String name) async {
+    String code = 'not_found';
+
     final url = '${Endpoints.baseAnilibriaURL}';
     String cleanedName = name.toLowerCase().replaceAll(RegExp(r'\W'), " ");
     final payLoad = {
@@ -73,17 +75,14 @@ class AnilibriaAnimeScrapper extends AnimeScrapper {
       List<String> names = [];
       List<dynamic> dataList = resp["data"];
 
-      String code = 'not_found';
       dataList.forEach((el) {
         names.add(el["names"].last);
       });
       if (dataList.isNotEmpty) {
         code = dataList[cleanedName.bestMatch(names).bestMatchIndex]['code'];
       }
-
-      return "https://www.anilibria.tv/release/$code.html";
-    } else {
-      return '';
     }
+
+    return "https://www.anilibria.tv/release/$code.html";
   }
 }

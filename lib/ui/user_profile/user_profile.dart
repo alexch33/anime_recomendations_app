@@ -60,23 +60,20 @@ class _UserProfileState extends State<UserProfile>
         AppLocalizations.of(context)!.translate('black_list')
       ];
 
-      setState(() {
-        likedAnimes = _animeStore.animeList.animes
-            .where(
-                (anime) => _userStore.user.likedAnimes.contains(anime.dataId))
-            .toList();
-        laterAnimes = _animeStore.animeList.animes
-            .where((anime) =>
-                _userStore.user.watchLaterAnimes.contains(anime.dataId))
-            .toList();
-        blackAnimes = _animeStore.animeList.animes
-            .where((anime) =>
-                _userStore.user.blackListAnimes.contains(anime.dataId))
-            .toList();
-        _userStore.initUser();
+      likedAnimes = _animeStore.animeList.animes
+          .where((anime) => _userStore.user.likedAnimes.contains(anime.dataId))
+          .toList();
+      laterAnimes = _animeStore.animeList.animes
+          .where((anime) =>
+              _userStore.user.watchLaterAnimes.contains(anime.dataId))
+          .toList();
+      blackAnimes = _animeStore.animeList.animes
+          .where(
+              (anime) => _userStore.user.blackListAnimes.contains(anime.dataId))
+          .toList();
+      _userStore.initUser();
 
-        isInited = true;
-      });
+      isInited = true;
     }
   }
 

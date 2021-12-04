@@ -329,7 +329,11 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   }
 
   void goToAnime(String url) {
-    _launchURL(url);
+    if (url.isEmpty) {
+      url = "https://www.google.com/search?q=${_anime.name}";
+    }
+
+    Navigator.of(context).pushNamed(Routes.webView, arguments: url);
   }
 
   Widget _buildSiteButtonContainer({required Widget child}) {

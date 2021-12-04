@@ -32,14 +32,16 @@ class _AnimeDetailsState extends State<AnimeDetails> {
       _animeStore = Provider.of<AnimeStore>(context);
       _userStore = Provider.of<UserStore>(context);
 
+      _anime = ModalRoute.of(context)!.settings.arguments as Anime;
+
+      _animeStore.getLinksForAnime(_anime);
+
       isInited = true;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    _anime = ModalRoute.of(context)!.settings.arguments as Anime;
-
     return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.translate('info')),
@@ -69,6 +71,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
                   children: [
                     _buildImageBlock(),
                     _buildTextInfo(),
+                    _buildLinkButtons(),
                   ]),
               constraints: BoxConstraints(
                 minHeight: viewportConstraints.maxHeight,
@@ -237,9 +240,116 @@ class _AnimeDetailsState extends State<AnimeDetails> {
     if (isPushed) setState(() {});
   }
 
-  _launchURL(String url) async {
+  void _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     }
+  }
+
+  Widget _buildLinkButtons() {
+    return Container(
+      width: double.infinity,
+      child: Column(
+        children: [
+          Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                  AppLocalizations.of(context)!.translate('watch_on_site'),
+                  style: Theme.of(context).textTheme.headline5)),
+          Container(
+            height: 16,
+          ),
+          buildSiteButtons(),
+        ],
+      ),
+    );
+  }
+
+  Widget buildSiteButtons() {
+    return Container(
+      width: double.infinity,
+      child: Column(
+        children: [
+          buildAnilibriaButton(),
+          buildAniVostButton(),
+          buildGogoButton(),
+          Container(
+            height: 32,
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildAnilibriaButton() {
+    return _buildSiteButtonContainer(
+        child: InkWell(
+      borderRadius: BorderRadius.circular(8.0),
+      child: Container(
+          height: double.infinity,
+          width: double.infinity,
+          alignment: Alignment.center,
+          child:
+              Text("Anilibria", style: Theme.of(context).textTheme.bodyText1)),
+      onTap: () {
+        goToAnime(_animeStore.anilibriaAnimeUrl);
+      },
+    ));
+  }
+
+  Widget buildAniVostButton() {
+    return _buildSiteButtonContainer(
+        child: InkWell(
+      borderRadius: BorderRadius.circular(8.0),
+      child: Container(
+          height: double.infinity,
+          width: double.infinity,
+          alignment: Alignment.center,
+          child: Text("Anivost", style: Theme.of(context).textTheme.bodyText1)),
+      onTap: () {
+        goToAnime(_animeStore.anivostAnimeUrl);
+      },
+    ));
+  }
+
+  Widget buildGogoButton() {
+    return _buildSiteButtonContainer(
+        child: InkWell(
+      borderRadius: BorderRadius.circular(8.0),
+      child: Container(
+          height: double.infinity,
+          width: double.infinity,
+          alignment: Alignment.center,
+          child:
+              Text("Gogo Anime", style: Theme.of(context).textTheme.bodyText1)),
+      onTap: () {
+        goToAnime(_animeStore.gogoAnimeUrl);
+      },
+    ));
+  }
+
+  void goToAnime(String url) {
+    _launchURL(url);
+  }
+
+  Widget _buildSiteButtonContainer({required Widget child}) {
+    return Container(
+      margin: EdgeInsets.all(4.0),
+      width: 200,
+      height: 50,
+      child: Material(
+        child: child,
+        color: Colors.green,
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
+      alignment: Alignment.center,
+    );
+  }
+
+  @override
+  void dispose() {
+    _animeStore.clearAnimesUrls();
+    super.dispose();
   }
 }

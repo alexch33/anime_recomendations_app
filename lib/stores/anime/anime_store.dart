@@ -55,6 +55,27 @@ abstract class _AnimeStore with Store {
   @observable
   ParserType scrapperType = ParserType.Anilibria;
 
+  @observable
+  String anilibriaAnimeUrl = '';
+
+  @observable
+  String anivostAnimeUrl = '';
+
+  @observable
+  String gogoAnimeUrl = '';
+
+  @action
+  Future<void> getLinksForAnime(Anime anime) async {
+    
+  }
+
+  @action
+  void clearAnimesUrls() {
+    anilibriaAnimeUrl = '';
+    anivostAnimeUrl = '';
+    gogoAnimeUrl = '';
+  }
+
   // actions:-------------------------------------------------------------------
   @action
   Future getAnimes() async {

@@ -11,8 +11,6 @@ import 'package:provider/provider.dart';
 import 'package:anime_recommendations_app/models/anime/anime.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:math' as math;
-import 'package:chewie/chewie.dart';
-import 'package:video_player/video_player.dart';
 
 class AnimeDetails extends StatefulWidget {
   @override
@@ -26,96 +24,15 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   late Anime _anime;
   bool isInited = false;
 
-  late String _animeUrl;
-  int _totalEpisodes = 0;
-  bool isLoading = true;
-  int episode = 1;
-  bool initedOnStart = false;
-  bool isShowPlayer = true;
-
-  late VideoPlayerController videoPlayerController;
-  late ChewieController chewieController;
-
-  bool playerInited = false;
-
-  Future<void> initVideoData(int episode) async {
-    if (playerInited) {
-      await chewieController.pause();
-      chewieController.dispose();
-      videoPlayerController.dispose();
-    }
-
-    if (isShowPlayer == false) return;
-
-    if (!mounted) return;
-    setState(() {
-      isLoading = true;
-      this.episode = episode;
-      if (initedOnStart == false) initedOnStart = true;
-    });
-
-    _anime = ModalRoute.of(context)!.settings.arguments as Anime;
-    if (!mounted) return;
-    String id = await _animeStore.getAnimeId(_anime);
-    if (!mounted) return;
-
-    final res = await _animeStore.getAnimeLinks(id, episode);
-
-    if (initedOnStart == false) return;
-
-    if (!mounted) return;
-    setState(() {
-      _totalEpisodes = int.parse(res.first.totalEpisodes);
-      _animeUrl = res.first.src;
-      isLoading = false;
-    });
-    await initPlayer();
-  }
-
-  Future initPlayer() async {
-    if (initedOnStart == false) return;
-
-    if (!mounted) return;
-    setState(() {
-      isLoading = true;
-    });
-
-    videoPlayerController = VideoPlayerController.network(_animeUrl);
-
-    await videoPlayerController.initialize();
-
-    chewieController = ChewieController(
-      videoPlayerController: videoPlayerController,
-      autoPlay: false,
-      looping: false,
-    );
-
-    if (!mounted) return;
-    setState(() {
-      isLoading = false;
-      playerInited = true;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
     if (!isInited) {
-      // initializing stores
       _animeStore = Provider.of<AnimeStore>(context);
       _userStore = Provider.of<UserStore>(context);
 
       isInited = true;
-    }
-
-    if (!this.initedOnStart) {
-      initVideoData(episode);
     }
   }
 
@@ -152,72 +69,11 @@ class _AnimeDetailsState extends State<AnimeDetails> {
                   children: [
                     _buildImageBlock(),
                     _buildTextInfo(),
-                    isShowPlayer ? _buildVideoBlock() : Container()
                   ]),
               constraints: BoxConstraints(
                 minHeight: viewportConstraints.maxHeight,
               )));
     }));
-  }
-
-  Widget _buildVideoBlock() {
-    return Container(
-        width: double.infinity,
-        height: 500,
-        child: Stack(
-          children: [
-            Center(
-                child:
-                    isLoading ? CustomProgressIndicatorWidget() : Container()),
-            Column(
-              children: [
-                Expanded(
-                  flex: 10,
-                  child: _buildRadioButtons(),
-                ),
-                Expanded(
-                    flex: 21,
-                    child: SingleChildScrollView(
-                        child: Container(
-                      child: Wrap(
-                        children: [..._buildEpisodeButtons()],
-                      ),
-                    ))),
-                Divider(),
-                Expanded(
-                    flex: 69,
-                    child: playerInited
-                        ? !isLoading
-                            ? Chewie(
-                                controller: chewieController,
-                              )
-                            : Container()
-                        : Container())
-              ],
-            )
-          ],
-        ));
-  }
-
-  List<Widget> _buildEpisodeButtons() {
-    var result = List.generate(_totalEpisodes, (index) => index + 1);
-
-    return result
-        .map((e) => Padding(
-              padding: EdgeInsets.all(4),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    primary: e == episode ? Colors.red : Colors.black),
-                child: Text(
-                  "$e",
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed: () async {
-                  await initVideoData(e);
-                },
-              ),
-            ))
-        .toList();
   }
 
   Widget _buildImageBlock() {
@@ -365,32 +221,6 @@ class _AnimeDetailsState extends State<AnimeDetails> {
         ));
   }
 
-  _buildRadioButtons() {
-    final content = ParserType.values
-        .map((type) => Observer(
-            builder: (contet) => Row(
-                  children: [
-                    Radio(
-                      value: type.index,
-                      onChanged: _handleRadioButton,
-                      groupValue: _animeStore.scrapperType.index,
-                    ),
-                    Text(type.toString().split(".").last)
-                  ],
-                )))
-        .toList();
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: content,
-    );
-  }
-
-  _handleRadioButton(int? value) async {
-    _animeStore.scrapperType = ParserType.values[value ?? 0];
-    initVideoData(episode);
-  }
-
   _handleLike() async {
     bool isLiked = await _animeStore.likeAnime(_anime.dataId);
     if (isLiked) await _userStore.initUser();
@@ -411,14 +241,5 @@ class _AnimeDetailsState extends State<AnimeDetails> {
     if (await canLaunch(url)) {
       await launch(url);
     }
-  }
-
-  @override
-  void dispose() {
-    if (playerInited) {
-      videoPlayerController.dispose();
-      chewieController.dispose();
-    }
-    super.dispose();
   }
 }

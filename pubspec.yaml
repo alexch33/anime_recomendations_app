@@ -60,9 +60,6 @@ dependencies:
   curved_navigation_bar: ^1.0.1
 
   url_launcher: ^6.0.3
-
-  chewie: ^1.2.1
-  video_player: ^2.1.5
   string_similarity: ^2.0.0
 
   html: ^0.15.0
@@ -98,7 +95,6 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-  - assets/images/
   - assets/icons/
   - assets/lang/
 

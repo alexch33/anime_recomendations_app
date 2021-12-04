@@ -97,7 +97,10 @@ class MyApp extends StatelessWidget {
 
               return loc;
             },
-            home: _userStore.isLoggedIn ? HomeScreen() : LoginScreen(),
+            home: Observer(
+              builder: (context) =>
+                  _userStore.isLoggedIn ? HomeScreen() : LoginScreen(),
+            ),
           );
         },
       ),

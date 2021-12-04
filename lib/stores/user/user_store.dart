@@ -22,6 +22,7 @@ abstract class _UserStore with Store {
   final ErrorStore errorStore = ErrorStore();
 
   // bool to check if current user is logged in
+  @observable
   bool isLoggedIn = false;
 
   // constructor:---------------------------------------------------------------

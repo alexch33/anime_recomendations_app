@@ -321,6 +321,7 @@ class _UserProfileState extends State<UserProfile>
   @override
   void dispose() {
     _tabController.dispose();
+    _fabController.dispose();
     super.dispose();
   }
 }

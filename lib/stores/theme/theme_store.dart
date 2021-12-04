@@ -18,7 +18,7 @@ abstract class _ThemeStore with Store {
 
   // store variables:-----------------------------------------------------------
   @observable
-  bool _darkMode = false;
+  bool _darkMode = true;
 
 
   // getters:-------------------------------------------------------------------
@@ -39,7 +39,7 @@ abstract class _ThemeStore with Store {
 
   // general methods:-----------------------------------------------------------
   Future init() async {
-    _darkMode = await _repository.isDarkMode;
+    _darkMode = true;
   }
 
   bool isPlatformDark(BuildContext context) =>

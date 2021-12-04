@@ -1,9 +1,12 @@
+import 'package:anime_recommendations_app/data/network/apis/animes/scrappers/anime_scraper.dart';
+import 'package:anime_recommendations_app/data/network/dio_client.dart';
 import 'package:anime_recommendations_app/data/repository.dart';
 import 'package:anime_recommendations_app/models/anime/anime.dart';
 import 'package:anime_recommendations_app/models/anime/anime_list.dart';
 import 'package:anime_recommendations_app/models/anime/anime_video.dart';
 import 'package:anime_recommendations_app/stores/error/error_store.dart';
 import 'package:anime_recommendations_app/utils/dio/dio_error_util.dart';
+import 'package:dio/dio.dart';
 import 'package:mobx/mobx.dart';
 import 'package:anime_recommendations_app/models/recomendation/recomendation_list.dart';
 
@@ -66,7 +69,16 @@ abstract class _AnimeStore with Store {
 
   @action
   Future<void> getLinksForAnime(Anime anime) async {
-    
+    var dio = DioClient(Dio());
+    AnimeScrapper.fromType(dio, ParserType.Anilibria)
+        .getAnimeUrl(anime.name)
+        .then((value) => anilibriaAnimeUrl = value);
+    AnimeScrapper.fromType(dio, ParserType.Gogo)
+        .getAnimeUrl(anime.name)
+        .then((value) => gogoAnimeUrl = value);
+    AnimeScrapper.fromType(dio, ParserType.AniVost)
+        .getAnimeUrl(anime.name)
+        .then((value) => anivostAnimeUrl = value);
   }
 
   @action

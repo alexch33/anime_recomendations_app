@@ -92,4 +92,9 @@ class AnimeVostScrapper extends AnimeScrapper {
     return idsHrefs[name.toLowerCase().bestMatch(idsNames).bestMatchIndex] ??
         "";
   }
+
+  @override
+  Future<String> getAnimeUrl(String name) async {
+    return await searchAnime(name);
+  }
 }

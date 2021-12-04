@@ -57,4 +57,33 @@ class AnilibriaAnimeScrapper extends AnimeScrapper {
 
     return "-1";
   }
+
+  @override
+  Future<String> getAnimeUrl(String name) async {
+    final url = '${Endpoints.baseAnilibriaURL}';
+    String cleanedName = name.toLowerCase().replaceAll(RegExp(r'\W'), " ");
+    final payLoad = {
+      "query": "search",
+      "search": cleanedName,
+      "filter": "id,names,playlist,code"
+    };
+
+    var resp = await dioClient.post(url, data: FormData.fromMap(payLoad));
+    if (resp["status"]) {
+      List<String> names = [];
+      List<dynamic> dataList = resp["data"];
+
+      String code = 'not_found';
+      dataList.forEach((el) {
+        names.add(el["names"].last);
+      });
+      if (dataList.isNotEmpty) {
+        code = dataList[cleanedName.bestMatch(names).bestMatchIndex]['code'];
+      }
+
+      return "https://www.anilibria.tv/release/$code.html";
+    } else {
+      return '';
+    }
+  }
 }

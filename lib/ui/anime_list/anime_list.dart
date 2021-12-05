@@ -17,7 +17,6 @@ class AnimeList extends StatefulWidget {
 class _AnimeListState extends State<AnimeList> {
   //stores:---------------------------------------------------------------------
   late AnimeStore _animeStore;
-  late ThemeStore _themeStore;
   late UserStore _userStore;
   bool isInited = false;
 
@@ -86,7 +85,6 @@ class _AnimeListState extends State<AnimeList> {
 
     if (!isInited) {
       // initializing stores
-      _themeStore = Provider.of<ThemeStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
       _userStore = Provider.of<UserStore>(context);
       
@@ -117,7 +115,6 @@ class _AnimeListState extends State<AnimeList> {
     if (_isSearching == false)
       buttonsBlock = [
         buildRefreshButton(),
-        buildThemeButton(context, _themeStore),
         buildLogoutButton(context, _userStore)
       ];
 

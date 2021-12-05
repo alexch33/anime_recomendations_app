@@ -1,3 +1,4 @@
+import 'package:anime_recommendations_app/ui/web_view/web_view_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:anime_recommendations_app/ui/home/home.dart';
@@ -14,14 +15,13 @@ class Routes {
   static const String home = '/home';
   static const String animeDetails = '/animeDetails';
   static const String similarAnimes = '/similarAnimes';
+  static const String webView = '/webView';
 
   static final routes = <String, WidgetBuilder>{
     login: (BuildContext context) => LoginScreen(),
     home: (BuildContext context) => HomeScreen(),
     animeDetails: (BuildContext context) => AnimeDetails(),
     similarAnimes: (BuildContext context) => SimilarAnimes(),
+    webView: (BuildContext context) => WebViewScreen(),
   };
 }
-
-
-

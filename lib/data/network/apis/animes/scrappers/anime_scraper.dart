@@ -12,6 +12,7 @@ abstract class AnimeScrapper {
 
   Future<List<AnimeVideo>> getLinksForAniById(String id, int episode);
   Future<String> searchAnime(String name);
+  Future<String> getAnimeUrl(String name);
 
   factory AnimeScrapper.fromType(DioClient client, ParserType type) {
     switch (type) {

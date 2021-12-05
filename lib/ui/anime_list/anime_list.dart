@@ -1,5 +1,4 @@
 import 'package:anime_recommendations_app/stores/anime/anime_store.dart';
-import 'package:anime_recommendations_app/stores/theme/theme_store.dart';
 import 'package:anime_recommendations_app/stores/user/user_store.dart';
 import 'package:anime_recommendations_app/utils/locale/app_localization.dart';
 import 'package:anime_recommendations_app/widgets/anime_grid_tile.dart';
@@ -17,7 +16,6 @@ class AnimeList extends StatefulWidget {
 class _AnimeListState extends State<AnimeList> {
   //stores:---------------------------------------------------------------------
   late AnimeStore _animeStore;
-  late ThemeStore _themeStore;
   late UserStore _userStore;
   bool isInited = false;
 
@@ -86,7 +84,6 @@ class _AnimeListState extends State<AnimeList> {
 
     if (!isInited) {
       // initializing stores
-      _themeStore = Provider.of<ThemeStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
       _userStore = Provider.of<UserStore>(context);
       
@@ -117,7 +114,6 @@ class _AnimeListState extends State<AnimeList> {
     if (_isSearching == false)
       buttonsBlock = [
         buildRefreshButton(),
-        buildThemeButton(context, _themeStore),
         buildLogoutButton(context, _userStore)
       ];
 

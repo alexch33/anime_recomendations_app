@@ -60,9 +60,6 @@ class NetworkModule extends PreferenceModule {
               final res = await dio.post(Endpoints.refreshTokens,
                   data: {"refreshToken": refreshToken});
 
-              dio.interceptors.requestLock.lock();
-              dio.interceptors.responseLock.lock();
-
               if (res.statusCode == 200) {
                 final token = res.data["access"]["token"];
                 final refresh = res.data["refresh"]["token"];
@@ -71,9 +68,6 @@ class NetworkModule extends PreferenceModule {
                 await prefs.setString(Preferences.refresh_token, refresh);
 
                 options.headers["Authorization"] = "Bearer " + token;
-
-                dio.interceptors.requestLock.unlock();
-                dio.interceptors.responseLock.unlock();
 
                 Options opt = Options(
                     contentType: options.contentType,
@@ -85,18 +79,13 @@ class NetworkModule extends PreferenceModule {
                     options: opt,
                     data: options.data,
                     queryParameters: options.queryParameters);
-                    handler.resolve(a);
-                // return handler.next(DioError(requestOptions: options));
+                handler.resolve(a);
               }
+              return handler.reject(error);
             }
-            dio.interceptors.requestLock.unlock();
-            dio.interceptors.responseLock.unlock();
 
-            return handler.next(error);
+            return handler.reject(error);
           } else {
-            dio.interceptors.requestLock.unlock();
-            dio.interceptors.responseLock.unlock();
-
             return handler.next(error);
           }
         }),

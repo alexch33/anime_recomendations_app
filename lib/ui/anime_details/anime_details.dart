@@ -11,8 +11,6 @@ import 'package:provider/provider.dart';
 import 'package:anime_recommendations_app/models/anime/anime.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:math' as math;
-import 'package:chewie/chewie.dart';
-import 'package:video_player/video_player.dart';
 
 class AnimeDetails extends StatefulWidget {
   @override
@@ -26,103 +24,24 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   late Anime _anime;
   bool isInited = false;
 
-  late String _animeUrl;
-  int _totalEpisodes = 0;
-  bool isLoading = true;
-  int episode = 1;
-  bool initedOnStart = false;
-  bool isShowPlayer = true;
-
-  late VideoPlayerController videoPlayerController;
-  late ChewieController chewieController;
-
-  bool playerInited = false;
-
-  Future<void> initVideoData(int episode) async {
-    if (playerInited) {
-      await chewieController.pause();
-      chewieController.dispose();
-      videoPlayerController.dispose();
-    }
-
-    if (isShowPlayer == false) return;
-
-    if (!mounted) return;
-    setState(() {
-      isLoading = true;
-      this.episode = episode;
-      if (initedOnStart == false) initedOnStart = true;
-    });
-
-    _anime = ModalRoute.of(context)!.settings.arguments as Anime;
-    if (!mounted) return;
-    String id = await _animeStore.getAnimeId(_anime);
-    if (!mounted) return;
-
-    final res = await _animeStore.getAnimeLinks(id, episode);
-
-    if (initedOnStart == false) return;
-
-    if (!mounted) return;
-    setState(() {
-      _totalEpisodes = int.parse(res.first.totalEpisodes);
-      _animeUrl = res.first.src;
-      isLoading = false;
-    });
-    await initPlayer();
-  }
-
-  Future initPlayer() async {
-    if (initedOnStart == false) return;
-
-    if (!mounted) return;
-    setState(() {
-      isLoading = true;
-    });
-
-    videoPlayerController = VideoPlayerController.network(_animeUrl);
-
-    await videoPlayerController.initialize();
-
-    chewieController = ChewieController(
-      videoPlayerController: videoPlayerController,
-      autoPlay: false,
-      looping: false,
-    );
-
-    if (!mounted) return;
-    setState(() {
-      isLoading = false;
-      playerInited = true;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
     if (!isInited) {
-      // initializing stores
       _animeStore = Provider.of<AnimeStore>(context);
       _userStore = Provider.of<UserStore>(context);
 
-      isInited = true;
-    }
+      _anime = ModalRoute.of(context)!.settings.arguments as Anime;
 
-    if (!this.initedOnStart) {
-      initVideoData(episode);
+      _animeStore.getLinksForAnime(_anime);
+
+      isInited = true;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    _anime = ModalRoute.of(context)!.settings.arguments as Anime;
-
     return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.translate('info')),
@@ -152,72 +71,12 @@ class _AnimeDetailsState extends State<AnimeDetails> {
                   children: [
                     _buildImageBlock(),
                     _buildTextInfo(),
-                    isShowPlayer ? _buildVideoBlock() : Container()
+                    _buildLinkButtons(),
                   ]),
               constraints: BoxConstraints(
                 minHeight: viewportConstraints.maxHeight,
               )));
     }));
-  }
-
-  Widget _buildVideoBlock() {
-    return Container(
-        width: double.infinity,
-        height: 500,
-        child: Stack(
-          children: [
-            Center(
-                child:
-                    isLoading ? CustomProgressIndicatorWidget() : Container()),
-            Column(
-              children: [
-                Expanded(
-                  flex: 10,
-                  child: _buildRadioButtons(),
-                ),
-                Expanded(
-                    flex: 21,
-                    child: SingleChildScrollView(
-                        child: Container(
-                      child: Wrap(
-                        children: [..._buildEpisodeButtons()],
-                      ),
-                    ))),
-                Divider(),
-                Expanded(
-                    flex: 69,
-                    child: playerInited
-                        ? !isLoading
-                            ? Chewie(
-                                controller: chewieController,
-                              )
-                            : Container()
-                        : Container())
-              ],
-            )
-          ],
-        ));
-  }
-
-  List<Widget> _buildEpisodeButtons() {
-    var result = List.generate(_totalEpisodes, (index) => index + 1);
-
-    return result
-        .map((e) => Padding(
-              padding: EdgeInsets.all(4),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    primary: e == episode ? Colors.red : Colors.black),
-                child: Text(
-                  "$e",
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed: () async {
-                  await initVideoData(e);
-                },
-              ),
-            ))
-        .toList();
   }
 
   Widget _buildImageBlock() {
@@ -365,32 +224,6 @@ class _AnimeDetailsState extends State<AnimeDetails> {
         ));
   }
 
-  _buildRadioButtons() {
-    final content = ParserType.values
-        .map((type) => Observer(
-            builder: (contet) => Row(
-                  children: [
-                    Radio(
-                      value: type.index,
-                      onChanged: _handleRadioButton,
-                      groupValue: _animeStore.scrapperType.index,
-                    ),
-                    Text(type.toString().split(".").last)
-                  ],
-                )))
-        .toList();
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: content,
-    );
-  }
-
-  _handleRadioButton(int? value) async {
-    _animeStore.scrapperType = ParserType.values[value ?? 0];
-    initVideoData(episode);
-  }
-
   _handleLike() async {
     bool isLiked = await _animeStore.likeAnime(_anime.dataId);
     if (isLiked) await _userStore.initUser();
@@ -407,18 +240,126 @@ class _AnimeDetailsState extends State<AnimeDetails> {
     if (isPushed) setState(() {});
   }
 
-  _launchURL(String url) async {
+  void _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     }
   }
 
+  Widget _buildLinkButtons() {
+    return Container(
+      width: double.infinity,
+      child: Column(
+        children: [
+          Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                  AppLocalizations.of(context)!.translate('watch_on_site'),
+                  style: Theme.of(context).textTheme.headline5)),
+          Container(
+            height: 16,
+          ),
+          buildSiteButtons(),
+        ],
+      ),
+    );
+  }
+
+  Widget buildSiteButtons() {
+    return Container(
+      width: double.infinity,
+      child: Column(
+        children: [
+          buildAnilibriaButton(),
+          buildAniVostButton(),
+          buildGogoButton(),
+          Container(
+            height: 32,
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildAnilibriaButton() {
+    return _buildSiteButtonContainer(
+        child: InkWell(
+      borderRadius: BorderRadius.circular(8.0),
+      child: Container(
+          height: double.infinity,
+          width: double.infinity,
+          alignment: Alignment.center,
+          child:
+              Text("Anilibria", style: Theme.of(context).textTheme.bodyText1)),
+      onTap: () {
+        goToAnime(_animeStore.anilibriaAnimeUrl);
+      },
+    ));
+  }
+
+  Widget buildAniVostButton() {
+    return _buildSiteButtonContainer(
+        child: InkWell(
+      borderRadius: BorderRadius.circular(8.0),
+      child: Container(
+          height: double.infinity,
+          width: double.infinity,
+          alignment: Alignment.center,
+          child: Text("Anivost", style: Theme.of(context).textTheme.bodyText1)),
+      onTap: () {
+        goToAnime(_animeStore.anivostAnimeUrl);
+      },
+    ));
+  }
+
+  Widget buildGogoButton() {
+    return _buildSiteButtonContainer(
+        child: InkWell(
+      borderRadius: BorderRadius.circular(8.0),
+      child: Container(
+          height: double.infinity,
+          width: double.infinity,
+          alignment: Alignment.center,
+          child:
+              Text("Gogo Anime", style: Theme.of(context).textTheme.bodyText1)),
+      onTap: () {
+        goToAnime(_animeStore.gogoAnimeUrl);
+      },
+    ));
+  }
+
+  void goToAnime(String url) {
+    if (url.isEmpty) {
+      url = "https://www.google.com/search?q=${_anime.name}";
+    }
+
+    if (url.isNotEmpty) {
+      if (!url.contains("https")) {
+        url = url.replaceAll("http", "https");
+      }
+    }
+
+    Navigator.of(context).pushNamed(Routes.webView, arguments: url);
+  }
+
+  Widget _buildSiteButtonContainer({required Widget child}) {
+    return Container(
+      margin: EdgeInsets.all(4.0),
+      width: 200,
+      height: 50,
+      child: Material(
+        child: child,
+        color: Colors.green,
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
+      alignment: Alignment.center,
+    );
+  }
+
   @override
   void dispose() {
-    if (playerInited) {
-      videoPlayerController.dispose();
-      chewieController.dispose();
-    }
+    _animeStore.clearAnimesUrls();
     super.dispose();
   }
 }

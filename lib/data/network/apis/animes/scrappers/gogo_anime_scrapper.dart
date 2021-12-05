@@ -74,4 +74,17 @@ class GogoAnimeScrapper extends AnimeScrapper {
 
     return id;
   }
+
+  @override
+  Future<String> getAnimeUrl(String name) async {
+    final url = '${Endpoints.baseGoURL}/search.html?keyword=$name&page=${1}';
+
+    final resp = await dioClient.get(url);
+    Document doc = parse(resp);
+
+    String? link =
+        doc.querySelectorAll(".img").first.children.first.attributes['href'];
+
+    return '${Endpoints.baseGoURL}$link';
+  }
 }

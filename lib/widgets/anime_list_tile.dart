@@ -60,8 +60,7 @@ class AnimeListTile extends StatelessWidget {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      SizedBox(
-                                        width: 250,
+                                      Expanded(
                                         child: Text(
                                           '${anime.name}',
                                           maxLines: 1,

@@ -21,13 +21,6 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
   late Anime _anime;
   bool isInited = false;
 
-  RecomendationList _recomendationsList = RecomendationList(recomendations: []);
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -39,9 +32,10 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
 
       _anime = ModalRoute.of(context)!.settings.arguments as Anime;
 
-      _animeStore
-          .querrySImilarItems(_anime.dataId.toString())
-          .then((value) => setState(() => _recomendationsList = value));
+      Future.delayed(Duration(milliseconds: 100), () {
+        _animeStore.querrySImilarItems(_anime.dataId.toString());
+      });
+
       isInited = true;
     }
   }
@@ -69,13 +63,13 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
   }
 
   Widget _buildGridView() {
-    return _recomendationsList.recomendations.isNotEmpty
+    return _animeStore.similarList.recomendations.isNotEmpty
         ? GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 0.5,
             ),
-            itemCount: _recomendationsList.recomendations.length,
+            itemCount: _animeStore.similarList.recomendations.length,
             itemBuilder: (context, index) {
               return _buildGridItem(index);
             },
@@ -91,7 +85,7 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
     Anime animeItem = _animeStore.animeList.animes.firstWhere(
         (anime) =>
             anime.dataId.toString() ==
-            _recomendationsList.recomendations[position].item.toString(),
+            _animeStore.similarList.recomendations[position].item.toString(),
         orElse: () => Anime());
 
     final isLiked = _userStore.isLikedAnime(animeItem.dataId);
@@ -100,5 +94,11 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
 
     return AnimeGridTile(
         anime: animeItem, isLiked: isLiked, isLater: isLater, isBlack: isBlack);
+  }
+
+  @override
+  void dispose() {
+    _animeStore.similarList = RecomendationList(recomendations: []);
+    super.dispose();
   }
 }

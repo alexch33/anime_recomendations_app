@@ -61,6 +61,21 @@ mixin _$AnimeStore on _AnimeStore, Store {
     });
   }
 
+  final _$similarListAtom = Atom(name: '_AnimeStore.similarList');
+
+  @override
+  RecomendationList get similarList {
+    _$similarListAtom.reportRead();
+    return super.similarList;
+  }
+
+  @override
+  set similarList(RecomendationList value) {
+    _$similarListAtom.reportWrite(value, super.similarList, () {
+      super.similarList = value;
+    });
+  }
+
   final _$successAtom = Atom(name: '_AnimeStore.success');
 
   @override
@@ -104,6 +119,60 @@ mixin _$AnimeStore on _AnimeStore, Store {
     _$scrapperTypeAtom.reportWrite(value, super.scrapperType, () {
       super.scrapperType = value;
     });
+  }
+
+  final _$anilibriaAnimeUrlAtom = Atom(name: '_AnimeStore.anilibriaAnimeUrl');
+
+  @override
+  String get anilibriaAnimeUrl {
+    _$anilibriaAnimeUrlAtom.reportRead();
+    return super.anilibriaAnimeUrl;
+  }
+
+  @override
+  set anilibriaAnimeUrl(String value) {
+    _$anilibriaAnimeUrlAtom.reportWrite(value, super.anilibriaAnimeUrl, () {
+      super.anilibriaAnimeUrl = value;
+    });
+  }
+
+  final _$anivostAnimeUrlAtom = Atom(name: '_AnimeStore.anivostAnimeUrl');
+
+  @override
+  String get anivostAnimeUrl {
+    _$anivostAnimeUrlAtom.reportRead();
+    return super.anivostAnimeUrl;
+  }
+
+  @override
+  set anivostAnimeUrl(String value) {
+    _$anivostAnimeUrlAtom.reportWrite(value, super.anivostAnimeUrl, () {
+      super.anivostAnimeUrl = value;
+    });
+  }
+
+  final _$gogoAnimeUrlAtom = Atom(name: '_AnimeStore.gogoAnimeUrl');
+
+  @override
+  String get gogoAnimeUrl {
+    _$gogoAnimeUrlAtom.reportRead();
+    return super.gogoAnimeUrl;
+  }
+
+  @override
+  set gogoAnimeUrl(String value) {
+    _$gogoAnimeUrlAtom.reportWrite(value, super.gogoAnimeUrl, () {
+      super.gogoAnimeUrl = value;
+    });
+  }
+
+  final _$getLinksForAnimeAsyncAction =
+      AsyncAction('_AnimeStore.getLinksForAnime');
+
+  @override
+  Future<void> getLinksForAnime(Anime anime) {
+    return _$getLinksForAnimeAsyncAction
+        .run(() => super.getLinksForAnime(anime));
   }
 
   final _$getAnimesAsyncAction = AsyncAction('_AnimeStore.getAnimes');
@@ -151,15 +220,32 @@ mixin _$AnimeStore on _AnimeStore, Store {
     return _$getAnimeIdAsyncAction.run(() => super.getAnimeId(anime));
   }
 
+  final _$_AnimeStoreActionController = ActionController(name: '_AnimeStore');
+
+  @override
+  void clearAnimesUrls() {
+    final _$actionInfo = _$_AnimeStoreActionController.startAction(
+        name: '_AnimeStore.clearAnimesUrls');
+    try {
+      return super.clearAnimesUrls();
+    } finally {
+      _$_AnimeStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
 fetchPostsFuture: ${fetchPostsFuture},
 fetchLikeFuture: ${fetchLikeFuture},
 animeList: ${animeList},
+similarList: ${similarList},
 success: ${success},
 isLoading: ${isLoading},
 scrapperType: ${scrapperType},
+anilibriaAnimeUrl: ${anilibriaAnimeUrl},
+anivostAnimeUrl: ${anivostAnimeUrl},
+gogoAnimeUrl: ${gogoAnimeUrl},
 loading: ${loading}
     ''';
   }

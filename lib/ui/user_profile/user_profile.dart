@@ -60,24 +60,21 @@ class _UserProfileState extends State<UserProfile>
         AppLocalizations.of(context)!.translate('black_list')
       ];
 
-      setState(() {
-        likedAnimes = _animeStore.animeList.animes
-            .where(
-                (anime) => _userStore.user.likedAnimes.contains(anime.dataId))
-            .toList();
-        laterAnimes = _animeStore.animeList.animes
-            .where((anime) =>
-                _userStore.user.watchLaterAnimes.contains(anime.dataId))
-            .toList();
-        blackAnimes = _animeStore.animeList.animes
-            .where((anime) =>
-                _userStore.user.blackListAnimes.contains(anime.dataId))
-            .toList();
-        isInited = true;
-      });
-    }
+      likedAnimes = _animeStore.animeList.animes
+          .where((anime) => _userStore.user.likedAnimes.contains(anime.dataId))
+          .toList();
+      laterAnimes = _animeStore.animeList.animes
+          .where((anime) =>
+              _userStore.user.watchLaterAnimes.contains(anime.dataId))
+          .toList();
+      blackAnimes = _animeStore.animeList.animes
+          .where(
+              (anime) => _userStore.user.blackListAnimes.contains(anime.dataId))
+          .toList();
+      _userStore.initUser();
 
-    _userStore.initUser();
+      isInited = true;
+    }
   }
 
   void _handleTabSelection() {
@@ -321,6 +318,7 @@ class _UserProfileState extends State<UserProfile>
   @override
   void dispose() {
     _tabController.dispose();
+    _fabController.dispose();
     super.dispose();
   }
 }

@@ -1,5 +1,4 @@
 import 'package:anime_recommendations_app/stores/anime/anime_store.dart';
-import 'package:anime_recommendations_app/stores/theme/theme_store.dart';
 import 'package:anime_recommendations_app/stores/user/user_store.dart';
 import 'package:anime_recommendations_app/utils/locale/app_localization.dart';
 import 'package:anime_recommendations_app/widgets/anime_grid_tile.dart';

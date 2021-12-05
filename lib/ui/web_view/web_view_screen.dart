@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 const DEFAULT_USER_AGENT =
     'Mozilla/5.0 (Linux; U; Android 2.2; en-gb; Nexus One Build/FRF50) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1';
@@ -14,27 +15,24 @@ class WebViewScreen extends StatefulWidget {
 class _WebViewScreenState extends State<WebViewScreen> {
   String url = 'https://google.com';
   int progress = 0;
-  late WebViewController _webViewController;
+  late InAppWebViewController _webViewController;
 
   @override
   void initState() {
-    WebView.platform = SurfaceAndroidWebView();
     super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    String url = ModalRoute.of(context)!.settings.arguments as String;
-
-    if (url.isNotEmpty) {
-      if (url.contains("https")) {
-        this.url = url;
-      } else {
-        this.url = url.replaceAll("http", "https");
-      }
-    }
+    url = ModalRoute.of(context)!.settings.arguments as String;
   }
 
   @override
@@ -59,32 +57,17 @@ class _WebViewScreenState extends State<WebViewScreen> {
               Expanded(
                 child: Stack(
                   children: [
-                    WebView(
-                      initialUrl: url,
-                      userAgent: DEFAULT_USER_AGENT,
-                      javascriptMode: JavascriptMode.unrestricted,
-                      onWebViewCreated: (WebViewController webViewController) {
+                    InAppWebView(
+                      initialUrlRequest: URLRequest(url: Uri.parse(url)),
+                      onWebViewCreated:
+                          (InAppWebViewController webViewController) {
                         _webViewController = webViewController;
                       },
-                      onProgress: (progress) {
+                      onProgressChanged: (controlle, progress) {
                         setState(() {
                           this.progress = progress;
                         });
                       },
-                      gestureRecognizers:
-                          <Factory<VerticalDragGestureRecognizer>>[
-                        new Factory<VerticalDragGestureRecognizer>(
-                          () => new VerticalDragGestureRecognizer()
-                            ..onDown = (DragDownDetails details) {
-                              _webViewController.getScrollY().then((value) {
-                                if (value == 0 &&
-                                    details.globalPosition.direction < 0.5) {
-                                  _webViewController.reload();
-                                }
-                              });
-                            },
-                        ),
-                      ].toSet(),
                     ),
                     SizedBox(
                         width: double.infinity,
@@ -101,5 +84,14 @@ class _WebViewScreenState extends State<WebViewScreen> {
             ],
           )),
     );
+  }
+
+  @override
+  dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
   }
 }

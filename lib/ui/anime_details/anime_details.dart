@@ -333,6 +333,12 @@ class _AnimeDetailsState extends State<AnimeDetails> {
       url = "https://www.google.com/search?q=${_anime.name}";
     }
 
+    if (url.isNotEmpty) {
+      if (!url.contains("https")) {
+        url = url.replaceAll("http", "https");
+      }
+    }
+
     Navigator.of(context).pushNamed(Routes.webView, arguments: url);
   }
 

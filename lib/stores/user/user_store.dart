@@ -72,17 +72,14 @@ abstract class _UserStore with Store {
   @observable
   bool isAdsOn = false;
 
-  @action
   bool isLikedAnime(int dataId) {
     return user.likedAnimes.contains(dataId);
   }
 
-  @action
   bool isLaterAnime(int dataId) {
     return user.watchLaterAnimes.contains(dataId);
   }
 
-  @action
   bool isBlackListedAnime(int dataId) {
     return user.blackListAnimes.contains(dataId);
   }

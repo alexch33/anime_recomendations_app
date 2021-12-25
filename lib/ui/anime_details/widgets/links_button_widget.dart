@@ -1,0 +1,59 @@
+
+import 'package:anime_recommendations_app/models/anime/anime.dart';
+import 'package:anime_recommendations_app/stores/anime/anime_store.dart';
+import 'package:anime_recommendations_app/utils/locale/app_localization.dart';
+import 'package:flutter/material.dart';
+
+import 'site_button_container.dart';
+
+class LinksButtonsWidget extends StatelessWidget {
+  final AnimeStore _animeStore;
+  final Anime _anime;
+
+  const LinksButtonsWidget(this._animeStore, this._anime, {Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      child: Column(
+        children: [
+          Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                  AppLocalizations.of(context)!.translate('watch_on_site'),
+                  style: Theme.of(context).textTheme.headline5)),
+          Container(
+            height: 16,
+          ),
+          Container(
+            width: double.infinity,
+            child: Column(
+              children: [
+                SiteButtonContainer(
+                    anime: _anime,
+                    urlToGo: _animeStore.anilibriaAnimeUrl,
+                    child: Text("Anilibria",
+                        style: Theme.of(context).textTheme.bodyText1)),
+                SiteButtonContainer(
+                    anime: _anime,
+                    urlToGo: _animeStore.anivostAnimeUrl,
+                    child: Text("Anivost",
+                        style: Theme.of(context).textTheme.bodyText1)),
+                SiteButtonContainer(
+                    anime: _anime,
+                    urlToGo: _animeStore.gogoAnimeUrl,
+                    child: Text("Gogo Anime",
+                        style: Theme.of(context).textTheme.bodyText1)),
+                Container(
+                  height: 32,
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

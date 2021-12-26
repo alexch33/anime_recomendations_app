@@ -62,7 +62,8 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
       _userStore = Provider.of<UserStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
 
-      appBarTitle = Text(AppLocalizations.of(context)!.translate('recommended'));
+      appBarTitle =
+          Text(AppLocalizations.of(context)!.translate('recommended'));
 
       isInited = true;
     }
@@ -97,7 +98,7 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
     if (_isSearching == false)
       buttonsBlock = [
         buildThemeButton(context, _themeStore),
-        buildLogoutButton(context, _userStore)
+        LogoutButtonWidget(_userStore)
       ];
 
     return <Widget>[
@@ -117,7 +118,8 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
               controller: _searchQuery,
               decoration: new InputDecoration(
                   prefixIcon: new Icon(Icons.search, size: 30),
-                  hintText: AppLocalizations.of(context)!.translate('search_hint')),
+                  hintText:
+                      AppLocalizations.of(context)!.translate('search_hint')),
             );
             _handleSearchStart();
           } else {
@@ -140,7 +142,8 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
         Icons.search,
         size: 30,
       );
-      this.appBarTitle = new Text(AppLocalizations.of(context)!.translate('recommended'));
+      this.appBarTitle =
+          new Text(AppLocalizations.of(context)!.translate('recommended'));
       _isSearching = false;
       _searchQuery.clear();
     });

@@ -7,6 +7,7 @@ import 'package:anime_recommendations_app/models/anime/anime_video.dart';
 import 'package:anime_recommendations_app/stores/error/error_store.dart';
 import 'package:anime_recommendations_app/utils/dio/dio_error_util.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:anime_recommendations_app/models/recomendation/recomendation_list.dart';
 
@@ -66,6 +67,46 @@ abstract class _AnimeStore with Store {
 
   @observable
   String gogoAnimeUrl = '';
+
+  @observable
+  bool isSearching = false;
+
+  String searchText = "";
+
+  final TextEditingController searchQuery = new TextEditingController();
+
+  @action
+  void initialize() {
+    searchQuery.addListener(() {
+      if (searchQuery.text.isEmpty) {
+        isSearching = false;
+        searchText = "";
+        animeList.cashedAnimes = animeList.animes;
+      } else {
+        isSearching = true;
+        searchText = searchQuery.text;
+        animeList.cashedAnimes = animeList.animes
+            .where((element) =>
+                element.nameEng
+                    .toLowerCase()
+                    .contains(searchText.toLowerCase()) ||
+                element.name.toLowerCase().contains(searchText.toLowerCase()))
+            .toList();
+      }
+    });
+  }
+
+  @action
+  void handleSearchStart() {
+    isSearching = true;
+    animeList.cashedAnimes = animeList.animes;
+  }
+
+  void handleSearchEnd() {
+    isSearching = false;
+    searchQuery.clear();
+    animeList.cashedAnimes = [];
+  }
 
   @action
   Future<void> getLinksForAnime(Anime anime) async {

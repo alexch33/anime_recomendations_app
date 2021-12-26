@@ -166,6 +166,21 @@ mixin _$AnimeStore on _AnimeStore, Store {
     });
   }
 
+  final _$isSearchingAtom = Atom(name: '_AnimeStore.isSearching');
+
+  @override
+  bool get isSearching {
+    _$isSearchingAtom.reportRead();
+    return super.isSearching;
+  }
+
+  @override
+  set isSearching(bool value) {
+    _$isSearchingAtom.reportWrite(value, super.isSearching, () {
+      super.isSearching = value;
+    });
+  }
+
   final _$getLinksForAnimeAsyncAction =
       AsyncAction('_AnimeStore.getLinksForAnime');
 
@@ -223,6 +238,28 @@ mixin _$AnimeStore on _AnimeStore, Store {
   final _$_AnimeStoreActionController = ActionController(name: '_AnimeStore');
 
   @override
+  void initialize() {
+    final _$actionInfo = _$_AnimeStoreActionController.startAction(
+        name: '_AnimeStore.initialize');
+    try {
+      return super.initialize();
+    } finally {
+      _$_AnimeStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void handleSearchStart() {
+    final _$actionInfo = _$_AnimeStoreActionController.startAction(
+        name: '_AnimeStore.handleSearchStart');
+    try {
+      return super.handleSearchStart();
+    } finally {
+      _$_AnimeStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void clearAnimesUrls() {
     final _$actionInfo = _$_AnimeStoreActionController.startAction(
         name: '_AnimeStore.clearAnimesUrls');
@@ -246,6 +283,7 @@ scrapperType: ${scrapperType},
 anilibriaAnimeUrl: ${anilibriaAnimeUrl},
 anivostAnimeUrl: ${anivostAnimeUrl},
 gogoAnimeUrl: ${gogoAnimeUrl},
+isSearching: ${isSearching},
 loading: ${loading}
     ''';
   }

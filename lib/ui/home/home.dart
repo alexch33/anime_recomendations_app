@@ -40,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _userStore = Provider.of<UserStore>(context);
       isInited = true;
     }
+    _animeStore.initialize();
     _animeStore.getAnimes();
     _userStore.initUser();
   }

@@ -1,8 +1,8 @@
-
 import 'package:anime_recommendations_app/models/anime/anime.dart';
 import 'package:anime_recommendations_app/stores/anime/anime_store.dart';
 import 'package:anime_recommendations_app/utils/locale/app_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 import 'site_button_container.dart';
 
@@ -29,27 +29,29 @@ class LinksButtonsWidget extends StatelessWidget {
           ),
           Container(
             width: double.infinity,
-            child: Column(
-              children: [
-                SiteButtonContainer(
-                    anime: _anime,
-                    urlToGo: _animeStore.anilibriaAnimeUrl,
-                    child: Text("Anilibria",
-                        style: Theme.of(context).textTheme.bodyText1)),
-                SiteButtonContainer(
-                    anime: _anime,
-                    urlToGo: _animeStore.anivostAnimeUrl,
-                    child: Text("Anivost",
-                        style: Theme.of(context).textTheme.bodyText1)),
-                SiteButtonContainer(
-                    anime: _anime,
-                    urlToGo: _animeStore.gogoAnimeUrl,
-                    child: Text("Gogo Anime",
-                        style: Theme.of(context).textTheme.bodyText1)),
-                Container(
-                  height: 32,
-                )
-              ],
+            child: Observer(
+              builder: (context) => Column(
+                children: [
+                  SiteButtonContainer(
+                      anime: _anime,
+                      urlToGo: _animeStore.anilibriaAnimeUrl,
+                      child: Text("Anilibria",
+                          style: Theme.of(context).textTheme.bodyText1)),
+                  SiteButtonContainer(
+                      anime: _anime,
+                      urlToGo: _animeStore.anivostAnimeUrl,
+                      child: Text("Anivost",
+                          style: Theme.of(context).textTheme.bodyText1)),
+                  SiteButtonContainer(
+                      anime: _anime,
+                      urlToGo: _animeStore.gogoAnimeUrl,
+                      child: Text("Gogo Anime",
+                          style: Theme.of(context).textTheme.bodyText1)),
+                  Container(
+                    height: 32,
+                  )
+                ],
+              ),
             ),
           ),
         ],

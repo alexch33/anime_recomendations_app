@@ -26,8 +26,7 @@ class SiteButtonContainer extends StatelessWidget {
               height: double.infinity,
               width: double.infinity,
               alignment: Alignment.center,
-              child: Text("Anivost",
-                  style: Theme.of(context).textTheme.bodyText1)),
+              child: child),
           onTap: () {
             goToAnime(context, urlToGo);
           },

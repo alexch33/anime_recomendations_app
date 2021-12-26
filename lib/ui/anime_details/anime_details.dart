@@ -46,7 +46,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
             padding: EdgeInsets.all(16),
             child: Stack(
               children: [
-                Material(child: LayoutBuilder(builder:
+                LayoutBuilder(builder:
                     (BuildContext context, BoxConstraints viewportConstraints) {
                   return SingleChildScrollView(
                       child: ConstrainedBox(
@@ -62,7 +62,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
                           constraints: BoxConstraints(
                             minHeight: viewportConstraints.maxHeight,
                           )));
-                })),
+                }),
                 Observer(
                     builder: (context) =>
                         (_userStore.loading || _animeStore.isLoading)

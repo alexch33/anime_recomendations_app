@@ -119,8 +119,6 @@ abstract class _UserStore with Store {
                   .contains(searchText.toLowerCase()) ||
               element.name.toLowerCase().contains(searchText.toLowerCase());
         }).toList();
-        print(
-            "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA   ${recomendationsList.cachedRecomendations.length}");
       }
     });
   }

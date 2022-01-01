@@ -1,7 +1,10 @@
+import 'package:anime_recommendations_app/models/anime/anime.dart';
 import 'package:anime_recommendations_app/models/recomendation/recomendation_list.dart';
 import 'package:anime_recommendations_app/models/user/user.dart';
+import 'package:anime_recommendations_app/stores/anime/anime_store.dart';
 import 'package:anime_recommendations_app/stores/error/error_store.dart';
 import 'package:anime_recommendations_app/utils/dio/dio_error_util.dart';
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../data/repository.dart';
@@ -71,6 +74,65 @@ abstract class _UserStore with Store {
 
   @observable
   bool isAdsOn = false;
+
+  @observable
+  bool isSearching = false;
+
+  @observable
+  RecomendationList recomendationsList = RecomendationList(recomendations: []);
+
+  late AnimeStore _animeStore;
+
+  String searchText = "";
+
+  final TextEditingController searchQuery = new TextEditingController();
+
+  @action
+  void initialize(AnimeStore animeStore) {
+    _animeStore = animeStore;
+    
+    searchQuery.addListener(() {
+      if (searchQuery.text.isEmpty) {
+        isSearching = false;
+        searchText = "";
+        recomendationsList.cachedRecomendations =
+            recomendationsList.recomendations;
+      } else {
+        isSearching = true;
+        searchText = searchQuery.text;
+        recomendationsList.cachedRecomendations =
+            recomendationsList.recomendations.where((recomendation) {
+          Anime element = _animeStore.animeList.animes.firstWhere(
+              (anime) => anime.dataId.toString() == recomendation.item,
+              orElse: () => Anime());
+          if (element.id == Anime().id) return false;
+          return element.nameEng
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              element.name.toLowerCase().contains(searchText.toLowerCase());
+        }).toList();
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA   ${recomendationsList.cachedRecomendations.length}");
+      }
+    });
+  }
+
+  @action
+  void handleSearchStart() {
+    isSearching = true;
+    recomendationsList.cachedRecomendations = recomendationsList.recomendations;
+  }
+
+  void handleSearchEnd() {
+    isSearching = false;
+    searchQuery.clear();
+    recomendationsList.cachedRecomendations = [];
+  }
+
+  @action
+  Future<void> refreshRecs() async {
+    await initUser();
+    await querryUserRecomendations(user.id);
+  }
 
   bool isLikedAnime(int dataId) {
     return user.likedAnimes.contains(dataId);
@@ -150,11 +212,15 @@ abstract class _UserStore with Store {
       loading = true;
       var res = await _repository.getUserRecomendations(userId);
       loading = false;
+      recomendationsList = res;
       return res;
     } catch (e) {
       loading = false;
       errorStore.errorMessage = DioErrorUtil.handleError(e);
-      return RecomendationList(recomendations: []);
+      var result = RecomendationList(recomendations: []);
+      recomendationsList = result;
+
+      return result;
     }
   }
 

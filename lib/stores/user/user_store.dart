@@ -3,6 +3,9 @@ import 'package:anime_recommendations_app/models/recomendation/recomendation_lis
 import 'package:anime_recommendations_app/models/user/user.dart';
 import 'package:anime_recommendations_app/stores/anime/anime_store.dart';
 import 'package:anime_recommendations_app/stores/error/error_store.dart';
+import 'package:anime_recommendations_app/ui/anime_list/anime_list.dart';
+import 'package:anime_recommendations_app/ui/anime_recomendations/anime_recomendations.dart';
+import 'package:anime_recommendations_app/ui/user_profile/user_profile.dart';
 import 'package:anime_recommendations_app/utils/dio/dio_error_util.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
@@ -81,6 +84,11 @@ abstract class _UserStore with Store {
   @observable
   RecomendationList recomendationsList = RecomendationList(recomendations: []);
 
+  @observable
+  int page = 1;
+
+  List<Widget> pages = [UserProfile(), AnimeList(), AnimeRecomendations()];
+
   late AnimeStore _animeStore;
 
   String searchText = "";
@@ -90,7 +98,7 @@ abstract class _UserStore with Store {
   @action
   void initialize(AnimeStore animeStore) {
     _animeStore = animeStore;
-    
+
     searchQuery.addListener(() {
       if (searchQuery.text.isEmpty) {
         isSearching = false;
@@ -111,7 +119,8 @@ abstract class _UserStore with Store {
                   .contains(searchText.toLowerCase()) ||
               element.name.toLowerCase().contains(searchText.toLowerCase());
         }).toList();
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA   ${recomendationsList.cachedRecomendations.length}");
+        print(
+            "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA   ${recomendationsList.cachedRecomendations.length}");
       }
     });
   }

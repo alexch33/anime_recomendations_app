@@ -37,7 +37,7 @@ dependencies:
   xxtea: ^2.1.0
 
   # An helper to easily exposes a value using InheritedWidget without having to write one.
-  provider: ^6.0.1
+  provider: ^6.0.2
 
   # String validation and sanitization for Dart. Dart 2-compatible version of validator
   validators: ^3.0.0

@@ -111,15 +111,17 @@ abstract class _AnimeStore with Store {
   @action
   Future<void> getLinksForAnime(Anime anime) async {
     var dio = DioClient(Dio());
-    AnimeScrapper.fromType(dio, ParserType.Anilibria)
-        .getAnimeUrl(anime.name)
-        .then((value) => anilibriaAnimeUrl = value);
-    AnimeScrapper.fromType(dio, ParserType.Gogo)
-        .getAnimeUrl(anime.name)
-        .then((value) => gogoAnimeUrl = value);
-    AnimeScrapper.fromType(dio, ParserType.AniVost)
-        .getAnimeUrl(anime.name)
-        .then((value) => anivostAnimeUrl = value);
+    try {
+      AnimeScrapper.fromType(dio, ParserType.Anilibria)
+          .getAnimeUrl(anime.name)
+          .then((value) => anilibriaAnimeUrl = value);
+      AnimeScrapper.fromType(dio, ParserType.Gogo)
+          .getAnimeUrl(anime.name)
+          .then((value) => gogoAnimeUrl = value);
+      AnimeScrapper.fromType(dio, ParserType.AniVost)
+          .getAnimeUrl(anime.name)
+          .then((value) => anivostAnimeUrl = value);
+    } catch (e) {}
   }
 
   @action

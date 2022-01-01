@@ -61,18 +61,18 @@ mixin _$AnimeStore on _AnimeStore, Store {
     });
   }
 
-  final _$similarListAtom = Atom(name: '_AnimeStore.similarList');
+  final _$similarsListsMapAtom = Atom(name: '_AnimeStore.similarsListsMap');
 
   @override
-  RecomendationList get similarList {
-    _$similarListAtom.reportRead();
-    return super.similarList;
+  Map<int, RecomendationList> get similarsListsMap {
+    _$similarsListsMapAtom.reportRead();
+    return super.similarsListsMap;
   }
 
   @override
-  set similarList(RecomendationList value) {
-    _$similarListAtom.reportWrite(value, super.similarList, () {
-      super.similarList = value;
+  set similarsListsMap(Map<int, RecomendationList> value) {
+    _$similarsListsMapAtom.reportWrite(value, super.similarsListsMap, () {
+      super.similarsListsMap = value;
     });
   }
 
@@ -215,7 +215,7 @@ mixin _$AnimeStore on _AnimeStore, Store {
       AsyncAction('_AnimeStore.querrySImilarItems');
 
   @override
-  Future<RecomendationList> querrySImilarItems(String itemDataId) {
+  Future<RecomendationList> querrySImilarItems(int itemDataId) {
     return _$querrySImilarItemsAsyncAction
         .run(() => super.querrySImilarItems(itemDataId));
   }
@@ -276,7 +276,7 @@ mixin _$AnimeStore on _AnimeStore, Store {
 fetchPostsFuture: ${fetchPostsFuture},
 fetchLikeFuture: ${fetchLikeFuture},
 animeList: ${animeList},
-similarList: ${similarList},
+similarsListsMap: ${similarsListsMap},
 success: ${success},
 isLoading: ${isLoading},
 scrapperType: ${scrapperType},

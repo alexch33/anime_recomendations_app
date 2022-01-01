@@ -45,7 +45,7 @@ abstract class _AnimeStore with Store {
   AnimeList animeList = AnimeList(animes: []);
 
   @observable
-  RecomendationList similarList = RecomendationList(recomendations: []);
+  Map<int, RecomendationList> similarsListsMap = {};
 
   @observable
   bool success = false;
@@ -171,19 +171,21 @@ abstract class _AnimeStore with Store {
   }
 
   @action
-  Future<RecomendationList> querrySImilarItems(String itemDataId) async {
+  Future<RecomendationList> querrySImilarItems(int itemDataId) async {
     isLoading = true;
-    similarList = RecomendationList(recomendations: []);
+    similarsListsMap[itemDataId] = RecomendationList(recomendations: []);
 
     try {
-      similarList = await _repository.getSimilarItems(itemDataId);
+      similarsListsMap[itemDataId] =
+          await _repository.getSimilarItems(itemDataId.toString());
     } catch (error) {
-      similarList = RecomendationList(recomendations: []);
+      similarsListsMap[itemDataId] = RecomendationList(recomendations: []);
       errorStore.errorMessage = DioErrorUtil.handleError(error);
     }
     isLoading = false;
 
-    return similarList;
+    return similarsListsMap[itemDataId] ??
+        RecomendationList(recomendations: []);
   }
 
   @action

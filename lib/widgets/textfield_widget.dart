@@ -41,6 +41,7 @@ class TextFieldWidget extends StatelessWidget {
     return Padding(
       padding: padding,
       child: TextFormField(
+        cursorColor: Colors.white,
         controller: textController,
         focusNode: focusNode,
         onFieldSubmitted: onFieldSubmitted,

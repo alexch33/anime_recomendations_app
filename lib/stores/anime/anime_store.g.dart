@@ -9,43 +9,6 @@ part of 'anime_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$AnimeStore on _AnimeStore, Store {
-  Computed<bool>? _$loadingComputed;
-
-  @override
-  bool get loading => (_$loadingComputed ??=
-          Computed<bool>(() => super.loading, name: '_AnimeStore.loading'))
-      .value;
-
-  final _$fetchPostsFutureAtom = Atom(name: '_AnimeStore.fetchPostsFuture');
-
-  @override
-  ObservableFuture<AnimeList> get fetchPostsFuture {
-    _$fetchPostsFutureAtom.reportRead();
-    return super.fetchPostsFuture;
-  }
-
-  @override
-  set fetchPostsFuture(ObservableFuture<AnimeList> value) {
-    _$fetchPostsFutureAtom.reportWrite(value, super.fetchPostsFuture, () {
-      super.fetchPostsFuture = value;
-    });
-  }
-
-  final _$fetchLikeFutureAtom = Atom(name: '_AnimeStore.fetchLikeFuture');
-
-  @override
-  ObservableFuture<bool> get fetchLikeFuture {
-    _$fetchLikeFutureAtom.reportRead();
-    return super.fetchLikeFuture;
-  }
-
-  @override
-  set fetchLikeFuture(ObservableFuture<bool> value) {
-    _$fetchLikeFutureAtom.reportWrite(value, super.fetchLikeFuture, () {
-      super.fetchLikeFuture = value;
-    });
-  }
-
   final _$animeListAtom = Atom(name: '_AnimeStore.animeList');
 
   @override
@@ -273,8 +236,6 @@ mixin _$AnimeStore on _AnimeStore, Store {
   @override
   String toString() {
     return '''
-fetchPostsFuture: ${fetchPostsFuture},
-fetchLikeFuture: ${fetchLikeFuture},
 animeList: ${animeList},
 similarsListsMap: ${similarsListsMap},
 success: ${success},
@@ -283,8 +244,7 @@ scrapperType: ${scrapperType},
 anilibriaAnimeUrl: ${anilibriaAnimeUrl},
 anivostAnimeUrl: ${anivostAnimeUrl},
 gogoAnimeUrl: ${gogoAnimeUrl},
-isSearching: ${isSearching},
-loading: ${loading}
+isSearching: ${isSearching}
     ''';
   }
 }

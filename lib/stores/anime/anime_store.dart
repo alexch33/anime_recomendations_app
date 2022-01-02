@@ -1,6 +1,12 @@
+import 'dart:isolate';
+import 'dart:ui';
 import 'package:anime_recommendations_app/data/network/apis/animes/scrappers/anime_scraper.dart';
 import 'package:anime_recommendations_app/data/network/dio_client.dart';
 import 'package:anime_recommendations_app/data/repository.dart';
+import 'package:anime_recommendations_app/di/components/app_component.dart';
+import 'package:anime_recommendations_app/di/modules/local_module.dart';
+import 'package:anime_recommendations_app/di/modules/netwok_module.dart';
+import 'package:anime_recommendations_app/di/modules/preference_module.dart';
 import 'package:anime_recommendations_app/models/anime/anime.dart';
 import 'package:anime_recommendations_app/models/anime/anime_list.dart';
 import 'package:anime_recommendations_app/models/anime/anime_video.dart';
@@ -10,8 +16,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:anime_recommendations_app/models/recomendation/recomendation_list.dart';
+import 'package:flutter_isolate/flutter_isolate.dart';
 
 part 'anime_store.g.dart';
+
+ReceivePort receivePort = ReceivePort();
+final String recieverName = "Reciever";
 
 enum ParserType { Anilibria, Gogo, AniVost }
 class AnimeStore = _AnimeStore with _$AnimeStore;
@@ -26,21 +36,6 @@ abstract class _AnimeStore with Store {
   // constructor:---------------------------------------------------------------
   _AnimeStore(Repository repository) : this._repository = repository;
 
-  // store variables:-----------------------------------------------------------
-  static ObservableFuture<AnimeList> emptyPostResponse =
-      ObservableFuture.value(AnimeList(animes: []));
-
-  static ObservableFuture<bool> emptyLikeResponse =
-      ObservableFuture.value(false);
-
-  @observable
-  ObservableFuture<AnimeList> fetchPostsFuture =
-      ObservableFuture<AnimeList>(emptyPostResponse);
-
-  @observable
-  ObservableFuture<bool> fetchLikeFuture =
-      ObservableFuture<bool>(emptyLikeResponse);
-
   @observable
   AnimeList animeList = AnimeList(animes: []);
 
@@ -49,9 +44,6 @@ abstract class _AnimeStore with Store {
 
   @observable
   bool success = false;
-
-  @computed
-  bool get loading => fetchPostsFuture.status == FutureStatus.pending;
 
   @observable
   bool isLoading = false;
@@ -94,6 +86,13 @@ abstract class _AnimeStore with Store {
             .toList();
       }
     });
+
+    receivePort.listen((message) {
+      if (message["list"] != null) {
+        this.animeList = message["list"];
+      }
+      isLoading = false;
+    });
   }
 
   @action
@@ -134,25 +133,35 @@ abstract class _AnimeStore with Store {
   // actions:-------------------------------------------------------------------
   @action
   Future getAnimes() async {
-    final future = _repository.getAnimes();
-    fetchPostsFuture = ObservableFuture(future);
+    isLoading = true;
 
     try {
-      this.animeList = await future;
+      this.animeList = await _repository.getAnimes();
     } catch (error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
     }
+
+    isLoading = false;
   }
 
   @action
   Future refreshAnimes() async {
-    final future = _repository.refreshAnimes();
-    fetchPostsFuture = ObservableFuture(future);
+    isLoading = true;
+    FlutterIsolate.spawn<void>(_refreshAnimeList, null);
+  }
 
+  static void _refreshAnimeList(nullData) async {
+    Repository? _repository = AppComponent.getReposInstance(
+      NetworkModule(),
+      LocalModule(),
+      PreferenceModule(),
+    );
+    SendPort? checkingPort = IsolateNameServer.lookupPortByName(recieverName);
     try {
-      this.animeList = await future;
+      var animeList = await _repository?.refreshAnimes();
+      checkingPort?.send({"list": animeList});
     } catch (error) {
-      errorStore.errorMessage = DioErrorUtil.handleError(error);
+      checkingPort?.send({"list": null});
     }
   }
 

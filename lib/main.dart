@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:anime_recommendations_app/constants/app_theme.dart';
 import 'package:anime_recommendations_app/constants/strings.dart';
 import 'package:anime_recommendations_app/data/repository.dart';
@@ -23,6 +25,7 @@ import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  IsolateNameServer.registerPortWithName(receivePort.sendPort, recieverName);
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,

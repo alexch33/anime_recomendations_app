@@ -55,7 +55,7 @@ class _AnimeListState extends State<AnimeList> {
             preferredSize: Size(DeviceUtils.getScaledWidth(context, 1), 56)),
         body: Observer(
           builder: (context) {
-            return _animeStore.loading
+            return _animeStore.isLoading
                 ? CustomProgressIndicatorWidget()
                 : GridViewWidget(_animeStore, _userStore);
           },

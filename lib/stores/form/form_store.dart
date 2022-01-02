@@ -135,6 +135,12 @@ abstract class _FormStore with Store {
   }
 
   @action
+  void skipRegistration() {
+    userStore.isLoggedIn = true;
+    success = true;
+  }
+
+  @action
   Future login() async {
     loading = true;
 

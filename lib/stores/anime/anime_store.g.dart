@@ -167,13 +167,6 @@ mixin _$AnimeStore on _AnimeStore, Store {
     return _$refreshAnimesAsyncAction.run(() => super.refreshAnimes());
   }
 
-  final _$likeAnimeAsyncAction = AsyncAction('_AnimeStore.likeAnime');
-
-  @override
-  Future<bool> likeAnime(int animeId) {
-    return _$likeAnimeAsyncAction.run(() => super.likeAnime(animeId));
-  }
-
   final _$querrySImilarItemsAsyncAction =
       AsyncAction('_AnimeStore.querrySImilarItems');
 

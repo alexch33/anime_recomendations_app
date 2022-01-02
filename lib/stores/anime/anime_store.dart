@@ -172,22 +172,6 @@ abstract class _AnimeStore with Store {
   }
 
   @action
-  Future<bool> likeAnime(int animeId) async {
-    isLoading = true;
-
-    try {
-      bool liked = await _repository.likeAnime(animeId);
-      isLoading = false;
-      if (liked) return true;
-      return false;
-    } catch (error) {
-      isLoading = false;
-      errorStore.errorMessage = DioErrorUtil.handleError(error);
-      return false;
-    }
-  }
-
-  @action
   Future<RecomendationList> querrySImilarItems(int itemDataId) async {
     isLoading = true;
     similarsListsMap[itemDataId] = RecomendationList(recomendations: []);

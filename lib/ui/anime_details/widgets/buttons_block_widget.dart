@@ -57,7 +57,7 @@ class ButtonsBlockWidget extends StatelessWidget {
   }
 
   _handleLike() async {
-    bool isLiked = await _animeStore.likeAnime(_anime.dataId);
+    bool isLiked = await _userStore.likeAnime(_anime.dataId);
     if (isLiked) await _userStore.initUser();
   }
 

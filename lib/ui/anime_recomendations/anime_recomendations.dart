@@ -30,8 +30,12 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
       _userStore = Provider.of<UserStore>(context);
       _animeStore = Provider.of<AnimeStore>(context);
       _userStore.initialize(_animeStore);
-      _userStore.refreshRecs();
 
+      if (_userStore.user.id.isEmpty) {
+        _userStore.refreshRecsCart();
+      } else {
+        _userStore.refreshRecs();
+      }
       isInited = true;
     }
   }

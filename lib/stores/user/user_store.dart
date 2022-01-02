@@ -332,6 +332,23 @@ abstract class _UserStore with Store {
     return true;
   }
 
+  @action
+  Future<bool> likeAnime(int animeId) async {
+    loading = true;
+    user.pushLikedAnime(animeId);
+    
+    try {
+      bool liked = await _repository.likeAnime(animeId);
+      loading = false;
+      if (liked) return true;
+      return false;
+    } catch (error) {
+      loading = false;
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+      return false;
+    }
+  }
+
   // general methods:-----------------------------------------------------------
   void dispose() {
     for (final d in _disposers) {

@@ -20,7 +20,7 @@ class AppBarAnimeListWidget extends StatelessWidget {
     return AppBar(
       title: isSearching
           ? (TextField(
-            cursorColor: Colors.white,
+              cursorColor: Colors.white,
               controller: _animeStore.searchQuery,
               decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.search, size: 30),
@@ -31,9 +31,9 @@ class AppBarAnimeListWidget extends StatelessWidget {
       actions: isSearching
           ? [SearchButtonWidget(_animeStore)]
           : [
+              SearchButtonWidget(_animeStore),
               RefreshButtonWidget(_animeStore),
               LogoutButtonWidget(_userStore),
-              SearchButtonWidget(_animeStore)
             ],
     );
   }

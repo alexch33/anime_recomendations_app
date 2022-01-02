@@ -54,8 +54,7 @@ class _AnimeDetailsState extends State<AnimeDetails> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                ImageBlockWidget(
-                                    _anime, _userStore, _animeStore),
+                                ImageBlockWidget(_anime, _userStore),
                                 TextInfoWidget(_anime),
                                 LinksButtonsWidget(_animeStore, _anime),
                               ]),

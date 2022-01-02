@@ -1,16 +1,13 @@
 import 'package:anime_recommendations_app/models/anime/anime.dart';
-import 'package:anime_recommendations_app/stores/anime/anime_store.dart';
 import 'package:anime_recommendations_app/stores/user/user_store.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class ButtonsBlockWidget extends StatelessWidget {
   final UserStore _userStore;
-  final AnimeStore _animeStore;
   final Anime _anime;
 
-  const ButtonsBlockWidget(this._userStore, this._animeStore, this._anime,
-      {Key? key})
+  const ButtonsBlockWidget(this._userStore, this._anime, {Key? key})
       : super(key: key);
 
   @override

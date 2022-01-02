@@ -1,6 +1,5 @@
 import 'package:anime_recommendations_app/models/anime/anime.dart';
 import 'package:anime_recommendations_app/routes.dart';
-import 'package:anime_recommendations_app/stores/anime/anime_store.dart';
 import 'package:anime_recommendations_app/stores/user/user_store.dart';
 import 'package:anime_recommendations_app/utils/locale/app_localization.dart';
 import 'package:anime_recommendations_app/widgets/ad_label.dart';
@@ -12,11 +11,9 @@ import 'buttons_block_widget.dart';
 
 class ImageBlockWidget extends StatelessWidget {
   final UserStore _userStore;
-  final AnimeStore _animeStore;
   final Anime _anime;
 
-  const ImageBlockWidget(this._anime, this._userStore, this._animeStore,
-      {Key? key})
+  const ImageBlockWidget(this._anime, this._userStore, {Key? key})
       : super(key: key);
 
   @override
@@ -52,7 +49,7 @@ class ImageBlockWidget extends StatelessWidget {
                 Divider(),
                 GenresWidget(ganres: _anime.genre, trim: false),
                 Divider(),
-                ButtonsBlockWidget(_userStore, _animeStore, _anime),
+                ButtonsBlockWidget(_userStore, _anime),
                 Divider(),
                 Padding(
                     padding: const EdgeInsets.all(8.0),

@@ -65,34 +65,40 @@ abstract class _AnimeStore with Store {
 
   String searchText = "";
 
+  bool _isInited = false;
+
   final TextEditingController searchQuery = new TextEditingController();
 
   @action
   void initialize() {
-    searchQuery.addListener(() {
-      if (searchQuery.text.isEmpty) {
-        isSearching = false;
-        searchText = "";
-        animeList.cashedAnimes = animeList.animes;
-      } else {
-        isSearching = true;
-        searchText = searchQuery.text;
-        animeList.cashedAnimes = animeList.animes
-            .where((element) =>
-                element.nameEng
-                    .toLowerCase()
-                    .contains(searchText.toLowerCase()) ||
-                element.name.toLowerCase().contains(searchText.toLowerCase()))
-            .toList();
-      }
-    });
+    if (!_isInited) {
+      searchQuery.addListener(() {
+        if (searchQuery.text.isEmpty) {
+          isSearching = false;
+          searchText = "";
+          animeList.cashedAnimes = animeList.animes;
+        } else {
+          isSearching = true;
+          searchText = searchQuery.text;
+          animeList.cashedAnimes = animeList.animes
+              .where((element) =>
+                  element.nameEng
+                      .toLowerCase()
+                      .contains(searchText.toLowerCase()) ||
+                  element.name.toLowerCase().contains(searchText.toLowerCase()))
+              .toList();
+        }
+      });
 
-    receivePort.listen((message) {
-      if (message["list"] != null) {
-        this.animeList = message["list"];
-      }
-      isLoading = false;
-    });
+      receivePort.listen((message) {
+        if (message["list"] != null) {
+          this.animeList = message["list"];
+        }
+        isLoading = false;
+      });
+    }
+
+    _isInited = true;
   }
 
   @action

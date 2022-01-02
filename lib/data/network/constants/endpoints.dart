@@ -26,6 +26,9 @@ class Endpoints {
   static const String querryUserRecomendations =
       baseUrl + "/ur/queryUserRecomendations";
 
+  static const String querryUserRecomendationsCart =
+      baseUrl + "/ur/queryUserRecomendationsCart";
+
   static const String querySimilarItems = baseUrl + "/ur/querySimilarItems";
 
   static const String deleteAllUsersAnimeEvents =
@@ -37,5 +40,6 @@ class Endpoints {
 
   static const baseVostURL = "https://animevost.am/";
 
-  static const baseAnilibriaURL = "https://www.anilibria.tv/public/api/index.php";
+  static const baseAnilibriaURL =
+      "https://www.anilibria.tv/public/api/index.php";
 }

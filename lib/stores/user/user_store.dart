@@ -141,6 +141,11 @@ abstract class _UserStore with Store {
     await querryUserRecomendations(user.id);
   }
 
+  @action
+  Future<void> refreshRecsCart() async {
+    await _querryUserRecomendationsCart();
+  }
+
   bool isLikedAnime(int dataId) {
     return user.likedAnimes.contains(dataId);
   }
@@ -218,6 +223,25 @@ abstract class _UserStore with Store {
     try {
       loading = true;
       var res = await _repository.getUserRecomendations(userId);
+      loading = false;
+      recomendationsList = res;
+      return res;
+    } catch (e) {
+      loading = false;
+      errorStore.errorMessage = DioErrorUtil.handleError(e);
+      var result = RecomendationList(recomendations: []);
+      recomendationsList = result;
+
+      return result;
+    }
+  }
+
+  @action
+  Future<RecomendationList> _querryUserRecomendationsCart() async {
+    try {
+      loading = true;
+      var res = await _repository.getUserRecomendationsCart(
+          user.likedAnimes.map((e) => e.toString()).toList());
       loading = false;
       recomendationsList = res;
       return res;

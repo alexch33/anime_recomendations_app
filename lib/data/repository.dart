@@ -208,6 +208,15 @@ class Repository {
     }).catchError((error) => throw error);
   }
 
+  Future<RecomendationList> getUserRecomendationsCart(
+      List<String> itemSet) async {
+    return await _animeApi
+        .querryUserRecomendationsCart(itemSet)
+        .then((list) async {
+      return list;
+    }).catchError((error) => throw error);
+  }
+
   // Token:---------------------------------------------------------------------
   Future<UserToken?> getToken() async {
     return await _tokenDataSource.getTokenFromDb();

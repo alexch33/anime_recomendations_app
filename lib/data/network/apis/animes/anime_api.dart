@@ -47,6 +47,16 @@ class AnimeApi {
     }
   }
 
+  Future<RecomendationList> querryUserRecomendationsCart(List<String> animeSet) async {
+    try {
+      final resp = await _dioClient
+          .post(Endpoints.querryUserRecomendationsCart, data: {"itemSet": animeSet});
+      return RecomendationList.fromJson(jsonDecode(resp)["result"]);
+    } catch (e) {
+      throw e;
+    }
+  }
+
   Future<RecomendationList> querrySimilarItems(String animeId) async {
     try {
       final resp = await _dioClient

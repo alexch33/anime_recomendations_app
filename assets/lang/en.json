@@ -36,5 +36,6 @@
   "black_list": "Black List",
   "rewarded_error": "Error Rewarded Ad Loading",
   "rewarded_not_load": "Rewarded ad not loaded",
-  "watch_on_site": "Watch Anime on Site"
+  "watch_on_site": "Watch Anime on Site",
+  "login_btn_skip": "Skip \n(opportunities will be partially blocked)"
 }

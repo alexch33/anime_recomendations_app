@@ -24,6 +24,7 @@ class RoundedButtonWidget extends StatelessWidget {
       onPressed: onPressed,
       child: Text(
         buttonText,
+        textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.button!.copyWith(color: textColor),
       ),
     );

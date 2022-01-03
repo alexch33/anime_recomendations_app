@@ -1,7 +1,13 @@
+import 'package:anime_recommendations_app/models/anime/anime.dart';
 import 'package:anime_recommendations_app/models/recomendation/recomendation_list.dart';
 import 'package:anime_recommendations_app/models/user/user.dart';
+import 'package:anime_recommendations_app/stores/anime/anime_store.dart';
 import 'package:anime_recommendations_app/stores/error/error_store.dart';
+import 'package:anime_recommendations_app/ui/anime_list/anime_list.dart';
+import 'package:anime_recommendations_app/ui/anime_recomendations/anime_recomendations.dart';
+import 'package:anime_recommendations_app/ui/user_profile/user_profile.dart';
 import 'package:anime_recommendations_app/utils/dio/dio_error_util.dart';
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../data/repository.dart';
@@ -72,17 +78,82 @@ abstract class _UserStore with Store {
   @observable
   bool isAdsOn = false;
 
+  @observable
+  bool isSearching = false;
+
+  @observable
+  RecomendationList recomendationsList = RecomendationList(recomendations: []);
+
+  @observable
+  int page = 1;
+
+  List<Widget> pages = [UserProfile(), AnimeList(), AnimeRecomendations()];
+
+  late AnimeStore _animeStore;
+
+  String searchText = "";
+
+  final TextEditingController searchQuery = new TextEditingController();
+
   @action
+  void initialize(AnimeStore animeStore) {
+    _animeStore = animeStore;
+
+    searchQuery.addListener(() {
+      if (searchQuery.text.isEmpty) {
+        isSearching = false;
+        searchText = "";
+        recomendationsList.cachedRecomendations =
+            recomendationsList.recomendations;
+      } else {
+        isSearching = true;
+        searchText = searchQuery.text;
+        recomendationsList.cachedRecomendations =
+            recomendationsList.recomendations.where((recomendation) {
+          Anime element = _animeStore.animeList.animes.firstWhere(
+              (anime) => anime.dataId.toString() == recomendation.item,
+              orElse: () => Anime());
+          if (element.id == Anime().id) return false;
+          return element.nameEng
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              element.name.toLowerCase().contains(searchText.toLowerCase());
+        }).toList();
+      }
+    });
+  }
+
+  @action
+  void handleSearchStart() {
+    isSearching = true;
+    recomendationsList.cachedRecomendations = recomendationsList.recomendations;
+  }
+
+  void handleSearchEnd() {
+    isSearching = false;
+    searchQuery.clear();
+    recomendationsList.cachedRecomendations = [];
+  }
+
+  @action
+  Future<void> refreshRecs() async {
+    await initUser();
+    await querryUserRecomendations(user.id);
+  }
+
+  @action
+  Future<void> refreshRecsCart() async {
+    await _querryUserRecomendationsCart();
+  }
+
   bool isLikedAnime(int dataId) {
     return user.likedAnimes.contains(dataId);
   }
 
-  @action
   bool isLaterAnime(int dataId) {
     return user.watchLaterAnimes.contains(dataId);
   }
 
-  @action
   bool isBlackListedAnime(int dataId) {
     return user.blackListAnimes.contains(dataId);
   }
@@ -136,7 +207,7 @@ abstract class _UserStore with Store {
     try {
       this.user = (await _repository.getUser())!;
     } catch (e) {
-      errorStore.errorMessage = DioErrorUtil.handleError(e);
+      // errorStore.errorMessage = DioErrorUtil.handleError(e);
     }
     loading = false;
   }
@@ -153,11 +224,34 @@ abstract class _UserStore with Store {
       loading = true;
       var res = await _repository.getUserRecomendations(userId);
       loading = false;
+      recomendationsList = res;
       return res;
     } catch (e) {
       loading = false;
       errorStore.errorMessage = DioErrorUtil.handleError(e);
-      return RecomendationList(recomendations: []);
+      var result = RecomendationList(recomendations: []);
+      recomendationsList = result;
+
+      return result;
+    }
+  }
+
+  @action
+  Future<RecomendationList> _querryUserRecomendationsCart() async {
+    try {
+      loading = true;
+      var res = await _repository.getUserRecomendationsCart(
+          user.likedAnimes.map((e) => e.toString()).toList());
+      loading = false;
+      recomendationsList = res;
+      return res;
+    } catch (e) {
+      loading = false;
+      errorStore.errorMessage = DioErrorUtil.handleError(e);
+      var result = RecomendationList(recomendations: []);
+      recomendationsList = result;
+
+      return result;
     }
   }
 
@@ -236,6 +330,23 @@ abstract class _UserStore with Store {
     }
     loading = false;
     return true;
+  }
+
+  @action
+  Future<bool> likeAnime(int animeId) async {
+    loading = true;
+    user.pushLikedAnime(animeId);
+    
+    try {
+      bool liked = await _repository.likeAnime(animeId);
+      loading = false;
+      if (liked) return true;
+      return false;
+    } catch (error) {
+      loading = false;
+      errorStore.errorMessage = DioErrorUtil.handleError(error);
+      return false;
+    }
   }
 
   // general methods:-----------------------------------------------------------

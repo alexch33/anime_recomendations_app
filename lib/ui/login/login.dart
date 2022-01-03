@@ -108,7 +108,9 @@ class _LoginScreenState extends State<LoginScreen> {
             Container(height: 32),
             _buildSignInButton(),
             Center(child: Text(AppLocalizations.of(context)!.translate('or'))),
-            _buildSignUpButton()
+            _buildSignUpButton(),
+            Center(child: Text(AppLocalizations.of(context)!.translate('or'))),
+            _buildSkipButton()
           ],
         ),
       ),
@@ -189,6 +191,17 @@ class _LoginScreenState extends State<LoginScreen> {
           _showErrorMessage(AppLocalizations.of(context)!
               .translate('login_error_fill_fields'));
         }
+      },
+    );
+  }
+
+  Widget _buildSkipButton() {
+    return RoundedButtonWidget(
+      buttonText: AppLocalizations.of(context)!.translate('login_btn_skip'),
+      buttonColor: Colors.orangeAccent,
+      textColor: Colors.white,
+      onPressed: () async {
+        _store.skipRegistration();
       },
     );
   }

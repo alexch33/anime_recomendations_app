@@ -1,15 +1,12 @@
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:anime_recommendations_app/stores/anime/anime_store.dart';
 import 'package:anime_recommendations_app/stores/user/user_store.dart';
-import 'package:anime_recommendations_app/ui/anime_recomendations/anime_recomendations.dart';
 import 'package:anime_recommendations_app/utils/locale/app_localization.dart';
-import 'package:anime_recommendations_app/widgets/ad_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:anime_recommendations_app/ui/anime_list/anime_list.dart';
-import 'package:anime_recommendations_app/ui/user_profile/user_profile.dart';
+
+import 'widgets/bottom_navbar_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -22,15 +19,6 @@ class _HomeScreenState extends State<HomeScreen> {
   late UserStore _userStore;
   bool isInited = false;
 
-  List<Widget> pages = [UserProfile(), AnimeList(), AnimeRecomendations()];
-  int _page = 1;
-  GlobalKey _bottomNavigationKey = GlobalKey();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -40,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _userStore = Provider.of<UserStore>(context);
       isInited = true;
     }
+    _animeStore.initialize();
     _animeStore.getAnimes();
     _userStore.initUser();
   }
@@ -47,38 +36,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: _buildNavBar(),
-      body: _buildBody(),
-    );
-  }
-
-  Widget _buildNavBar() {
-    return CurvedNavigationBar(
-      key: _bottomNavigationKey,
-      index: 1,
-      color: Theme.of(context).primaryColor,
-      backgroundColor: Colors.pink,
-      items: <Widget>[
-        Icon(Icons.person, size: 30),
-        Icon(Icons.list, size: 30),
-        _buildAdRecommended()
-      ],
-      onTap: (index) {
-        //Handle button tap
-        setState(() {
-          _page = index;
-        });
-      },
-    );
-  }
-
-  // body methods:--------------------------------------------------------------
-  Widget _buildBody() {
-    return Stack(
-      children: <Widget>[
-        _handleErrorMessage(),
-        pages[_page],
-      ],
+      bottomNavigationBar: BottomNavBarWidget(_userStore),
+      body: Stack(
+        children: <Widget>[
+          _handleErrorMessage(),
+          Observer(builder: (context) => _userStore.pages[_userStore.page]),
+        ],
+      ),
     );
   }
 
@@ -109,21 +73,5 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     return SizedBox.shrink();
-  }
-
-  Widget _buildAdRecommended() {
-    return SizedBox(
-        width: 45,
-        height: 45,
-        child: Stack(
-          children: [
-            Icon(Icons.recommend, size: 30),
-            Align(
-              child: _userStore.isAdsOn ? AdLabel(padding: 2) : Container(),
-              alignment: Alignment.topRight,
-            )
-          ],
-          alignment: Alignment.center,
-        ));
   }
 }

@@ -1,5 +1,5 @@
 import 'package:anime_recommendations_app/models/anime/anime.dart';
-import 'package:anime_recommendations_app/widgets/build_ganres.dart';
+import 'package:anime_recommendations_app/widgets/ganres_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'package:anime_recommendations_app/routes.dart';
@@ -38,9 +38,8 @@ class AnimeListTile extends StatelessWidget {
                       padding: EdgeInsets.symmetric(vertical: 2, horizontal: 8),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: this.anime.imgUrl.isNotEmpty
-                            ? Image.network(this.anime.imgUrl,
-                                fit: BoxFit.fitHeight)
+                        child: anime.imgUrl.isNotEmpty
+                            ? Image.network(anime.imgUrl, fit: BoxFit.fitHeight)
                             : Container(),
                       ),
                     )),
@@ -58,7 +57,8 @@ class AnimeListTile extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Expanded(
                                         child: Text(
@@ -71,7 +71,7 @@ class AnimeListTile extends StatelessWidget {
                                               .headline6,
                                         ),
                                       ),
-                                      this.buttons ?? Container(),
+                                      buttons ?? Container(),
                                     ],
                                   ),
                                   Text(
@@ -84,7 +84,7 @@ class AnimeListTile extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              buildGenres(anime.genre),
+                              GenresWidget(ganres: anime.genre),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,

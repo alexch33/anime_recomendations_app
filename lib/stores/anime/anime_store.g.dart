@@ -9,43 +9,6 @@ part of 'anime_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$AnimeStore on _AnimeStore, Store {
-  Computed<bool>? _$loadingComputed;
-
-  @override
-  bool get loading => (_$loadingComputed ??=
-          Computed<bool>(() => super.loading, name: '_AnimeStore.loading'))
-      .value;
-
-  final _$fetchPostsFutureAtom = Atom(name: '_AnimeStore.fetchPostsFuture');
-
-  @override
-  ObservableFuture<AnimeList> get fetchPostsFuture {
-    _$fetchPostsFutureAtom.reportRead();
-    return super.fetchPostsFuture;
-  }
-
-  @override
-  set fetchPostsFuture(ObservableFuture<AnimeList> value) {
-    _$fetchPostsFutureAtom.reportWrite(value, super.fetchPostsFuture, () {
-      super.fetchPostsFuture = value;
-    });
-  }
-
-  final _$fetchLikeFutureAtom = Atom(name: '_AnimeStore.fetchLikeFuture');
-
-  @override
-  ObservableFuture<bool> get fetchLikeFuture {
-    _$fetchLikeFutureAtom.reportRead();
-    return super.fetchLikeFuture;
-  }
-
-  @override
-  set fetchLikeFuture(ObservableFuture<bool> value) {
-    _$fetchLikeFutureAtom.reportWrite(value, super.fetchLikeFuture, () {
-      super.fetchLikeFuture = value;
-    });
-  }
-
   final _$animeListAtom = Atom(name: '_AnimeStore.animeList');
 
   @override
@@ -61,18 +24,18 @@ mixin _$AnimeStore on _AnimeStore, Store {
     });
   }
 
-  final _$similarListAtom = Atom(name: '_AnimeStore.similarList');
+  final _$similarsListsMapAtom = Atom(name: '_AnimeStore.similarsListsMap');
 
   @override
-  RecomendationList get similarList {
-    _$similarListAtom.reportRead();
-    return super.similarList;
+  Map<int, RecomendationList> get similarsListsMap {
+    _$similarsListsMapAtom.reportRead();
+    return super.similarsListsMap;
   }
 
   @override
-  set similarList(RecomendationList value) {
-    _$similarListAtom.reportWrite(value, super.similarList, () {
-      super.similarList = value;
+  set similarsListsMap(Map<int, RecomendationList> value) {
+    _$similarsListsMapAtom.reportWrite(value, super.similarsListsMap, () {
+      super.similarsListsMap = value;
     });
   }
 
@@ -166,6 +129,21 @@ mixin _$AnimeStore on _AnimeStore, Store {
     });
   }
 
+  final _$isSearchingAtom = Atom(name: '_AnimeStore.isSearching');
+
+  @override
+  bool get isSearching {
+    _$isSearchingAtom.reportRead();
+    return super.isSearching;
+  }
+
+  @override
+  set isSearching(bool value) {
+    _$isSearchingAtom.reportWrite(value, super.isSearching, () {
+      super.isSearching = value;
+    });
+  }
+
   final _$getLinksForAnimeAsyncAction =
       AsyncAction('_AnimeStore.getLinksForAnime');
 
@@ -189,18 +167,11 @@ mixin _$AnimeStore on _AnimeStore, Store {
     return _$refreshAnimesAsyncAction.run(() => super.refreshAnimes());
   }
 
-  final _$likeAnimeAsyncAction = AsyncAction('_AnimeStore.likeAnime');
-
-  @override
-  Future<bool> likeAnime(int animeId) {
-    return _$likeAnimeAsyncAction.run(() => super.likeAnime(animeId));
-  }
-
   final _$querrySImilarItemsAsyncAction =
       AsyncAction('_AnimeStore.querrySImilarItems');
 
   @override
-  Future<RecomendationList> querrySImilarItems(String itemDataId) {
+  Future<RecomendationList> querrySImilarItems(int itemDataId) {
     return _$querrySImilarItemsAsyncAction
         .run(() => super.querrySImilarItems(itemDataId));
   }
@@ -223,6 +194,28 @@ mixin _$AnimeStore on _AnimeStore, Store {
   final _$_AnimeStoreActionController = ActionController(name: '_AnimeStore');
 
   @override
+  void initialize() {
+    final _$actionInfo = _$_AnimeStoreActionController.startAction(
+        name: '_AnimeStore.initialize');
+    try {
+      return super.initialize();
+    } finally {
+      _$_AnimeStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void handleSearchStart() {
+    final _$actionInfo = _$_AnimeStoreActionController.startAction(
+        name: '_AnimeStore.handleSearchStart');
+    try {
+      return super.handleSearchStart();
+    } finally {
+      _$_AnimeStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void clearAnimesUrls() {
     final _$actionInfo = _$_AnimeStoreActionController.startAction(
         name: '_AnimeStore.clearAnimesUrls');
@@ -236,17 +229,15 @@ mixin _$AnimeStore on _AnimeStore, Store {
   @override
   String toString() {
     return '''
-fetchPostsFuture: ${fetchPostsFuture},
-fetchLikeFuture: ${fetchLikeFuture},
 animeList: ${animeList},
-similarList: ${similarList},
+similarsListsMap: ${similarsListsMap},
 success: ${success},
 isLoading: ${isLoading},
 scrapperType: ${scrapperType},
 anilibriaAnimeUrl: ${anilibriaAnimeUrl},
 anivostAnimeUrl: ${anivostAnimeUrl},
 gogoAnimeUrl: ${gogoAnimeUrl},
-loading: ${loading}
+isSearching: ${isSearching}
     ''';
   }
 }

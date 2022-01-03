@@ -207,7 +207,7 @@ abstract class _UserStore with Store {
     try {
       this.user = (await _repository.getUser())!;
     } catch (e) {
-      errorStore.errorMessage = DioErrorUtil.handleError(e);
+      // errorStore.errorMessage = DioErrorUtil.handleError(e);
     }
     loading = false;
   }

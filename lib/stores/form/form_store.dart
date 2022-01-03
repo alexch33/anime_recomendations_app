@@ -123,7 +123,7 @@ abstract class _FormStore with Store {
     } catch (e) {
       errorStore.errorMessage = e.toString().contains("Http status error [400]")
           ? "emal musst be valid or password must contain password must contain at least 1 letter and 1 number"
-          : "Something went wrong, please check your internet connection and try again";
+          : "Something went wrong";
     }
     if (userStore.success) {
       loading = false;
@@ -149,7 +149,7 @@ abstract class _FormStore with Store {
     } catch (e) {
       errorStore.errorMessage = e.toString().contains("ERROR_USER_NOT_FOUND")
           ? "Username and password doesn't match"
-          : "Something went wrong, please check your internet connection and try again";
+          : "Something went wrongn";
     }
     if (userStore.success) {
       loading = false;

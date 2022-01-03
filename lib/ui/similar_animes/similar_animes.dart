@@ -77,8 +77,8 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
                         )
                       : Center(
                           child: Text(
-                            AppLocalizations.of(context)!
-                                .translate('home_tv_no_post_found'),
+                            _userStore.user.id.isNotEmpty ? AppLocalizations.of(context)!
+                                .translate('home_tv_no_post_found') : "Please sign in or sign Up",
                           ),
                         );
             },

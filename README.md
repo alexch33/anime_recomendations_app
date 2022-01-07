@@ -1,5 +1,7 @@
 ### Anime recommendations app
 
+Screenshots from classic branch
+
 <table>
     <tr>
         <td>
@@ -55,10 +57,12 @@ or watch command in order to keep the source code synced automatically:
 flutter packages pub run build_runner watch
 ```
 **Step 4:**
+
 Start api
 
 ```
 https://github.com/i3po/anime_recomender_api
+
 ```
 
 ## Hide Generated Files

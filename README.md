@@ -61,7 +61,7 @@ flutter packages pub run build_runner watch
 Start api
 
 ```
-https://github.com/i3po/anime_recomender_api
+https://github.com/lexch13/anime_recomender_api
 
 ```
 

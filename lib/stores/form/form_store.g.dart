@@ -202,6 +202,17 @@ mixin _$FormStore on _FormStore, Store {
   }
 
   @override
+  void skipRegistration() {
+    final _$actionInfo = _$_FormStoreActionController.startAction(
+        name: '_FormStore.skipRegistration');
+    try {
+      return super.skipRegistration();
+    } finally {
+      _$_FormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 userEmail: ${userEmail},

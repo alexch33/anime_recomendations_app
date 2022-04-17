@@ -12,7 +12,6 @@
 
 *.inject.summary
 *.inject.dart
-*.g.dart
 
 # IntelliJ related
 *.iml

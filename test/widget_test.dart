@@ -13,12 +13,16 @@ import 'package:anime_recommendations_app/main.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('Test start app', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp(AppComponent.getReposInstance(
-      NetworkModule(),
-      LocalModule(),
-      PreferenceModule(),
-    )!));
-  });
+    await tester.pumpWidget(
+      MyApp(AppComponent.getReposInstance(
+        NetworkModule(),
+        LocalModule(),
+        PreferenceModule(),
+      )!),
+      const Duration(seconds: 5),
+    );
+    expect(find.text('Or'), findsOneWidget);
+  }, timeout: Timeout(Duration(seconds: 10)));
 }

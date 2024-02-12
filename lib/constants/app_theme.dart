@@ -25,18 +25,19 @@ import 'package:anime_recommendations_app/constants/font_family.dart';
 import 'package:flutter/material.dart';
 
 final Color primaryLight = Colors.purple[300] ?? Colors.grey;
-final Color primaryDark = Colors.black;
+final Color primaryDark = Colors.purple[900] ?? Colors.grey;
 
 final Color secondary = Colors.purple[600] ?? Colors.grey;
 
 final ThemeData themeData = new ThemeData(
-    fontFamily: FontFamily.productSans,
-    primaryColor: primaryLight,
-    colorScheme:
-        ColorScheme.light(primary: primaryLight, secondary: secondary));
+  fontFamily: FontFamily.productSans,
+  primaryColor: primaryLight,
+  colorScheme: ColorScheme.light(primary: primaryLight, secondary: secondary),
+);
 
 final ThemeData themeDataDark = ThemeData(
-    fontFamily: FontFamily.productSans,
-    primaryColor: primaryDark,
-    colorScheme: ColorScheme.dark(
-        primary: primaryDark, surface: primaryDark, secondary: secondary));
+  fontFamily: FontFamily.productSans,
+  primaryColor: primaryDark,
+  colorScheme: ColorScheme.dark(
+      primary: primaryDark, secondary: secondary),
+);

@@ -22,8 +22,8 @@ class NetworkModule extends PreferenceModule {
 
     dio
       ..options.baseUrl = Endpoints.baseUrl
-      ..options.connectTimeout = Endpoints.connectionTimeout
-      ..options.receiveTimeout = Endpoints.receiveTimeout
+      ..options.connectTimeout = Duration(milliseconds: 10000)
+      ..options.receiveTimeout = Duration(milliseconds: 10000)
       ..options.headers = {'Content-Type': 'application/json; charset=utf-8'}
       ..interceptors.add(LogInterceptor(
         request: true,
@@ -49,7 +49,7 @@ class NetworkModule extends PreferenceModule {
           }
           return handler.next(options);
         },
-        onError: ((DioError error, ErrorInterceptorHandler handler) async {
+        onError: ((DioException error, ErrorInterceptorHandler handler) async {
           if (error.response?.statusCode == 401) {
             final prefs = await SharedPreferences.getInstance();
             final refreshToken = prefs.getString(Preferences.refresh_token);

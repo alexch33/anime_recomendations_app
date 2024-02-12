@@ -43,7 +43,7 @@ class ImageBlockWidget extends StatelessWidget {
                         _anime.rating?.toStringAsFixed(2) ??
                             AppLocalizations.of(context)!
                                 .translate('no_rating'),
-                        style: Theme.of(context).textTheme.headline6),
+                        style: Theme.of(context).textTheme.titleLarge),
                   ],
                 ),
                 Divider(),
@@ -63,7 +63,7 @@ class ImageBlockWidget extends StatelessWidget {
                               child: Text(
                                   AppLocalizations.of(context)!
                                       .translate('similar_button'),
-                                  style: Theme.of(context).textTheme.button),
+                                  style: Theme.of(context).textTheme.labelLarge),
                               onPressed: () {
                                 Navigator.of(context).pushNamed(
                                     Routes.similarAnimes,
@@ -94,8 +94,9 @@ class ImageBlockWidget extends StatelessWidget {
   }
 
   void _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+    var uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     }
   }
 }

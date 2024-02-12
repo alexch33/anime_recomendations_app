@@ -56,7 +56,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                 child: Stack(
                   children: [
                     InAppWebView(
-                      initialUrlRequest: URLRequest(url: Uri.parse(url)),
+                      initialUrlRequest: URLRequest(url: WebUri.uri(Uri.parse(url))),
                       onWebViewCreated:
                           (InAppWebViewController webViewController) {
                         _webViewController = webViewController;

@@ -49,7 +49,7 @@ class AnimeGridTile extends StatelessWidget {
                               color: Colors.yellowAccent,
                             ),
                             Text(anime.rating?.toStringAsFixed(2) ?? "",
-                                style: Theme.of(context).textTheme.headline6),
+                                style: Theme.of(context).textTheme.titleLarge),
                             Container(width: 16),
                             isLiked
                                 ? Icon(Icons.favorite, color: Colors.red)
@@ -72,13 +72,13 @@ class AnimeGridTile extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             softWrap: false,
-                            style: Theme.of(context).textTheme.headline6),
+                            style: Theme.of(context).textTheme.titleLarge),
                         anime.nameEng.isNotEmpty
                             ? Text(anime.nameEng,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: false,
-                                style: Theme.of(context).textTheme.bodyText1)
+                                style: Theme.of(context).textTheme.bodyLarge)
                             : Container(),
                       ]),
                       anime.genre.isNotEmpty

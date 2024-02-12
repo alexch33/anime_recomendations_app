@@ -41,6 +41,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   final Repository repo;
+
   // This widget is the root of your application.
   // Create your store as a final variable in a base Widget. This works better
   // with Hot Reload than creating it directly in the `build` function.
@@ -85,7 +86,7 @@ class MyApp extends StatelessWidget {
             ],
             localeResolutionCallback: (locale, supportedLocales) {
               // Check if the current device locale is supported
-              final List<Locale> systemLocales = WidgetsBinding.instance!.window
+              final List<Locale> systemLocales = PlatformDispatcher.instance
                   .locales; // Returns the list of locales that user defined in the system settings.
               var currentLocaSystem = systemLocales.first;
 

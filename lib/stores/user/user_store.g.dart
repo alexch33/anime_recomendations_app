@@ -6,7 +6,7 @@ part of 'user_store.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$UserStore on _UserStore, Store {
   Computed<bool>? _$isLoadingComputed;
@@ -16,7 +16,8 @@ mixin _$UserStore on _UserStore, Store {
           Computed<bool>(() => super.isLoading, name: '_UserStore.isLoading'))
       .value;
 
-  final _$isLoggedInAtom = Atom(name: '_UserStore.isLoggedIn');
+  late final _$isLoggedInAtom =
+      Atom(name: '_UserStore.isLoggedIn', context: context);
 
   @override
   bool get isLoggedIn {
@@ -31,7 +32,7 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  final _$userAtom = Atom(name: '_UserStore.user');
+  late final _$userAtom = Atom(name: '_UserStore.user', context: context);
 
   @override
   User get user {
@@ -46,7 +47,7 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  final _$successAtom = Atom(name: '_UserStore.success');
+  late final _$successAtom = Atom(name: '_UserStore.success', context: context);
 
   @override
   bool get success {
@@ -61,7 +62,8 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  final _$loginFutureAtom = Atom(name: '_UserStore.loginFuture');
+  late final _$loginFutureAtom =
+      Atom(name: '_UserStore.loginFuture', context: context);
 
   @override
   ObservableFuture<bool> get loginFuture {
@@ -76,7 +78,7 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  final _$loadingAtom = Atom(name: '_UserStore.loading');
+  late final _$loadingAtom = Atom(name: '_UserStore.loading', context: context);
 
   @override
   bool get loading {
@@ -91,7 +93,7 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  final _$isAdsOnAtom = Atom(name: '_UserStore.isAdsOn');
+  late final _$isAdsOnAtom = Atom(name: '_UserStore.isAdsOn', context: context);
 
   @override
   bool get isAdsOn {
@@ -106,7 +108,8 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  final _$isSearchingAtom = Atom(name: '_UserStore.isSearching');
+  late final _$isSearchingAtom =
+      Atom(name: '_UserStore.isSearching', context: context);
 
   @override
   bool get isSearching {
@@ -121,7 +124,8 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  final _$recomendationsListAtom = Atom(name: '_UserStore.recomendationsList');
+  late final _$recomendationsListAtom =
+      Atom(name: '_UserStore.recomendationsList', context: context);
 
   @override
   RecomendationList get recomendationsList {
@@ -136,7 +140,7 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  final _$pageAtom = Atom(name: '_UserStore.page');
+  late final _$pageAtom = Atom(name: '_UserStore.page', context: context);
 
   @override
   int get page {
@@ -151,51 +155,56 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  final _$refreshRecsAsyncAction = AsyncAction('_UserStore.refreshRecs');
+  late final _$refreshRecsAsyncAction =
+      AsyncAction('_UserStore.refreshRecs', context: context);
 
   @override
   Future<void> refreshRecs() {
     return _$refreshRecsAsyncAction.run(() => super.refreshRecs());
   }
 
-  final _$refreshRecsCartAsyncAction =
-      AsyncAction('_UserStore.refreshRecsCart');
+  late final _$refreshRecsCartAsyncAction =
+      AsyncAction('_UserStore.refreshRecsCart', context: context);
 
   @override
   Future<void> refreshRecsCart() {
     return _$refreshRecsCartAsyncAction.run(() => super.refreshRecsCart());
   }
 
-  final _$loginAsyncAction = AsyncAction('_UserStore.login');
+  late final _$loginAsyncAction =
+      AsyncAction('_UserStore.login', context: context);
 
   @override
   Future<dynamic> login(String email, String password) {
     return _$loginAsyncAction.run(() => super.login(email, password));
   }
 
-  final _$signUpAsyncAction = AsyncAction('_UserStore.signUp');
+  late final _$signUpAsyncAction =
+      AsyncAction('_UserStore.signUp', context: context);
 
   @override
   Future<dynamic> signUp(String email, String password) {
     return _$signUpAsyncAction.run(() => super.signUp(email, password));
   }
 
-  final _$initUserAsyncAction = AsyncAction('_UserStore.initUser');
+  late final _$initUserAsyncAction =
+      AsyncAction('_UserStore.initUser', context: context);
 
   @override
   Future<dynamic> initUser() {
     return _$initUserAsyncAction.run(() => super.initUser());
   }
 
-  final _$logoutAsyncAction = AsyncAction('_UserStore.logout');
+  late final _$logoutAsyncAction =
+      AsyncAction('_UserStore.logout', context: context);
 
   @override
   Future<dynamic> logout() {
     return _$logoutAsyncAction.run(() => super.logout());
   }
 
-  final _$querryUserRecomendationsAsyncAction =
-      AsyncAction('_UserStore.querryUserRecomendations');
+  late final _$querryUserRecomendationsAsyncAction =
+      AsyncAction('_UserStore.querryUserRecomendations', context: context);
 
   @override
   Future<RecomendationList> querryUserRecomendations(String userId) {
@@ -203,8 +212,8 @@ mixin _$UserStore on _UserStore, Store {
         .run(() => super.querryUserRecomendations(userId));
   }
 
-  final _$_querryUserRecomendationsCartAsyncAction =
-      AsyncAction('_UserStore._querryUserRecomendationsCart');
+  late final _$_querryUserRecomendationsCartAsyncAction =
+      AsyncAction('_UserStore._querryUserRecomendationsCart', context: context);
 
   @override
   Future<RecomendationList> _querryUserRecomendationsCart() {
@@ -212,8 +221,8 @@ mixin _$UserStore on _UserStore, Store {
         .run(() => super._querryUserRecomendationsCart());
   }
 
-  final _$deleteAllUserEventsAsyncAction =
-      AsyncAction('_UserStore.deleteAllUserEvents');
+  late final _$deleteAllUserEventsAsyncAction =
+      AsyncAction('_UserStore.deleteAllUserEvents', context: context);
 
   @override
   Future<bool> deleteAllUserEvents() {
@@ -221,8 +230,8 @@ mixin _$UserStore on _UserStore, Store {
         .run(() => super.deleteAllUserEvents());
   }
 
-  final _$pushWatchLaterAnimeAsyncAction =
-      AsyncAction('_UserStore.pushWatchLaterAnime');
+  late final _$pushWatchLaterAnimeAsyncAction =
+      AsyncAction('_UserStore.pushWatchLaterAnime', context: context);
 
   @override
   Future<bool> pushWatchLaterAnime(int animeId) {
@@ -230,8 +239,8 @@ mixin _$UserStore on _UserStore, Store {
         .run(() => super.pushWatchLaterAnime(animeId));
   }
 
-  final _$removeWatchLaterAnimeAsyncAction =
-      AsyncAction('_UserStore.removeWatchLaterAnime');
+  late final _$removeWatchLaterAnimeAsyncAction =
+      AsyncAction('_UserStore.removeWatchLaterAnime', context: context);
 
   @override
   Future<bool> removeWatchLaterAnime(int animeId) {
@@ -239,8 +248,8 @@ mixin _$UserStore on _UserStore, Store {
         .run(() => super.removeWatchLaterAnime(animeId));
   }
 
-  final _$pushBlackListAnimeAsyncAction =
-      AsyncAction('_UserStore.pushBlackListAnime');
+  late final _$pushBlackListAnimeAsyncAction =
+      AsyncAction('_UserStore.pushBlackListAnime', context: context);
 
   @override
   Future<bool> pushBlackListAnime(int animeId) {
@@ -248,8 +257,8 @@ mixin _$UserStore on _UserStore, Store {
         .run(() => super.pushBlackListAnime(animeId));
   }
 
-  final _$removeBlackListAnimeAsyncAction =
-      AsyncAction('_UserStore.removeBlackListAnime');
+  late final _$removeBlackListAnimeAsyncAction =
+      AsyncAction('_UserStore.removeBlackListAnime', context: context);
 
   @override
   Future<bool> removeBlackListAnime(int animeId) {
@@ -257,14 +266,16 @@ mixin _$UserStore on _UserStore, Store {
         .run(() => super.removeBlackListAnime(animeId));
   }
 
-  final _$likeAnimeAsyncAction = AsyncAction('_UserStore.likeAnime');
+  late final _$likeAnimeAsyncAction =
+      AsyncAction('_UserStore.likeAnime', context: context);
 
   @override
   Future<bool> likeAnime(int animeId) {
     return _$likeAnimeAsyncAction.run(() => super.likeAnime(animeId));
   }
 
-  final _$_UserStoreActionController = ActionController(name: '_UserStore');
+  late final _$_UserStoreActionController =
+      ActionController(name: '_UserStore', context: context);
 
   @override
   void initialize(AnimeStore animeStore) {

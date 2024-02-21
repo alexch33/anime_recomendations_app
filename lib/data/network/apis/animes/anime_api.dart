@@ -20,7 +20,7 @@ class AnimeApi {
   Future<AnimeList> getAnimes() async {
     try {
       final res = await _dioClient
-          .get(Endpoints.getAnimes, queryParameters: {"limit": 20000});
+          .get(Endpoints.getAnimes, queryParameters: {"limit": 30000});
       return AnimeList.fromJson(res["results"]);
     } catch (e) {
       print(e.toString());

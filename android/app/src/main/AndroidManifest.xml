@@ -13,9 +13,10 @@
          additional functionality it is fine to subclass or reimplement
          FlutterApplication and put your custom class here. -->
     <application
+        android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher"
         android:name="androidx.multidex.MultiDexApplication" 
-        android:label="Anime Recomender">
+        android:label="Anime Recommender">
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-2018524162823058~8586601026"/>

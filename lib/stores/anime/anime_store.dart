@@ -14,9 +14,9 @@ import 'package:anime_recommendations_app/stores/error/error_store.dart';
 import 'package:anime_recommendations_app/utils/dio/dio_error_util.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mobx/mobx.dart';
 import 'package:anime_recommendations_app/models/recomendation/recomendation_list.dart';
-import 'package:flutter_isolate/flutter_isolate.dart';
 
 part 'anime_store.g.dart';
 
@@ -153,10 +153,13 @@ abstract class _AnimeStore with Store {
   @action
   Future refreshAnimes() async {
     isLoading = true;
-    FlutterIsolate.spawn<void>(_refreshAnimeList, null);
+    final token = RootIsolateToken.instance;
+    await Isolate.spawn(_refreshAnimeList, token);
   }
 
-  static void _refreshAnimeList(nullData) async {
+  static void _refreshAnimeList(RootIsolateToken? token) async {
+    BackgroundIsolateBinaryMessenger.ensureInitialized(token!);
+
     Repository? _repository = AppComponent.getReposInstance(
       NetworkModule(),
       LocalModule(),

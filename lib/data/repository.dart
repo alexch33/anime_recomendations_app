@@ -54,32 +54,17 @@ class Repository {
     // later use
     int count = await _animeDataSource.count();
     if (count > 0) return await _animeDataSource.getAnimesFromDbOrCache();
+    final animeList = await _animeApi.getAnimes();
 
-    return await _animeApi.getAnimes().then((animesList) {
-      animesList.animes.forEach((anime) {
-        _animeDataSource.insert(anime);
-      });
-
-      return animesList;
-    }).catchError((error) => throw error);
+    return await _animeDataSource.insertAll(animeList.animes);
   }
 
   Future<AnimeList> refreshAnimes() async {
-    // check to see if posts are present in database, then fetch from database
-    // else make a network call to get all posts, store them into database for
-    // later use
     int count = await _animeDataSource.count();
-    // if (count > 0) return await _animeDataSource.getAnimesFromDb();
+    final animeList = await _animeApi.getAnimes();
+    if (count > 0) await _animeDataSource.deleteAll();
 
-    return await _animeApi.getAnimes().then((animesList) {
-      if (count > 0) _animeDataSource.deleteAll();
-
-      animesList.animes.forEach((anime) {
-        _animeDataSource.insert(anime);
-      });
-
-      return animesList;
-    }).catchError((error) => throw error);
+    return await _animeDataSource.insertAll(animeList.animes);
   }
 
   Future<bool> likeAnime(int animeId) async {
@@ -95,7 +80,7 @@ class Repository {
     }).catchError((error) => throw error);
   }
 
-  Future<List<Anime>> findPostById(int id) {
+  Future<List<Anime>> findAnimeById(int id) {
     //creating filter
     List<Filter> filters = [];
 
@@ -106,13 +91,13 @@ class Repository {
     //making db call
     return _animeDataSource
         .getAllSortedByFilter(filters: filters)
-        .then((posts) => posts)
+        .then((animes) => animes)
         .catchError((error) => throw error);
   }
 
-  Future<int?> insert(Anime post) => _animeDataSource
-      .insert(post)
-      .then((id) => id)
+  Future<AnimeList> insertAll(List<Anime> animes) => _animeDataSource
+      .insertAll(animes)
+      .then((animeList) => animeList)
       .catchError((error) => throw error);
 
   Future<int> update(Anime post) => _animeDataSource
@@ -203,18 +188,13 @@ class Repository {
   }
 
   Future<RecomendationList> getUserRecomendations(String userId) async {
-    return await _animeApi.querryUserRecomendations(userId).then((list) async {
-      return list;
-    }).catchError((error) => throw error);
+    return await _animeApi.querryUserRecomendations(userId);
   }
 
   Future<RecomendationList> getUserRecomendationsCart(
       List<String> itemSet) async {
     return await _animeApi
-        .querryUserRecomendationsCart(itemSet)
-        .then((list) async {
-      return list;
-    }).catchError((error) => throw error);
+        .querryUserRecomendationsCart(itemSet);
   }
 
   // Token:---------------------------------------------------------------------

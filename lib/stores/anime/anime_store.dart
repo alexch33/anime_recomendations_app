@@ -77,16 +77,26 @@ abstract class _AnimeStore with Store {
           isSearching = false;
           searchText = "";
           animeList.cashedAnimes = animeList.animes;
+
+          var list = AnimeList(animes: animeList.animes);
+          list.cashedAnimes = animeList.animes;
+
+          animeList = list;
         } else {
           isSearching = true;
           searchText = searchQuery.text;
           animeList.cashedAnimes = animeList.animes
               .where((element) =>
-                  element.nameEng
-                      .toLowerCase()
-                      .contains(searchText.toLowerCase()) ||
-                  element.name.toLowerCase().contains(searchText.toLowerCase()))
+          element.nameEng
+              .toLowerCase()
+              .contains(searchText.toLowerCase()) ||
+              element.name.toLowerCase().contains(searchText.toLowerCase()))
               .toList();
+
+          var list = AnimeList(animes: animeList.animes);
+          list.cashedAnimes = animeList.cashedAnimes;
+
+          animeList = list;
         }
       });
 
@@ -181,7 +191,7 @@ abstract class _AnimeStore with Store {
 
     try {
       similarsListsMap[itemDataId] =
-          await _repository.getSimilarItems(itemDataId.toString());
+      await _repository.getSimilarItems(itemDataId.toString());
     } catch (error) {
       similarsListsMap[itemDataId] = RecomendationList(recomendations: []);
       errorStore.errorMessage = DioErrorUtil.handleError(error);

@@ -212,15 +212,6 @@ mixin _$UserStore on _UserStore, Store {
         .run(() => super.querryUserRecomendations(userId));
   }
 
-  late final _$_querryUserRecomendationsCartAsyncAction =
-      AsyncAction('_UserStore._querryUserRecomendationsCart', context: context);
-
-  @override
-  Future<RecomendationList> _querryUserRecomendationsCart() {
-    return _$_querryUserRecomendationsCartAsyncAction
-        .run(() => super._querryUserRecomendationsCart());
-  }
-
   late final _$deleteAllUserEventsAsyncAction =
       AsyncAction('_UserStore.deleteAllUserEvents', context: context);
 
@@ -272,6 +263,15 @@ mixin _$UserStore on _UserStore, Store {
   @override
   Future<bool> likeAnime(int animeId) {
     return _$likeAnimeAsyncAction.run(() => super.likeAnime(animeId));
+  }
+
+  late final _$_querryUserRecomendationsCartAsyncAction =
+      AsyncAction('_UserStore._querryUserRecomendationsCart', context: context);
+
+  @override
+  Future<RecomendationList> _querryUserRecomendationsCart() {
+    return _$_querryUserRecomendationsCartAsyncAction
+        .run(() => super._querryUserRecomendationsCart());
   }
 
   late final _$_UserStoreActionController =

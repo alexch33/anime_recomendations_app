@@ -223,33 +223,14 @@ abstract class _UserStore with Store {
     try {
       loading = true;
       var res = await _repository.getUserRecomendations(userId);
-      loading = false;
       recomendationsList = res;
+      loading = false;
       return res;
     } catch (e) {
-      loading = false;
       errorStore.errorMessage = DioErrorUtil.handleError(e);
       var result = RecomendationList(recomendations: []);
       recomendationsList = result;
-
-      return result;
-    }
-  }
-
-  @action
-  Future<RecomendationList> _querryUserRecomendationsCart() async {
-    try {
-      loading = true;
-      var res = await _repository.getUserRecomendationsCart(
-          user.likedAnimes.map((e) => e.toString()).toList());
       loading = false;
-      recomendationsList = res;
-      return res;
-    } catch (e) {
-      loading = false;
-      errorStore.errorMessage = DioErrorUtil.handleError(e);
-      var result = RecomendationList(recomendations: []);
-      recomendationsList = result;
 
       return result;
     }
@@ -277,10 +258,12 @@ abstract class _UserStore with Store {
     if (isPushed) {
       try {
         await _repository.updateUser(user);
+        await initUser();
       } catch (e) {
         errorStore.errorMessage = DioErrorUtil.handleError(e);
       }
     }
+
     loading = false;
     return true;
   }
@@ -293,6 +276,7 @@ abstract class _UserStore with Store {
     if (isPushed) {
       try {
         await _repository.updateUser(user);
+        await initUser();
       } catch (error) {
         errorStore.errorMessage = DioErrorUtil.handleError(error);
       }
@@ -308,6 +292,7 @@ abstract class _UserStore with Store {
     if (isPushed) {
       try {
         await _repository.updateUser(user);
+        await initUser();
       } catch (error) {
         errorStore.errorMessage = DioErrorUtil.handleError(error);
       }
@@ -324,6 +309,7 @@ abstract class _UserStore with Store {
     if (isPushed) {
       try {
         await _repository.updateUser(user);
+        await initUser();
       } catch (e) {
         errorStore.errorMessage = DioErrorUtil.handleError(e);
       }
@@ -336,9 +322,10 @@ abstract class _UserStore with Store {
   Future<bool> likeAnime(int animeId) async {
     loading = true;
     user.pushLikedAnime(animeId);
-    
+
     try {
       bool liked = await _repository.likeAnime(animeId);
+      await initUser();
       loading = false;
       if (liked) return true;
       return false;
@@ -346,6 +333,25 @@ abstract class _UserStore with Store {
       loading = false;
       errorStore.errorMessage = DioErrorUtil.handleError(error);
       return false;
+    }
+  }
+
+  @action
+  Future<RecomendationList> _querryUserRecomendationsCart() async {
+    try {
+      loading = true;
+      var res = await _repository.getUserRecomendationsCart(
+          user.likedAnimes.map((e) => e.toString()).toList());
+      recomendationsList = res;
+      loading = false;
+      return res;
+    } catch (e) {
+      loading = false;
+      errorStore.errorMessage = DioErrorUtil.handleError(e);
+      var result = RecomendationList(recomendations: []);
+      recomendationsList = result;
+
+      return result;
     }
   }
 

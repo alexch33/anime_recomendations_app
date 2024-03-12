@@ -41,7 +41,13 @@ abstract class _UserStore with Store {
       this.isLoggedIn = value;
 
       if (this.isLoggedIn) {
-        _repository.getUser().then((user) => this.user = user!);
+        _repository
+            .getUser()
+            .then((user) => this.user = user!)
+            .onError((error, stackTrace) {
+          errorStore.errorMessage = "Please Sign In";
+          return User(email: "");
+        });
       }
     });
   }

@@ -46,9 +46,10 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
         appBar: PreferredSize(
             child: Observer(
               builder: (context) {
-                return _userStore.isSearching
-                    ? AppBarAnimeRecsListWidget(_userStore, isSearching: true)
-                    : AppBarAnimeRecsListWidget(_userStore, isSearching: false);
+                return AppBarAnimeRecsListWidget(
+                  _userStore,
+                  isSearching: _userStore.isSearching,
+                );
               },
             ),
             preferredSize: Size(DeviceUtils.getScaledWidth(context, 1), 56)),

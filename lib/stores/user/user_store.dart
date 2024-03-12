@@ -105,6 +105,7 @@ abstract class _UserStore with Store {
         searchText = "";
         recomendationsList.cachedRecomendations =
             recomendationsList.recomendations;
+        _applyNewRecsList();
       } else {
         isSearching = true;
         searchText = searchQuery.text;
@@ -119,6 +120,7 @@ abstract class _UserStore with Store {
                   .contains(searchText.toLowerCase()) ||
               element.name.toLowerCase().contains(searchText.toLowerCase());
         }).toList();
+        _applyNewRecsList();
       }
     });
   }
@@ -216,6 +218,7 @@ abstract class _UserStore with Store {
   Future logout() async {
     this.isLoggedIn = false;
     _repository.logout();
+    user = User(email: "");
   }
 
   @action
@@ -353,6 +356,13 @@ abstract class _UserStore with Store {
 
       return result;
     }
+  }
+
+  void _applyNewRecsList() {
+    final newLIst =
+        RecomendationList(recomendations: recomendationsList.recomendations);
+    newLIst.cachedRecomendations = recomendationsList.cachedRecomendations;
+    recomendationsList = newLIst;
   }
 
   // general methods:-----------------------------------------------------------

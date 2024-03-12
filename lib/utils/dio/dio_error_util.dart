@@ -22,10 +22,10 @@ class DioErrorUtil {
           errorDescription = "Bad certificate";
           break;
         case DioExceptionType.badResponse:
-          errorDescription = "Bad Response";
+          errorDescription = "Not Authenticated";
           break;
         case DioExceptionType.connectionError:
-          errorDescription = "Internet Error";
+          errorDescription = "Server Connection Error";
           break;
         case DioExceptionType.unknown:
           errorDescription = "Unknown Error";

@@ -248,6 +248,10 @@ abstract class _UserStore with Store {
       await this.initUser();
     } catch (e) {
       errorStore.errorMessage = DioErrorUtil.handleError(e);
+      if (this.user.email.isEmpty) {
+        user.likedAnimes = [];
+        user = User.fromMap(user.toMap());
+      }
     }
 
     loading = false;
@@ -264,6 +268,7 @@ abstract class _UserStore with Store {
         await initUser();
       } catch (e) {
         errorStore.errorMessage = DioErrorUtil.handleError(e);
+        user = User.fromMap(user.toMap());
       }
     }
 
@@ -282,6 +287,7 @@ abstract class _UserStore with Store {
         await initUser();
       } catch (error) {
         errorStore.errorMessage = DioErrorUtil.handleError(error);
+        user = User.fromMap(user.toMap());
       }
     }
     loading = false;
@@ -298,6 +304,7 @@ abstract class _UserStore with Store {
         await initUser();
       } catch (error) {
         errorStore.errorMessage = DioErrorUtil.handleError(error);
+        user = User.fromMap(user.toMap());
       }
       loading = false;
     }
@@ -315,6 +322,7 @@ abstract class _UserStore with Store {
         await initUser();
       } catch (e) {
         errorStore.errorMessage = DioErrorUtil.handleError(e);
+        user = User.fromMap(user.toMap());
       }
     }
     loading = false;
@@ -335,6 +343,7 @@ abstract class _UserStore with Store {
     } catch (error) {
       loading = false;
       errorStore.errorMessage = DioErrorUtil.handleError(error);
+      user = User.fromMap(user.toMap());
       return false;
     }
   }

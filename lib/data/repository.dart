@@ -193,8 +193,7 @@ class Repository {
 
   Future<RecomendationList> getUserRecomendationsCart(
       List<String> itemSet) async {
-    return await _animeApi
-        .querryUserRecomendationsCart(itemSet);
+    return await _animeApi.querryUserRecomendationsCart(itemSet);
   }
 
   // Token:---------------------------------------------------------------------

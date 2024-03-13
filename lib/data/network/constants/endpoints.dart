@@ -36,7 +36,7 @@ class Endpoints {
 
   static const String userUpdateSelf = baseUrl + "/users/updateSelf";
 
-  static const baseGoURL = "https://www1.gogoanime.cm/";
+  static const baseGoURL = "https://anitaku.to/";
 
   static const baseVostURL = "https://animevost.org/";
 

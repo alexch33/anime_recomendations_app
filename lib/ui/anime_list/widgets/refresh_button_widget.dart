@@ -1,3 +1,4 @@
+import 'package:anime_recommendations_app/constants/app_theme.dart';
 import 'package:anime_recommendations_app/stores/anime/anime_store.dart';
 import 'package:anime_recommendations_app/utils/locale/app_localization.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,9 @@ class RefreshButtonWidget extends StatelessWidget {
   }
 
   _showMaterialDialog(BuildContext context) {
+    final buttonsTextStyle =
+        Theme.of(context).primaryTextTheme.titleMedium?.apply(color: secondary);
+
     showDialog(
         context: context,
         builder: (_) => new AlertDialog(
@@ -26,15 +30,20 @@ class RefreshButtonWidget extends StatelessWidget {
                   .translate('animes_refresh_message')),
               actions: <Widget>[
                 TextButton(
-                  child:
-                      Text(AppLocalizations.of(context)!.translate('continue')),
+                  child: Text(
+                    AppLocalizations.of(context)!.translate('continue'),
+                    style: buttonsTextStyle,
+                  ),
                   onPressed: () {
                     _animeStore.refreshAnimes();
                     Navigator.of(context).pop();
                   },
                 ),
                 TextButton(
-                  child: Text(AppLocalizations.of(context)!.translate('close')),
+                  child: Text(
+                    AppLocalizations.of(context)!.translate('close'),
+                    style: buttonsTextStyle,
+                  ),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },

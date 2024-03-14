@@ -42,4 +42,8 @@ class Endpoints {
 
   static const baseAnilibriaURL =
       "https://www.anilibria.tv/public/api/index.php";
+
+  static const baseAnime9URL = "https://9anime.pe";
+
+  static const baseAnimeGoURL = "https://animego.org";
 }

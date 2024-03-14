@@ -23,7 +23,8 @@ part 'anime_store.g.dart';
 ReceivePort receivePort = ReceivePort();
 final String recieverName = "Reciever";
 
-enum ParserType { Anilibria, Gogo, AniVost }
+enum ParserType { Anilibria, Gogo, AniVost, Anime9, AnimeGo }
+
 class AnimeStore = _AnimeStore with _$AnimeStore;
 
 abstract class _AnimeStore with Store {
@@ -61,6 +62,12 @@ abstract class _AnimeStore with Store {
   String gogoAnimeUrl = '';
 
   @observable
+  String anime9Url = '';
+
+  @observable
+  String animeGoUrl = '';
+
+  @observable
   bool isSearching = false;
 
   String searchText = "";
@@ -87,10 +94,10 @@ abstract class _AnimeStore with Store {
           searchText = searchQuery.text;
           animeList.cashedAnimes = animeList.animes
               .where((element) =>
-          element.nameEng
-              .toLowerCase()
-              .contains(searchText.toLowerCase()) ||
-              element.name.toLowerCase().contains(searchText.toLowerCase()))
+                  element.nameEng
+                      .toLowerCase()
+                      .contains(searchText.toLowerCase()) ||
+                  element.name.toLowerCase().contains(searchText.toLowerCase()))
               .toList();
 
           var list = AnimeList(animes: animeList.animes);
@@ -126,17 +133,22 @@ abstract class _AnimeStore with Store {
   @action
   Future<void> getLinksForAnime(Anime anime) async {
     var dio = DioClient(Dio());
-    try {
-      AnimeScrapper.fromType(dio, ParserType.Anilibria)
-          .getAnimeUrl(anime.name)
-          .then((value) => anilibriaAnimeUrl = value);
-      AnimeScrapper.fromType(dio, ParserType.Gogo)
-          .getAnimeUrl(anime.name)
-          .then((value) => gogoAnimeUrl = value);
-      AnimeScrapper.fromType(dio, ParserType.AniVost)
-          .getAnimeUrl(anime.name)
-          .then((value) => anivostAnimeUrl = value);
-    } catch (e) {}
+    AnimeScrapper.fromType(dio, ParserType.Gogo)
+        .getAnimeUrl(anime.name)
+        .then((value) => gogoAnimeUrl = value)
+        .onError((error, stackTrace) => "");
+    AnimeScrapper.fromType(dio, ParserType.AniVost)
+        .getAnimeUrl(anime.name)
+        .then((value) => anivostAnimeUrl = value)
+        .onError((error, stackTrace) => "");
+    AnimeScrapper.fromType(dio, ParserType.Anime9)
+        .getAnimeUrl(anime.name)
+        .then((value) => anime9Url = value)
+        .onError((error, stackTrace) => "");
+    AnimeScrapper.fromType(dio, ParserType.AnimeGo)
+        .getAnimeUrl(anime.name)
+        .then((value) => animeGoUrl = value)
+        .onError((error, stackTrace) => "");
   }
 
   @action
@@ -191,7 +203,7 @@ abstract class _AnimeStore with Store {
 
     try {
       similarsListsMap[itemDataId] =
-      await _repository.getSimilarItems(itemDataId.toString());
+          await _repository.getSimilarItems(itemDataId.toString());
     } catch (error) {
       similarsListsMap[itemDataId] = RecomendationList(recomendations: []);
       errorStore.errorMessage = DioErrorUtil.handleError(error);

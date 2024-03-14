@@ -156,6 +156,8 @@ abstract class _AnimeStore with Store {
     anilibriaAnimeUrl = '';
     anivostAnimeUrl = '';
     gogoAnimeUrl = '';
+    anime9Url = '';
+    animeGoUrl = '';
   }
 
   // actions:-------------------------------------------------------------------

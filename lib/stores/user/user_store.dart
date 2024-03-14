@@ -363,8 +363,10 @@ abstract class _UserStore with Store {
   }
 
   void showInterstitialAd() async {
-    await _interstitialAd?.show();
-    _loadInterstitialAd();
+    if (isAdsOn) {
+      await _interstitialAd?.show();
+      _loadInterstitialAd();
+    }
   }
 
   @action

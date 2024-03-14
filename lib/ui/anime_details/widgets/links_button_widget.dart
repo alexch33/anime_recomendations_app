@@ -46,6 +46,12 @@ class LinksButtonsWidget extends StatelessWidget {
                   ),
                   SiteButtonContainer(
                     anime: _anime,
+                    urlToGo: '',
+                    child: Text("Search in Google",
+                        style: Theme.of(context).textTheme.bodyLarge),
+                  ),
+                  SiteButtonContainer(
+                    anime: _anime,
                     urlToGo: _animeStore.animeGoUrl,
                     child: Text("Anime Go",
                         style: Theme.of(context).textTheme.bodyLarge),

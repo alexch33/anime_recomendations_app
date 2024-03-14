@@ -30,13 +30,14 @@ dependencies:
   validators: 3.0.0
   dio: 5.4.1
   another_flushbar: 1.12.30
-  material_dialog: ^1.0.0-nullsafety.1
+  material_dialog: 1.0.0-nullsafety.1
   intl: 0.18.1
   curved_navigation_bar: 1.0.3
   url_launcher: 6.2.5
   string_similarity: 2.0.0
   html: 0.15.4
   flutter_inappwebview: 6.0.0
+  google_mobile_ads: 4.0.0
 
 dev_dependencies:
   flutter_test:

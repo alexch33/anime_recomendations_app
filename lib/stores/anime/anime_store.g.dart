@@ -137,6 +137,38 @@ mixin _$AnimeStore on _AnimeStore, Store {
     });
   }
 
+  late final _$anime9UrlAtom =
+      Atom(name: '_AnimeStore.anime9Url', context: context);
+
+  @override
+  String get anime9Url {
+    _$anime9UrlAtom.reportRead();
+    return super.anime9Url;
+  }
+
+  @override
+  set anime9Url(String value) {
+    _$anime9UrlAtom.reportWrite(value, super.anime9Url, () {
+      super.anime9Url = value;
+    });
+  }
+
+  late final _$animeGoUrlAtom =
+      Atom(name: '_AnimeStore.animeGoUrl', context: context);
+
+  @override
+  String get animeGoUrl {
+    _$animeGoUrlAtom.reportRead();
+    return super.animeGoUrl;
+  }
+
+  @override
+  set animeGoUrl(String value) {
+    _$animeGoUrlAtom.reportWrite(value, super.animeGoUrl, () {
+      super.animeGoUrl = value;
+    });
+  }
+
   late final _$isSearchingAtom =
       Atom(name: '_AnimeStore.isSearching', context: context);
 
@@ -251,6 +283,8 @@ scrapperType: ${scrapperType},
 anilibriaAnimeUrl: ${anilibriaAnimeUrl},
 anivostAnimeUrl: ${anivostAnimeUrl},
 gogoAnimeUrl: ${gogoAnimeUrl},
+anime9Url: ${anime9Url},
+animeGoUrl: ${animeGoUrl},
 isSearching: ${isSearching}
     ''';
   }

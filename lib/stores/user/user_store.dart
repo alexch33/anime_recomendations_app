@@ -1,3 +1,4 @@
+import 'package:anime_recommendations_app/constants/strings.dart';
 import 'package:anime_recommendations_app/models/anime/anime.dart';
 import 'package:anime_recommendations_app/models/recomendation/recomendation_list.dart';
 import 'package:anime_recommendations_app/models/user/user.dart';
@@ -8,6 +9,7 @@ import 'package:anime_recommendations_app/ui/anime_recomendations/anime_recomend
 import 'package:anime_recommendations_app/ui/user_profile/user_profile.dart';
 import 'package:anime_recommendations_app/utils/dio/dio_error_util.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../data/repository.dart';
@@ -82,7 +84,7 @@ abstract class _UserStore with Store {
   bool loading = false;
 
   @observable
-  bool isAdsOn = false;
+  bool isAdsOn = true;
 
   @observable
   bool isSearching = false;
@@ -101,9 +103,15 @@ abstract class _UserStore with Store {
 
   final TextEditingController searchQuery = new TextEditingController();
 
+  InterstitialAd? _interstitialAd;
+
   @action
   void initialize(AnimeStore animeStore) {
     _animeStore = animeStore;
+
+    if (isAdsOn) {
+      _loadInterstitialAd();
+    }
 
     searchQuery.addListener(() {
       if (searchQuery.text.isEmpty) {
@@ -354,6 +362,11 @@ abstract class _UserStore with Store {
     }
   }
 
+  void showInterstitialAd() async {
+    await _interstitialAd?.show();
+    _loadInterstitialAd();
+  }
+
   @action
   Future<RecomendationList> _querryUserRecomendationsCart() async {
     try {
@@ -371,6 +384,21 @@ abstract class _UserStore with Store {
 
       return result;
     }
+  }
+
+  void _loadInterstitialAd() async {
+    await InterstitialAd.load(
+        adUnitId: Strings.interstitialAdUnitId,
+        request: const AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (ad) {
+            debugPrint('$ad loaded.');
+            _interstitialAd = ad;
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            debugPrint('InterstitialAd failed to load: $error');
+          },
+        ));
   }
 
   void _applyNewRecsList() {

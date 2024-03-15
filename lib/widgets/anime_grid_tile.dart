@@ -9,14 +9,16 @@ class AnimeGridTile extends StatelessWidget {
   final bool isLiked;
   final bool isLater;
   final bool isBlack;
+  final double score;
 
-  const AnimeGridTile(
-      {Key? key,
-      required this.anime,
-      this.isLiked = false,
-      this.isLater = false,
-      this.isBlack = false})
-      : super(key: key);
+  const AnimeGridTile({
+    Key? key,
+    required this.anime,
+    this.isLiked = false,
+    this.isLater = false,
+    this.isBlack = false,
+    this.score = 0.0,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +73,12 @@ class AnimeGridTile extends StatelessWidget {
                                 : Container(),
                           ],
                         ),
+                        score != 0.0
+                            ? Text(
+                                score.toStringAsFixed(3),
+                                style: Theme.of(context).textTheme.titleMedium,
+                              )
+                            : SizedBox.shrink(),
                         Text(anime.name,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,

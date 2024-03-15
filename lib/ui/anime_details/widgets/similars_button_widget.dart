@@ -4,7 +4,7 @@ import 'package:anime_recommendations_app/utils/locale/app_localization.dart';
 import 'package:flutter/material.dart';
 
 class SimilarsButtonWidget extends StatelessWidget {
-  static const _width = 200.0;
+  static const _width = 300.0;
   static const _height = 60.0;
 
   final Anime _anime;

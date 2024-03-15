@@ -35,7 +35,7 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
       _animeStore.querrySImilarItems(_anime.dataId);
 
       isInited = true;
-      
+
       _userStore.showInterstitialAd();
     }
   }
@@ -64,15 +64,20 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
                           itemCount: _animeStore.similarsListsMap[_anime.dataId]
                               ?.recomendations.length,
                           itemBuilder: (context, index) {
-                            String? id = _animeStore
+                            final recommendation = _animeStore
                                 .similarsListsMap[_anime.dataId]
-                                ?.recomendations[index]
-                                .item;
-                            Anime anime = _animeStore.animeList.animes
+                                ?.recomendations[index];
+                            final id = recommendation?.item;
+                            final score = recommendation?.score;
+                            final anime = _animeStore.animeList.animes
                                 .firstWhere(
                                     (anime) => anime.dataId.toString() == id,
                                     orElse: () => Anime());
-                            return SimAnimeListGridItem(_userStore, anime);
+                            return SimAnimeListGridItem(
+                              _userStore,
+                              anime,
+                              score: score ?? 0.0,
+                            );
                           },
                         )
                       : Center(

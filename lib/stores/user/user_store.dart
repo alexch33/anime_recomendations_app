@@ -119,6 +119,7 @@ abstract class _UserStore with Store {
         searchText = "";
         recomendationsList.cachedRecomendations =
             recomendationsList.recomendations;
+
         _applyNewRecsList();
       } else {
         isSearching = true;
@@ -134,6 +135,7 @@ abstract class _UserStore with Store {
                   .contains(searchText.toLowerCase()) ||
               element.name.toLowerCase().contains(searchText.toLowerCase());
         }).toList();
+
         _applyNewRecsList();
       }
     });
@@ -389,18 +391,20 @@ abstract class _UserStore with Store {
   }
 
   void _loadInterstitialAd() async {
-    await InterstitialAd.load(
-        adUnitId: Strings.interstitialAdUnitId,
-        request: const AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (ad) {
-            debugPrint('$ad loaded.');
-            _interstitialAd = ad;
-          },
-          onAdFailedToLoad: (LoadAdError error) {
-            debugPrint('InterstitialAd failed to load: $error');
-          },
-        ));
+    if (isAdsOn) {
+      await InterstitialAd.load(
+          adUnitId: Strings.interstitialAdUnitId,
+          request: const AdRequest(),
+          adLoadCallback: InterstitialAdLoadCallback(
+            onAdLoaded: (ad) {
+              debugPrint('$ad loaded.');
+              _interstitialAd = ad;
+            },
+            onAdFailedToLoad: (LoadAdError error) {
+              debugPrint('InterstitialAd failed to load: $error');
+            },
+          ));
+    }
   }
 
   void _applyNewRecsList() {

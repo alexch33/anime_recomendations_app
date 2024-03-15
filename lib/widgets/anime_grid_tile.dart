@@ -1,5 +1,4 @@
 import 'package:anime_recommendations_app/models/anime/anime.dart';
-import 'package:anime_recommendations_app/widgets/ganres_widget.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
@@ -48,7 +47,11 @@ class AnimeGridTile extends StatelessWidget {
                               Icons.star,
                               color: Colors.yellowAccent,
                             ),
-                            Text(anime.rating?.toStringAsFixed(2) ?? "",
+                            Text(
+                                anime.rating
+                                        ?.toStringAsFixed(2)
+                                        .replaceAll("-1.00", "") ??
+                                    "",
                                 style: Theme.of(context).textTheme.titleLarge),
                             Container(width: 16),
                             isLiked
@@ -74,16 +77,13 @@ class AnimeGridTile extends StatelessWidget {
                             softWrap: false,
                             style: Theme.of(context).textTheme.titleLarge),
                         anime.nameEng.isNotEmpty
-                            ? Text(anime.nameEng,
+                            ? Text(anime.nameEng.replaceAll("UNKNOWN", ""),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: false,
                                 style: Theme.of(context).textTheme.bodyLarge)
                             : Container(),
                       ]),
-                      anime.genre.isNotEmpty
-                          ? GenresWidget(ganres: this.anime.genre)
-                          : Container()
                     ],
                   ),
                   flex: 34)

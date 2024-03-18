@@ -2,7 +2,7 @@ class Endpoints {
   Endpoints._();
 
   // base url
-  static const String baseUrl = "http://10.0.2.2:3000/v1";
+  static const String baseUrl = "https://i3poac.freemyip.com/api/v1";
 
   // receiveTimeout
   static const int receiveTimeout = 20000;

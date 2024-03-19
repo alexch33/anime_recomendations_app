@@ -6,10 +6,11 @@ part of 'anime_store.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$AnimeStore on _AnimeStore, Store {
-  final _$animeListAtom = Atom(name: '_AnimeStore.animeList');
+  late final _$animeListAtom =
+      Atom(name: '_AnimeStore.animeList', context: context);
 
   @override
   AnimeList get animeList {
@@ -24,7 +25,8 @@ mixin _$AnimeStore on _AnimeStore, Store {
     });
   }
 
-  final _$similarsListsMapAtom = Atom(name: '_AnimeStore.similarsListsMap');
+  late final _$similarsListsMapAtom =
+      Atom(name: '_AnimeStore.similarsListsMap', context: context);
 
   @override
   Map<int, RecomendationList> get similarsListsMap {
@@ -39,7 +41,8 @@ mixin _$AnimeStore on _AnimeStore, Store {
     });
   }
 
-  final _$successAtom = Atom(name: '_AnimeStore.success');
+  late final _$successAtom =
+      Atom(name: '_AnimeStore.success', context: context);
 
   @override
   bool get success {
@@ -54,7 +57,8 @@ mixin _$AnimeStore on _AnimeStore, Store {
     });
   }
 
-  final _$isLoadingAtom = Atom(name: '_AnimeStore.isLoading');
+  late final _$isLoadingAtom =
+      Atom(name: '_AnimeStore.isLoading', context: context);
 
   @override
   bool get isLoading {
@@ -69,7 +73,8 @@ mixin _$AnimeStore on _AnimeStore, Store {
     });
   }
 
-  final _$scrapperTypeAtom = Atom(name: '_AnimeStore.scrapperType');
+  late final _$scrapperTypeAtom =
+      Atom(name: '_AnimeStore.scrapperType', context: context);
 
   @override
   ParserType get scrapperType {
@@ -84,7 +89,8 @@ mixin _$AnimeStore on _AnimeStore, Store {
     });
   }
 
-  final _$anilibriaAnimeUrlAtom = Atom(name: '_AnimeStore.anilibriaAnimeUrl');
+  late final _$anilibriaAnimeUrlAtom =
+      Atom(name: '_AnimeStore.anilibriaAnimeUrl', context: context);
 
   @override
   String get anilibriaAnimeUrl {
@@ -99,7 +105,8 @@ mixin _$AnimeStore on _AnimeStore, Store {
     });
   }
 
-  final _$anivostAnimeUrlAtom = Atom(name: '_AnimeStore.anivostAnimeUrl');
+  late final _$anivostAnimeUrlAtom =
+      Atom(name: '_AnimeStore.anivostAnimeUrl', context: context);
 
   @override
   String get anivostAnimeUrl {
@@ -114,7 +121,8 @@ mixin _$AnimeStore on _AnimeStore, Store {
     });
   }
 
-  final _$gogoAnimeUrlAtom = Atom(name: '_AnimeStore.gogoAnimeUrl');
+  late final _$gogoAnimeUrlAtom =
+      Atom(name: '_AnimeStore.gogoAnimeUrl', context: context);
 
   @override
   String get gogoAnimeUrl {
@@ -129,7 +137,40 @@ mixin _$AnimeStore on _AnimeStore, Store {
     });
   }
 
-  final _$isSearchingAtom = Atom(name: '_AnimeStore.isSearching');
+  late final _$anime9UrlAtom =
+      Atom(name: '_AnimeStore.anime9Url', context: context);
+
+  @override
+  String get anime9Url {
+    _$anime9UrlAtom.reportRead();
+    return super.anime9Url;
+  }
+
+  @override
+  set anime9Url(String value) {
+    _$anime9UrlAtom.reportWrite(value, super.anime9Url, () {
+      super.anime9Url = value;
+    });
+  }
+
+  late final _$animeGoUrlAtom =
+      Atom(name: '_AnimeStore.animeGoUrl', context: context);
+
+  @override
+  String get animeGoUrl {
+    _$animeGoUrlAtom.reportRead();
+    return super.animeGoUrl;
+  }
+
+  @override
+  set animeGoUrl(String value) {
+    _$animeGoUrlAtom.reportWrite(value, super.animeGoUrl, () {
+      super.animeGoUrl = value;
+    });
+  }
+
+  late final _$isSearchingAtom =
+      Atom(name: '_AnimeStore.isSearching', context: context);
 
   @override
   bool get isSearching {
@@ -144,8 +185,8 @@ mixin _$AnimeStore on _AnimeStore, Store {
     });
   }
 
-  final _$getLinksForAnimeAsyncAction =
-      AsyncAction('_AnimeStore.getLinksForAnime');
+  late final _$getLinksForAnimeAsyncAction =
+      AsyncAction('_AnimeStore.getLinksForAnime', context: context);
 
   @override
   Future<void> getLinksForAnime(Anime anime) {
@@ -153,22 +194,24 @@ mixin _$AnimeStore on _AnimeStore, Store {
         .run(() => super.getLinksForAnime(anime));
   }
 
-  final _$getAnimesAsyncAction = AsyncAction('_AnimeStore.getAnimes');
+  late final _$getAnimesAsyncAction =
+      AsyncAction('_AnimeStore.getAnimes', context: context);
 
   @override
   Future<dynamic> getAnimes() {
     return _$getAnimesAsyncAction.run(() => super.getAnimes());
   }
 
-  final _$refreshAnimesAsyncAction = AsyncAction('_AnimeStore.refreshAnimes');
+  late final _$refreshAnimesAsyncAction =
+      AsyncAction('_AnimeStore.refreshAnimes', context: context);
 
   @override
   Future<dynamic> refreshAnimes() {
     return _$refreshAnimesAsyncAction.run(() => super.refreshAnimes());
   }
 
-  final _$querrySImilarItemsAsyncAction =
-      AsyncAction('_AnimeStore.querrySImilarItems');
+  late final _$querrySImilarItemsAsyncAction =
+      AsyncAction('_AnimeStore.querrySImilarItems', context: context);
 
   @override
   Future<RecomendationList> querrySImilarItems(int itemDataId) {
@@ -176,7 +219,8 @@ mixin _$AnimeStore on _AnimeStore, Store {
         .run(() => super.querrySImilarItems(itemDataId));
   }
 
-  final _$getAnimeLinksAsyncAction = AsyncAction('_AnimeStore.getAnimeLinks');
+  late final _$getAnimeLinksAsyncAction =
+      AsyncAction('_AnimeStore.getAnimeLinks', context: context);
 
   @override
   Future<List<AnimeVideo>> getAnimeLinks(String animeId, int episodeNum) {
@@ -184,14 +228,16 @@ mixin _$AnimeStore on _AnimeStore, Store {
         .run(() => super.getAnimeLinks(animeId, episodeNum));
   }
 
-  final _$getAnimeIdAsyncAction = AsyncAction('_AnimeStore.getAnimeId');
+  late final _$getAnimeIdAsyncAction =
+      AsyncAction('_AnimeStore.getAnimeId', context: context);
 
   @override
   Future<String> getAnimeId(Anime anime) {
     return _$getAnimeIdAsyncAction.run(() => super.getAnimeId(anime));
   }
 
-  final _$_AnimeStoreActionController = ActionController(name: '_AnimeStore');
+  late final _$_AnimeStoreActionController =
+      ActionController(name: '_AnimeStore', context: context);
 
   @override
   void initialize() {
@@ -237,6 +283,8 @@ scrapperType: ${scrapperType},
 anilibriaAnimeUrl: ${anilibriaAnimeUrl},
 anivostAnimeUrl: ${anivostAnimeUrl},
 gogoAnimeUrl: ${gogoAnimeUrl},
+anime9Url: ${anime9Url},
+animeGoUrl: ${animeGoUrl},
 isSearching: ${isSearching}
     ''';
   }

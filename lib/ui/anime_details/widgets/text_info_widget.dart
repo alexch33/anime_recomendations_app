@@ -14,15 +14,15 @@ class TextInfoWidget extends StatelessWidget {
         Padding(
             padding: EdgeInsets.all(2.0),
             child: Text(_anime.name,
-                style: Theme.of(context).textTheme.headline5)),
+                style: Theme.of(context).textTheme.headlineSmall)),
         Padding(
             padding: EdgeInsets.all(2.0),
             child: Text(_anime.nameEng,
-                style: Theme.of(context).textTheme.headline6)),
+                style: Theme.of(context).textTheme.titleLarge)),
         Padding(
             padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
             child: Text(_anime.synopsis,
-                style: Theme.of(context).textTheme.bodyText1)),
+                style: Theme.of(context).textTheme.bodyLarge)),
       ],
     ));
   }

@@ -23,7 +23,7 @@ class LinksButtonsWidget extends StatelessWidget {
               padding: EdgeInsets.all(8.0),
               child: Text(
                   AppLocalizations.of(context)!.translate('watch_on_site'),
-                  style: Theme.of(context).textTheme.headline5)),
+                  style: Theme.of(context).textTheme.headlineSmall)),
           Container(
             height: 16,
           ),
@@ -33,20 +33,35 @@ class LinksButtonsWidget extends StatelessWidget {
               builder: (context) => Column(
                 children: [
                   SiteButtonContainer(
-                      anime: _anime,
-                      urlToGo: _animeStore.anilibriaAnimeUrl,
-                      child: Text("Anilibria",
-                          style: Theme.of(context).textTheme.bodyText1)),
+                    anime: _anime,
+                    urlToGo: _animeStore.anime9Url,
+                    child: Text("9Anime (Recommended)",
+                        style: Theme.of(context).textTheme.bodyLarge),
+                  ),
                   SiteButtonContainer(
-                      anime: _anime,
-                      urlToGo: _animeStore.anivostAnimeUrl,
-                      child: Text("Anivost",
-                          style: Theme.of(context).textTheme.bodyText1)),
+                    anime: _anime,
+                    urlToGo: _animeStore.gogoAnimeUrl,
+                    child: Text("Gogo Anime",
+                        style: Theme.of(context).textTheme.bodyLarge),
+                  ),
                   SiteButtonContainer(
-                      anime: _anime,
-                      urlToGo: _animeStore.gogoAnimeUrl,
-                      child: Text("Gogo Anime",
-                          style: Theme.of(context).textTheme.bodyText1)),
+                    anime: _anime,
+                    urlToGo: '',
+                    child: Text("Search in Google",
+                        style: Theme.of(context).textTheme.bodyLarge),
+                  ),
+                  SiteButtonContainer(
+                    anime: _anime,
+                    urlToGo: _animeStore.animeGoUrl,
+                    child: Text("Anime Go",
+                        style: Theme.of(context).textTheme.bodyLarge),
+                  ),
+                  SiteButtonContainer(
+                    anime: _anime,
+                    urlToGo: _animeStore.anivostAnimeUrl,
+                    child: Text("Anivost",
+                        style: Theme.of(context).textTheme.bodyLarge),
+                  ),
                   Container(
                     height: 32,
                   )

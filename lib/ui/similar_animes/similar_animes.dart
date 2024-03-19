@@ -32,11 +32,11 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
 
       _anime = ModalRoute.of(context)!.settings.arguments as Anime;
 
-      Future.delayed(Duration(milliseconds: 100), () {
-        _animeStore.querrySImilarItems(_anime.dataId);
-      });
+      _animeStore.querrySImilarItems(_anime.dataId);
 
       isInited = true;
+
+      _userStore.showInterstitialAd();
     }
   }
 
@@ -64,21 +64,28 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
                           itemCount: _animeStore.similarsListsMap[_anime.dataId]
                               ?.recomendations.length,
                           itemBuilder: (context, index) {
-                            String? id = _animeStore
+                            final recommendation = _animeStore
                                 .similarsListsMap[_anime.dataId]
-                                ?.recomendations[index]
-                                .item;
-                            Anime anime = _animeStore.animeList.animes
+                                ?.recomendations[index];
+                            final id = recommendation?.item;
+                            final score = recommendation?.score;
+                            final anime = _animeStore.animeList.animes
                                 .firstWhere(
                                     (anime) => anime.dataId.toString() == id,
                                     orElse: () => Anime());
-                            return SimAnimeListGridItem(_userStore, anime);
+                            return SimAnimeListGridItem(
+                              _userStore,
+                              anime,
+                              score: score ?? 0.0,
+                            );
                           },
                         )
                       : Center(
                           child: Text(
-                            _userStore.user.id.isNotEmpty ? AppLocalizations.of(context)!
-                                .translate('home_tv_no_post_found') : "Please sign in or sign Up",
+                            _userStore.user.id.isNotEmpty
+                                ? AppLocalizations.of(context)!
+                                    .translate('home_tv_no_post_found')
+                                : "Please sign in or sign Up",
                           ),
                         );
             },

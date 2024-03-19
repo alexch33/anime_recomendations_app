@@ -19,12 +19,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 // global instance for app component
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
+
   IsolateNameServer.registerPortWithName(receivePort.sendPort, recieverName);
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -41,6 +44,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   final Repository repo;
+
   // This widget is the root of your application.
   // Create your store as a final variable in a base Widget. This works better
   // with Hot Reload than creating it directly in the `build` function.
@@ -85,7 +89,7 @@ class MyApp extends StatelessWidget {
             ],
             localeResolutionCallback: (locale, supportedLocales) {
               // Check if the current device locale is supported
-              final List<Locale> systemLocales = WidgetsBinding.instance!.window
+              final List<Locale> systemLocales = PlatformDispatcher.instance
                   .locales; // Returns the list of locales that user defined in the system settings.
               var currentLocaSystem = systemLocales.first;
 

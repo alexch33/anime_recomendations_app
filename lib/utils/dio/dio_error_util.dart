@@ -4,27 +4,31 @@ class DioErrorUtil {
   // general methods:------------------------------------------------------------
   static String handleError(Object error) {
     String errorDescription = "";
-    if (error is DioError) {
+    if (error is DioException) {
       switch (error.type) {
-        case DioErrorType.cancel:
+        case DioExceptionType.cancel:
           errorDescription = "Request to API server was cancelled";
           break;
-        case DioErrorType.connectTimeout:
-          errorDescription = "Connection timeout with API server";
-          break;
-        case DioErrorType.other:
-          errorDescription =
-          "Connection to API server failed due to internet connection";
-          break;
-        case DioErrorType.receiveTimeout:
+        case DioExceptionType.receiveTimeout:
           errorDescription = "Receive timeout in connection with API server";
           break;
-        case DioErrorType.response:
-          errorDescription =
-          "Received invalid status code: ${error.response!.statusCode}";
-          break;
-        case DioErrorType.sendTimeout:
+        case DioExceptionType.sendTimeout:
           errorDescription = "Send timeout in connection with API server";
+          break;
+        case DioExceptionType.connectionTimeout:
+          errorDescription = "Connection timeout with API server";
+          break;
+        case DioExceptionType.badCertificate:
+          errorDescription = "Bad certificate";
+          break;
+        case DioExceptionType.badResponse:
+          errorDescription = "Not Authenticated";
+          break;
+        case DioExceptionType.connectionError:
+          errorDescription = "Server Connection Error";
+          break;
+        case DioExceptionType.unknown:
+          errorDescription = "Unknown Error";
           break;
       }
     } else {

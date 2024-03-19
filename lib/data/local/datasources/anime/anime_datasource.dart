@@ -27,6 +27,16 @@ class AnimeDataSource {
     return int.parse(result["dataId"].toString());
   }
 
+  Future<AnimeList> insertAll(List<Anime> animes) async {
+    final dataids = animes.map((e) => e.dataId);
+
+    await _animesStore
+        .records(dataids)
+        .put(await _db, animes.map((e) => e.toMap()).toList());
+
+    return await getAnimesFromDb();
+  }
+
   Future<int> count() async {
     return await _animesStore.count(await _db);
   }

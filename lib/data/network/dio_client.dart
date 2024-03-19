@@ -25,7 +25,6 @@ class DioClient {
       );
       return response.data;
     } catch (e) {
-      print(e.toString());
       throw e;
     }
   }

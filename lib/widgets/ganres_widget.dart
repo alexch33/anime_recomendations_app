@@ -4,7 +4,7 @@ class GenresWidget extends StatelessWidget {
   final List<String> ganres;
   final bool trim;
 
-  const GenresWidget({Key? key, required this.ganres, this.trim: true})
+  const GenresWidget({Key? key, required this.ganres, this.trim = true})
       : super(key: key);
 
   @override

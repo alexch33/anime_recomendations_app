@@ -1,3 +1,4 @@
+import 'package:anime_recommendations_app/constants/strings.dart';
 import 'package:anime_recommendations_app/models/anime/anime.dart';
 import 'package:anime_recommendations_app/models/recomendation/recomendation_list.dart';
 import 'package:anime_recommendations_app/models/user/user.dart';
@@ -8,6 +9,7 @@ import 'package:anime_recommendations_app/ui/anime_recomendations/anime_recomend
 import 'package:anime_recommendations_app/ui/user_profile/user_profile.dart';
 import 'package:anime_recommendations_app/utils/dio/dio_error_util.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../data/repository.dart';
@@ -41,7 +43,13 @@ abstract class _UserStore with Store {
       this.isLoggedIn = value;
 
       if (this.isLoggedIn) {
-        _repository.getUser().then((user) => this.user = user!);
+        _repository
+            .getUser()
+            .then((user) => this.user = user!)
+            .onError((error, stackTrace) {
+          errorStore.errorMessage = "Please Sign In";
+          return User(email: "");
+        });
       }
     });
   }
@@ -76,7 +84,7 @@ abstract class _UserStore with Store {
   bool loading = false;
 
   @observable
-  bool isAdsOn = false;
+  bool isAdsOn = true;
 
   @observable
   bool isSearching = false;
@@ -95,9 +103,15 @@ abstract class _UserStore with Store {
 
   final TextEditingController searchQuery = new TextEditingController();
 
+  InterstitialAd? _interstitialAd;
+
   @action
   void initialize(AnimeStore animeStore) {
     _animeStore = animeStore;
+
+    if (isAdsOn) {
+      _loadInterstitialAd();
+    }
 
     searchQuery.addListener(() {
       if (searchQuery.text.isEmpty) {
@@ -105,6 +119,8 @@ abstract class _UserStore with Store {
         searchText = "";
         recomendationsList.cachedRecomendations =
             recomendationsList.recomendations;
+
+        _applyNewRecsList();
       } else {
         isSearching = true;
         searchText = searchQuery.text;
@@ -119,6 +135,8 @@ abstract class _UserStore with Store {
                   .contains(searchText.toLowerCase()) ||
               element.name.toLowerCase().contains(searchText.toLowerCase());
         }).toList();
+
+        _applyNewRecsList();
       }
     });
   }
@@ -216,6 +234,7 @@ abstract class _UserStore with Store {
   Future logout() async {
     this.isLoggedIn = false;
     _repository.logout();
+    user = User(email: "");
   }
 
   @action
@@ -223,33 +242,14 @@ abstract class _UserStore with Store {
     try {
       loading = true;
       var res = await _repository.getUserRecomendations(userId);
-      loading = false;
       recomendationsList = res;
+      loading = false;
       return res;
     } catch (e) {
-      loading = false;
       errorStore.errorMessage = DioErrorUtil.handleError(e);
       var result = RecomendationList(recomendations: []);
       recomendationsList = result;
-
-      return result;
-    }
-  }
-
-  @action
-  Future<RecomendationList> _querryUserRecomendationsCart() async {
-    try {
-      loading = true;
-      var res = await _repository.getUserRecomendationsCart(
-          user.likedAnimes.map((e) => e.toString()).toList());
       loading = false;
-      recomendationsList = res;
-      return res;
-    } catch (e) {
-      loading = false;
-      errorStore.errorMessage = DioErrorUtil.handleError(e);
-      var result = RecomendationList(recomendations: []);
-      recomendationsList = result;
 
       return result;
     }
@@ -264,6 +264,10 @@ abstract class _UserStore with Store {
       await this.initUser();
     } catch (e) {
       errorStore.errorMessage = DioErrorUtil.handleError(e);
+      if (this.user.email.isEmpty) {
+        user.likedAnimes = [];
+        user = User.fromMap(user.toMap());
+      }
     }
 
     loading = false;
@@ -277,10 +281,13 @@ abstract class _UserStore with Store {
     if (isPushed) {
       try {
         await _repository.updateUser(user);
+        await initUser();
       } catch (e) {
         errorStore.errorMessage = DioErrorUtil.handleError(e);
+        user = User.fromMap(user.toMap());
       }
     }
+
     loading = false;
     return true;
   }
@@ -293,8 +300,10 @@ abstract class _UserStore with Store {
     if (isPushed) {
       try {
         await _repository.updateUser(user);
+        await initUser();
       } catch (error) {
         errorStore.errorMessage = DioErrorUtil.handleError(error);
+        user = User.fromMap(user.toMap());
       }
     }
     loading = false;
@@ -308,8 +317,10 @@ abstract class _UserStore with Store {
     if (isPushed) {
       try {
         await _repository.updateUser(user);
+        await initUser();
       } catch (error) {
         errorStore.errorMessage = DioErrorUtil.handleError(error);
+        user = User.fromMap(user.toMap());
       }
       loading = false;
     }
@@ -324,8 +335,10 @@ abstract class _UserStore with Store {
     if (isPushed) {
       try {
         await _repository.updateUser(user);
+        await initUser();
       } catch (e) {
         errorStore.errorMessage = DioErrorUtil.handleError(e);
+        user = User.fromMap(user.toMap());
       }
     }
     loading = false;
@@ -336,17 +349,69 @@ abstract class _UserStore with Store {
   Future<bool> likeAnime(int animeId) async {
     loading = true;
     user.pushLikedAnime(animeId);
-    
+
     try {
       bool liked = await _repository.likeAnime(animeId);
+      await initUser();
       loading = false;
       if (liked) return true;
       return false;
     } catch (error) {
       loading = false;
       errorStore.errorMessage = DioErrorUtil.handleError(error);
+      user = User.fromMap(user.toMap());
       return false;
     }
+  }
+
+  void showInterstitialAd() async {
+    if (isAdsOn) {
+      await _interstitialAd?.show();
+      _loadInterstitialAd();
+    }
+  }
+
+  @action
+  Future<RecomendationList> _querryUserRecomendationsCart() async {
+    try {
+      loading = true;
+      var res = await _repository.getUserRecomendationsCart(
+          user.likedAnimes.map((e) => e.toString()).toList());
+      recomendationsList = res;
+      loading = false;
+      return res;
+    } catch (e) {
+      loading = false;
+      errorStore.errorMessage = DioErrorUtil.handleError(e);
+      var result = RecomendationList(recomendations: []);
+      recomendationsList = result;
+
+      return result;
+    }
+  }
+
+  void _loadInterstitialAd() async {
+    if (isAdsOn) {
+      await InterstitialAd.load(
+          adUnitId: Strings.interstitialAdUnitId,
+          request: const AdRequest(),
+          adLoadCallback: InterstitialAdLoadCallback(
+            onAdLoaded: (ad) {
+              debugPrint('$ad loaded.');
+              _interstitialAd = ad;
+            },
+            onAdFailedToLoad: (LoadAdError error) {
+              debugPrint('InterstitialAd failed to load: $error');
+            },
+          ));
+    }
+  }
+
+  void _applyNewRecsList() {
+    final newLIst =
+        RecomendationList(recomendations: recomendationsList.recomendations);
+    newLIst.cachedRecomendations = recomendationsList.cachedRecomendations;
+    recomendationsList = newLIst;
   }
 
   // general methods:-----------------------------------------------------------

@@ -68,7 +68,7 @@ class AnimeListTile extends StatelessWidget {
                                           softWrap: false,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline6,
+                                              .titleLarge,
                                         ),
                                       ),
                                       buttons ?? Container(),
@@ -80,7 +80,7 @@ class AnimeListTile extends StatelessWidget {
                                     overflow: TextOverflow.ellipsis,
                                     softWrap: false,
                                     style:
-                                        Theme.of(context).textTheme.bodyText1,
+                                        Theme.of(context).textTheme.bodyLarge,
                                   ),
                                 ],
                               ),

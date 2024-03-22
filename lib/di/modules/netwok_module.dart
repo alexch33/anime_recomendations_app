@@ -79,7 +79,7 @@ class NetworkModule extends PreferenceModule {
                     options: opt,
                     data: options.data,
                     queryParameters: options.queryParameters);
-                handler.resolve(a);
+                return handler.resolve(a);
               }
               return handler.reject(error);
             }
@@ -110,7 +110,7 @@ class NetworkModule extends PreferenceModule {
   ///
   /// Calling it multiple times will return the same instance.
 
-  AnimeApi providePostApi(DioClient dioClient) => AnimeApi(dioClient);
+  AnimeApi provideAnimeApi(DioClient dioClient) => AnimeApi(dioClient);
 
   UsersApi provideUsersApi(DioClient dioClient) => UsersApi(dioClient);
 // Api Providers End:---------------------------------------------------------

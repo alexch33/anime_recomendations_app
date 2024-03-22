@@ -45,11 +45,11 @@ class _AnimeListState extends State<AnimeList> {
         appBar: PreferredSize(
             child: Observer(
               builder: (context) {
-                return _animeStore.isSearching
-                    ? AppBarAnimeListWidget(_animeStore, _userStore,
-                        isSearching: true)
-                    : AppBarAnimeListWidget(_animeStore, _userStore,
-                        isSearching: false);
+                return AppBarAnimeListWidget(
+                  _animeStore,
+                  _userStore,
+                  isSearching: _animeStore.isSearching,
+                );
               },
             ),
             preferredSize: Size(DeviceUtils.getScaledWidth(context, 1), 56)),
@@ -62,6 +62,7 @@ class _AnimeListState extends State<AnimeList> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text("Loading offline database, please wait a minute..."),
+                      Divider(),
                       LinearProgressIndicator(),
                     ],
                   )

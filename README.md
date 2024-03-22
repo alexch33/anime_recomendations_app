@@ -1,5 +1,7 @@
 ### Anime recommendations app
 
+<a href="https://play.google.com/store/apps/details?id=com.anime.recomender"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" height=60px /></a>
+
 Screenshots from classic branch
 
 <table>

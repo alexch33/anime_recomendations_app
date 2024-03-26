@@ -263,7 +263,10 @@ abstract class _UserStore with Store {
       await _repository.deleteAllUserEvents();
       await this.initUser();
     } catch (e) {
-      errorStore.errorMessage = DioErrorUtil.handleError(e);
+      if (user.email.isNotEmpty) {
+        errorStore.errorMessage = DioErrorUtil.handleError(e);
+      }
+
       if (this.user.email.isEmpty) {
         user.likedAnimes = [];
         user = User.fromMap(user.toMap());
@@ -283,7 +286,10 @@ abstract class _UserStore with Store {
         await _repository.updateUser(user);
         await initUser();
       } catch (e) {
-        errorStore.errorMessage = DioErrorUtil.handleError(e);
+        if (user.email.isNotEmpty) {
+          errorStore.errorMessage = DioErrorUtil.handleError(e);
+        }
+
         user = User.fromMap(user.toMap());
       }
     }
@@ -302,7 +308,10 @@ abstract class _UserStore with Store {
         await _repository.updateUser(user);
         await initUser();
       } catch (error) {
-        errorStore.errorMessage = DioErrorUtil.handleError(error);
+        if (user.email.isNotEmpty) {
+          errorStore.errorMessage = DioErrorUtil.handleError(error);
+        }
+
         user = User.fromMap(user.toMap());
       }
     }
@@ -319,7 +328,10 @@ abstract class _UserStore with Store {
         await _repository.updateUser(user);
         await initUser();
       } catch (error) {
-        errorStore.errorMessage = DioErrorUtil.handleError(error);
+        if (user.email.isNotEmpty) {
+          errorStore.errorMessage = DioErrorUtil.handleError(error);
+        }
+
         user = User.fromMap(user.toMap());
       }
       loading = false;
@@ -337,7 +349,10 @@ abstract class _UserStore with Store {
         await _repository.updateUser(user);
         await initUser();
       } catch (e) {
-        errorStore.errorMessage = DioErrorUtil.handleError(e);
+        if (user.email.isNotEmpty) {
+          errorStore.errorMessage = DioErrorUtil.handleError(e);
+        }
+
         user = User.fromMap(user.toMap());
       }
     }
@@ -358,7 +373,10 @@ abstract class _UserStore with Store {
       return false;
     } catch (error) {
       loading = false;
-      errorStore.errorMessage = DioErrorUtil.handleError(error);
+      if (user.email.isNotEmpty) {
+        errorStore.errorMessage = DioErrorUtil.handleError(error);
+      }
+
       user = User.fromMap(user.toMap());
       return false;
     }

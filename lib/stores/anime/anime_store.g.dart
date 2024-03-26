@@ -41,22 +41,6 @@ mixin _$AnimeStore on _AnimeStore, Store {
     });
   }
 
-  late final _$successAtom =
-      Atom(name: '_AnimeStore.success', context: context);
-
-  @override
-  bool get success {
-    _$successAtom.reportRead();
-    return super.success;
-  }
-
-  @override
-  set success(bool value) {
-    _$successAtom.reportWrite(value, super.success, () {
-      super.success = value;
-    });
-  }
-
   late final _$isLoadingAtom =
       Atom(name: '_AnimeStore.isLoading', context: context);
 
@@ -185,6 +169,87 @@ mixin _$AnimeStore on _AnimeStore, Store {
     });
   }
 
+  late final _$fetchStatusAtom =
+      Atom(name: '_AnimeStore.fetchStatus', context: context);
+
+  @override
+  String get fetchStatus {
+    _$fetchStatusAtom.reportRead();
+    return super.fetchStatus;
+  }
+
+  @override
+  set fetchStatus(String value) {
+    _$fetchStatusAtom.reportWrite(value, super.fetchStatus, () {
+      super.fetchStatus = value;
+    });
+  }
+
+  late final _$isFetchingAnimeListAtom =
+      Atom(name: '_AnimeStore.isFetchingAnimeList', context: context);
+
+  @override
+  bool get isFetchingAnimeList {
+    _$isFetchingAnimeListAtom.reportRead();
+    return super.isFetchingAnimeList;
+  }
+
+  @override
+  set isFetchingAnimeList(bool value) {
+    _$isFetchingAnimeListAtom.reportWrite(value, super.isFetchingAnimeList, () {
+      super.isFetchingAnimeList = value;
+    });
+  }
+
+  late final _$isAnimeFetchDoneAtom =
+      Atom(name: '_AnimeStore.isAnimeFetchDone', context: context);
+
+  @override
+  bool get isAnimeFetchDone {
+    _$isAnimeFetchDoneAtom.reportRead();
+    return super.isAnimeFetchDone;
+  }
+
+  @override
+  set isAnimeFetchDone(bool value) {
+    _$isAnimeFetchDoneAtom.reportWrite(value, super.isAnimeFetchDone, () {
+      super.isAnimeFetchDone = value;
+    });
+  }
+
+  late final _$currentFetchProgressAtom =
+      Atom(name: '_AnimeStore.currentFetchProgress', context: context);
+
+  @override
+  int get currentFetchProgress {
+    _$currentFetchProgressAtom.reportRead();
+    return super.currentFetchProgress;
+  }
+
+  @override
+  set currentFetchProgress(int value) {
+    _$currentFetchProgressAtom.reportWrite(value, super.currentFetchProgress,
+        () {
+      super.currentFetchProgress = value;
+    });
+  }
+
+  late final _$isCanSkipFetchAtom =
+      Atom(name: '_AnimeStore.isCanSkipFetch', context: context);
+
+  @override
+  bool get isCanSkipFetch {
+    _$isCanSkipFetchAtom.reportRead();
+    return super.isCanSkipFetch;
+  }
+
+  @override
+  set isCanSkipFetch(bool value) {
+    _$isCanSkipFetchAtom.reportWrite(value, super.isCanSkipFetch, () {
+      super.isCanSkipFetch = value;
+    });
+  }
+
   late final _$getLinksForAnimeAsyncAction =
       AsyncAction('_AnimeStore.getLinksForAnime', context: context);
 
@@ -277,7 +342,6 @@ mixin _$AnimeStore on _AnimeStore, Store {
     return '''
 animeList: ${animeList},
 similarsListsMap: ${similarsListsMap},
-success: ${success},
 isLoading: ${isLoading},
 scrapperType: ${scrapperType},
 anilibriaAnimeUrl: ${anilibriaAnimeUrl},
@@ -285,7 +349,12 @@ anivostAnimeUrl: ${anivostAnimeUrl},
 gogoAnimeUrl: ${gogoAnimeUrl},
 anime9Url: ${anime9Url},
 animeGoUrl: ${animeGoUrl},
-isSearching: ${isSearching}
+isSearching: ${isSearching},
+fetchStatus: ${fetchStatus},
+isFetchingAnimeList: ${isFetchingAnimeList},
+isAnimeFetchDone: ${isAnimeFetchDone},
+currentFetchProgress: ${currentFetchProgress},
+isCanSkipFetch: ${isCanSkipFetch}
     ''';
   }
 }

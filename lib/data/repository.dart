@@ -48,23 +48,30 @@ class Repository {
     }).catchError((error) => throw error);
   }
 
-  Future<AnimeList> getAnimes() async {
-    // check to see if posts are present in database, then fetch from database
-    // else make a network call to get all posts, store them into database for
-    // later use
-    int count = await _animeDataSource.count();
-    if (count > 0) return await _animeDataSource.getAnimesFromDbOrCache();
-    final animeList = await _animeApi.getAnimes();
-
-    return await _animeDataSource.insertAll(animeList.animes);
+  Future<int> getAnimesDBCount() async {
+    return await _animeDataSource.count();
   }
 
-  Future<AnimeList> refreshAnimes() async {
-    int count = await _animeDataSource.count();
-    final animeList = await _animeApi.getAnimes();
+  Future<AnimeList> getAnimesFromDBOrCached() async {
+    return await _animeDataSource.getAnimesFromDbOrCache();
+  }
+
+  Future<AnimeList> getAnimesFromApi(void Function(int, int)? onProgress) async {
+    return await _animeApi.getAllAnimes(onProgress);
+  }
+
+  Future<AnimeList> refreshAnimes(void Function(int, int)? onProgress) async {
+    int count = await getAnimesDBCount();
+
+    final animeList = await getAnimesFromApi(onProgress);
+
     if (count > 0) await _animeDataSource.deleteAll();
 
-    return await _animeDataSource.insertAll(animeList.animes);
+    return await insertAll(animeList.animes);
+  }
+
+  Future<void> deleteAllAnimes() async {
+    await _animeDataSource.deleteAll();
   }
 
   Future<bool> likeAnime(int animeId) async {

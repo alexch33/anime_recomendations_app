@@ -35,15 +35,97 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: BottomNavBarWidget(_userStore),
-      body: Stack(
-        children: <Widget>[
-          _handleErrorMessage(),
-          Observer(builder: (context) => _userStore.pages[_userStore.page]),
+    return Observer(builder: (context) {
+      final theme = Theme.of(context);
+      final isAnimeFetchDone = _animeStore.isAnimeFetchDone;
+      theme.textTheme.titleLarge?.copyWith(color: Colors.green);
+
+      return Scaffold(
+        bottomNavigationBar: isAnimeFetchDone
+            ? BottomNavBarWidget(_userStore)
+            : SizedBox.shrink(),
+        body: Stack(
+          children: <Widget>[
+            _handleErrorMessage(),
+            isAnimeFetchDone
+                ? _userStore.pages[_userStore.page]
+                : _downloadingScreen(),
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget _downloadingScreen() {
+    final theme = Theme.of(context);
+    final totalProg = _animeStore.totalFetchProgress;
+    final currentProg = _animeStore.currentFetchProgress;
+    final loadingValue = currentProg != 0 ? currentProg / totalProg : 0;
+    final buttonTextStyle =
+        theme.textTheme.titleLarge?.copyWith(color: Colors.green);
+
+    return Container(
+      height: double.maxFinite,
+      width: double.maxFinite,
+      color: Colors.black,
+      padding: EdgeInsets.all(16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "Anime DB downloading",
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          Text(
+            "This app before start downloading offline anime data base. more than 25 000 titles 15MB total. Please wait.",
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+          Text(
+            _animeStore.fetchStatus,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          LinearProgressIndicator(
+              minHeight: 5,
+              color: Theme.of(context).primaryColor,
+              value: loadingValue.toDouble()),
+          Text("${formatBytes(currentProg)}/${formatBytes(totalProg)}"),
+          _animeStore.fetchStatus == "error"
+              ? ElevatedButton(
+                  onPressed: () {
+                    _animeStore.refreshAnimes();
+                  },
+                  child: Text(
+                    "Retry",
+                    style: buttonTextStyle,
+                  ),
+                )
+              : SizedBox.shrink(),
+          _animeStore.isCanSkipFetch == true
+              ? ElevatedButton(
+                  onPressed: () {
+                    _animeStore.isAnimeFetchDone = true;
+                  },
+                  child: Text(
+                    "Skip",
+                    style: buttonTextStyle,
+                  ),
+                )
+              : SizedBox.shrink()
         ],
       ),
     );
+  }
+
+  String formatBytes(int bytes) {
+    if (bytes < 1024) {
+      return '$bytes B';
+    } else if (bytes < 1024 * 1024) {
+      return '${(bytes / 1024).toStringAsFixed(2)} KB';
+    } else if (bytes < 1024 * 1024 * 1024) {
+      return '${(bytes / (1024 * 1024)).toStringAsFixed(2)} MB';
+    } else {
+      return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
+    }
   }
 
   Widget _handleErrorMessage() {

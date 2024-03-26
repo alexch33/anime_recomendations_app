@@ -44,9 +44,6 @@ abstract class _AnimeStore with Store {
   Map<int, RecomendationList> similarsListsMap = {};
 
   @observable
-  bool success = false;
-
-  @observable
   bool isLoading = false;
 
   @observable
@@ -69,6 +66,23 @@ abstract class _AnimeStore with Store {
 
   @observable
   bool isSearching = false;
+
+  @observable
+  String fetchStatus = '';
+
+  @observable
+  bool isFetchingAnimeList = false;
+
+  @observable
+  bool isAnimeFetchDone = false;
+
+  @observable
+  int currentFetchProgress = 0;
+
+  @observable
+  bool isCanSkipFetch = false;
+
+  final totalFetchProgress = 15348390;
 
   String searchText = "";
 
@@ -107,11 +121,33 @@ abstract class _AnimeStore with Store {
         }
       });
 
-      receivePort.listen((message) {
+      receivePort.listen((message) async {
         if (message["list"] != null) {
           this.animeList = message["list"];
+          final newAnimes = this.animeList.animes.toList();
+          newAnimes.sort((a, b) => (b.rating ?? 0).compareTo(a.rating ?? 0));
+
+          this.animeList = AnimeList(animes: newAnimes);
+          fetchStatus = "done";
+          isFetchingAnimeList = false;
+          isAnimeFetchDone = true;
         }
-        isLoading = false;
+
+        final status = message["status"];
+        if (status != null) {
+          fetchStatus = status;
+
+          if (status == "error") {
+            isFetchingAnimeList = false;
+            isAnimeFetchDone = false;
+            final count = await _repository.getAnimesDBCount();
+            isCanSkipFetch = count > 0;
+          }
+        }
+        final current = message["current"];
+        if (current != null) {
+          currentFetchProgress = current;
+        }
       });
     }
 
@@ -163,20 +199,35 @@ abstract class _AnimeStore with Store {
   // actions:-------------------------------------------------------------------
   @action
   Future getAnimes() async {
-    isLoading = true;
+    isFetchingAnimeList = true;
+    isAnimeFetchDone = false;
 
     try {
-      this.animeList = await _repository.getAnimes();
+      final count = await _repository.getAnimesDBCount();
+      if (count == 0) {
+        fetchStatus = "Connecting...";
+        await refreshAnimes();
+      } else {
+        fetchStatus = "Loading...";
+        this.animeList = await _repository.getAnimesFromDBOrCached();
+      }
     } catch (error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
     }
 
-    isLoading = false;
+    final count = await _repository.getAnimesDBCount();
+
+    isAnimeFetchDone = count > 0;
+    isFetchingAnimeList = false;
+    fetchStatus = "done";
   }
 
   @action
   Future refreshAnimes() async {
-    isLoading = true;
+    isFetchingAnimeList = true;
+    isAnimeFetchDone = false;
+    currentFetchProgress = 0;
+
     final token = RootIsolateToken.instance;
     await Isolate.spawn(_refreshAnimeList, token);
   }
@@ -191,10 +242,26 @@ abstract class _AnimeStore with Store {
     );
     SendPort? checkingPort = IsolateNameServer.lookupPortByName(recieverName);
     try {
-      var animeList = await _repository?.refreshAnimes();
-      checkingPort?.send({"list": animeList});
+      checkingPort?.send({"status": "connecting"});
+
+      var animeList = await _repository?.getAnimesFromApi((curr, total) {
+        checkingPort?.send({
+          "status": "downloading",
+          "current": curr,
+        });
+      });
+
+      if (animeList?.animes != null && animeList?.animes.isNotEmpty == true) {
+        checkingPort?.send({"status": "unpacking"});
+        await _repository?.deleteAllAnimes();
+        await _repository?.insertAll(animeList!.animes);
+      }
+
+      if (animeList != null) {
+        checkingPort?.send({"list": animeList, "status": "done"});
+      }
     } catch (error) {
-      checkingPort?.send({"list": null});
+      checkingPort?.send({"list": null, "status": "error"});
     }
   }
 

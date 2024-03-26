@@ -17,9 +17,9 @@ class AnimeApi {
   AnimeApi(this._dioClient);
 
   /// Returns list of post in response
-  Future<AnimeList> getAnimes() async {
-    final res = await _dioClient
-        .get(Endpoints.getAnimes, queryParameters: {"limit": 30000});
+  Future<AnimeList> getAllAnimes(void Function(int, int)? onProgress) async {
+    final res = await _dioClient.get(Endpoints.getAnimes,
+        queryParameters: {"limit": 30000}, onReceiveProgress: onProgress);
     return AnimeList.fromJson(res["results"]);
   }
 

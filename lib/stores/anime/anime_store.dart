@@ -208,6 +208,7 @@ abstract class _AnimeStore with Store {
         await refreshAnimes();
       } else {
         fetchStatus = "Loading...";
+        currentFetchProgress = totalFetchProgress;
         this.animeList = await _repository.getAnimesFromDBOrCached();
       }
     } catch (error) {

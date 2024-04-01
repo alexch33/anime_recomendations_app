@@ -17,7 +17,8 @@ class AppBarAnimeRecsListWidget extends StatelessWidget {
     return AppBar(
       title: isSearching
           ? (TextField(
-            cursorColor: Colors.white,
+              autofocus: true,
+              cursorColor: Colors.white,
               controller: _userStore.searchQuery,
               decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.search, size: 30),

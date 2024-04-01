@@ -5,10 +5,10 @@ class Endpoints {
   static const String baseUrl = "https://i3poac.freemyip.com/api/v1";
 
   // receiveTimeout
-  static const int receiveTimeout = 20000;
+  static const int receiveTimeout = 10000;
 
   // connectTimeout
-  static const int connectionTimeout = 30000;
+  static const int connectionTimeout = 20000;
 
   // booking endpoints
   static const String getAnimes = baseUrl + "/animes";

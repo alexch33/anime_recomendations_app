@@ -5,6 +5,11 @@ class DioErrorUtil {
   static String handleError(Object error) {
     String errorDescription = "";
     if (error is DioException) {
+      String? message = null;
+      if (error.response?.data is Map) {
+        message = error.response?.data['message'];
+      }
+
       switch (error.type) {
         case DioExceptionType.cancel:
           errorDescription = "Request to API server was cancelled";
@@ -22,13 +27,17 @@ class DioErrorUtil {
           errorDescription = "Bad certificate";
           break;
         case DioExceptionType.badResponse:
-          errorDescription = "Not Authenticated";
+          if (error.response?.statusCode == 429) {
+            errorDescription = message ?? "Too many requests, try again latter";
+          } else {
+            errorDescription = message ?? "Bad Response";
+          }
           break;
         case DioExceptionType.connectionError:
           errorDescription = "Server Connection Error";
           break;
         case DioExceptionType.unknown:
-          errorDescription = "Unknown Error";
+          errorDescription = message ?? "Unknown Error";
           break;
       }
     } else {

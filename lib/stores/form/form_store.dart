@@ -1,5 +1,6 @@
 import 'package:anime_recommendations_app/stores/error/error_store.dart';
 import 'package:anime_recommendations_app/stores/user/user_store.dart';
+import 'package:anime_recommendations_app/utils/dio/dio_error_util.dart';
 import 'package:mobx/mobx.dart';
 import 'package:validators/validators.dart';
 
@@ -84,7 +85,7 @@ abstract class _FormStore with Store {
     if (value.isEmpty) {
       formErrorStore.userEmail = "Email can't be empty";
     } else if (!isEmail(value)) {
-      formErrorStore.userEmail = 'Please enter a valid email address';
+      formErrorStore.userEmail = 'Please enter any email address';
     } else {
       formErrorStore.userEmail = null;
     }
@@ -121,9 +122,7 @@ abstract class _FormStore with Store {
     try {
       await userStore.signUp(userEmail, password);
     } catch (e) {
-      errorStore.errorMessage = e.toString().contains("Http status error [400]")
-          ? "emal musst be valid or password must contain password must contain at least 1 letter and 1 number"
-          : "Something went wrong";
+      errorStore.errorMessage = DioErrorUtil.handleError(e);
     }
     if (userStore.success) {
       loading = false;
@@ -147,9 +146,7 @@ abstract class _FormStore with Store {
     try {
       await userStore.login(userEmail, password);
     } catch (e) {
-      errorStore.errorMessage = e.toString().contains("ERROR_USER_NOT_FOUND")
-          ? "Username and password doesn't match"
-          : "Something went wrongn";
+      errorStore.errorMessage = DioErrorUtil.handleError(e);
     }
     if (userStore.success) {
       loading = false;

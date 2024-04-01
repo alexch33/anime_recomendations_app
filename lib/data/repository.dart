@@ -56,7 +56,8 @@ class Repository {
     return await _animeDataSource.getAnimesFromDbOrCache();
   }
 
-  Future<AnimeList> getAnimesFromApi(void Function(int, int)? onProgress) async {
+  Future<AnimeList> getAnimesFromApi(
+      void Function(int, int)? onProgress) async {
     return await _animeApi.getAllAnimes(onProgress);
   }
 
@@ -84,7 +85,7 @@ class Repository {
         await _userDataSource.update(user);
       }
       return boolVal;
-    }).catchError((error) => throw error);
+    });
   }
 
   Future<List<Anime>> findAnimeById(int id) {
@@ -98,24 +99,17 @@ class Repository {
     //making db call
     return _animeDataSource
         .getAllSortedByFilter(filters: filters)
-        .then((animes) => animes)
-        .catchError((error) => throw error);
+        .then((animes) => animes);
   }
 
-  Future<AnimeList> insertAll(List<Anime> animes) => _animeDataSource
-      .insertAll(animes)
-      .then((animeList) => animeList)
-      .catchError((error) => throw error);
+  Future<AnimeList> insertAll(List<Anime> animes) =>
+      _animeDataSource.insertAll(animes).then((animeList) => animeList);
 
-  Future<int> update(Anime post) => _animeDataSource
-      .update(post)
-      .then((id) => id)
-      .catchError((error) => throw error);
+  Future<int> update(Anime anime) =>
+      _animeDataSource.update(anime).then((id) => id);
 
-  Future<int> delete(Anime post) => _animeDataSource
-      .update(post)
-      .then((id) => id)
-      .catchError((error) => throw error);
+  Future<int> delete(Anime anime) =>
+      _animeDataSource.update(anime).then((id) => id);
 
   // Login:---------------------------------------------------------------------
   Future<bool> login(String email, String password) async {
@@ -155,17 +149,25 @@ class Repository {
 
   Future logout() async {
     saveIsLoggedIn(false);
-    _usersApi
-        .logout((await _sharedPrefsHelper.refreshToken)!)
-        .catchError((error) => throw error);
+    _usersApi.logout((await _sharedPrefsHelper.refreshToken ?? ''));
     deleteToken();
     deleteUser();
   }
 
-  Future<void> saveIsLoggedIn(bool value) =>
-      _sharedPrefsHelper.saveIsLoggedIn(value);
+  Future<void> saveIsLoggedIn(bool value) async =>
+      await _sharedPrefsHelper.saveIsLoggedIn(value);
 
-  Future<bool> get isLoggedIn => _sharedPrefsHelper.isLoggedIn;
+  Future<bool> get isLoggedIn async {
+    final isLoggedIn = await _sharedPrefsHelper.isLoggedIn;
+
+    if (isLoggedIn) {
+      final token = await _sharedPrefsHelper.refreshToken;
+
+      return token?.isNotEmpty == true;
+    }
+
+    return isLoggedIn;
+  }
 
   // User:----------------------------------------------------------------------
   Future<User?> getUser() async {
@@ -173,13 +175,9 @@ class Repository {
   }
 
   Future<User?> updateUser(User user) async {
-    try {
-      User updatedUser = await _usersApi.userUpdateSelf(user);
-      await _userDataSource.update(updatedUser);
-      return await this.getUser();
-    } catch (error) {
-      throw error;
-    }
+    User updatedUser = await _usersApi.userUpdateSelf(user);
+    await _userDataSource.update(updatedUser);
+    return await this.getUser();
   }
 
   Future<void> deleteUser() async {

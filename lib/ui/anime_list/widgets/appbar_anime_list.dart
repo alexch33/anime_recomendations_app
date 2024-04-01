@@ -20,6 +20,7 @@ class AppBarAnimeListWidget extends StatelessWidget {
     return AppBar(
       title: isSearching
           ? (TextField(
+              autofocus: true,
               cursorColor: Colors.white,
               controller: _animeStore.searchQuery,
               decoration: InputDecoration(

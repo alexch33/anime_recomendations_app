@@ -115,7 +115,6 @@ abstract class _UserStore with Store {
 
     searchQuery.addListener(() {
       if (searchQuery.text.isEmpty) {
-        isSearching = false;
         searchText = "";
         recomendationsList.cachedRecomendations =
             recomendationsList.recomendations;

@@ -95,7 +95,6 @@ abstract class _AnimeStore with Store {
     if (!_isInited) {
       searchQuery.addListener(() {
         if (searchQuery.text.isEmpty) {
-          isSearching = false;
           searchText = "";
           animeList.cashedAnimes = animeList.animes;
 

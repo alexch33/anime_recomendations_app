@@ -33,6 +33,9 @@ class UsersApi {
   }
 
   Future logout(String refreshToken) async {
+    if (refreshToken.isEmpty) {
+      return;
+    }
     await _dioClient
         .post(Endpoints.logout, data: {"refreshToken": refreshToken});
   }

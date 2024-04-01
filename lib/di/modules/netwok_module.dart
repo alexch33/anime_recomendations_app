@@ -52,15 +52,25 @@ class NetworkModule extends PreferenceModule {
         onError: ((DioException error, ErrorInterceptorHandler handler) async {
           if (error.response?.statusCode == 401) {
             final prefs = await SharedPreferences.getInstance();
+            await prefs.reload();
             final refreshToken = prefs.getString(Preferences.refresh_token);
 
             if (refreshToken != null) {
               RequestOptions options = error.response!.requestOptions;
 
-              final res = await dio.post(Endpoints.refreshTokens,
-                  data: {"refreshToken": refreshToken});
+              Response<dynamic>? res = null;
+              try {
+                res = await dio.post(Endpoints.refreshTokens,
+                    data: {"refreshToken": refreshToken});
+              } catch (e) {
+                if (e is DioException) {
+                  if (e.response?.statusCode == 401) {
+                    await prefs.remove(Preferences.refresh_token);
+                  }
+                }
+              }
 
-              if (res.statusCode == 200) {
+              if (res != null && res.statusCode == 200) {
                 final token = res.data["access"]["token"];
                 final refresh = res.data["refresh"]["token"];
 
@@ -114,5 +124,4 @@ class NetworkModule extends PreferenceModule {
 
   UsersApi provideUsersApi(DioClient dioClient) => UsersApi(dioClient);
 // Api Providers End:---------------------------------------------------------
-
 }

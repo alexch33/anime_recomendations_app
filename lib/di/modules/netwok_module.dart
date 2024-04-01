@@ -22,8 +22,8 @@ class NetworkModule extends PreferenceModule {
 
     dio
       ..options.baseUrl = Endpoints.baseUrl
-      ..options.connectTimeout = Duration(milliseconds: 10000)
-      ..options.receiveTimeout = Duration(milliseconds: 10000)
+      ..options.connectTimeout = Duration(milliseconds: Endpoints.connectionTimeout)
+      ..options.receiveTimeout = Duration(milliseconds: Endpoints.receiveTimeout)
       ..options.headers = {'Content-Type': 'application/json; charset=utf-8'}
       ..interceptors.add(LogInterceptor(
         request: true,

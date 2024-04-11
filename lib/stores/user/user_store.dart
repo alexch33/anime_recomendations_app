@@ -146,6 +146,7 @@ abstract class _UserStore with Store {
     recomendationsList.cachedRecomendations = recomendationsList.recomendations;
   }
 
+  @action
   void handleSearchEnd() {
     isSearching = false;
     searchQuery.clear();
@@ -278,6 +279,10 @@ abstract class _UserStore with Store {
 
   @action
   Future<bool> pushWatchLaterAnime(int animeId) async {
+    if (isLaterAnime(animeId)) {
+      return await removeWatchLaterAnime(animeId);
+    }
+
     loading = true;
     bool isPushed = user.pushWatchLaterAnime(animeId);
     if (isPushed) {
@@ -320,6 +325,10 @@ abstract class _UserStore with Store {
 
   @action
   Future<bool> pushBlackListAnime(int animeId) async {
+    if (isBlackListedAnime(animeId)) {
+      return await removeBlackListAnime(animeId);
+    }
+
     loading = true;
     bool isPushed = user.pushBlackListAnime(animeId);
     if (isPushed) {
@@ -361,6 +370,10 @@ abstract class _UserStore with Store {
 
   @action
   Future<bool> likeAnime(int animeId) async {
+    if (user.isAnimeLiked(animeId)) {
+      return false;
+    }
+
     loading = true;
     user.pushLikedAnime(animeId);
 
@@ -424,6 +437,7 @@ abstract class _UserStore with Store {
     }
   }
 
+  @action
   void _applyNewRecsList() {
     final newLIst =
         RecomendationList(recomendations: recomendationsList.recomendations);

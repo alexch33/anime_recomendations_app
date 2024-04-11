@@ -327,6 +327,17 @@ mixin _$AnimeStore on _AnimeStore, Store {
   }
 
   @override
+  void handleSearchEnd() {
+    final _$actionInfo = _$_AnimeStoreActionController.startAction(
+        name: '_AnimeStore.handleSearchEnd');
+    try {
+      return super.handleSearchEnd();
+    } finally {
+      _$_AnimeStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void clearAnimesUrls() {
     final _$actionInfo = _$_AnimeStoreActionController.startAction(
         name: '_AnimeStore.clearAnimesUrls');

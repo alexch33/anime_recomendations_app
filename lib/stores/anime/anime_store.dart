@@ -68,7 +68,7 @@ abstract class _AnimeStore with Store {
   bool isSearching = false;
 
   @observable
-  String fetchStatus = '';
+  String fetchStatus = 'Loading...';
 
   @observable
   bool isFetchingAnimeList = false;
@@ -159,6 +159,7 @@ abstract class _AnimeStore with Store {
     animeList.cashedAnimes = animeList.animes;
   }
 
+  @action
   void handleSearchEnd() {
     isSearching = false;
     searchQuery.clear();

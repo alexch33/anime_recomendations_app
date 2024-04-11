@@ -300,6 +300,28 @@ mixin _$UserStore on _UserStore, Store {
   }
 
   @override
+  void handleSearchEnd() {
+    final _$actionInfo = _$_UserStoreActionController.startAction(
+        name: '_UserStore.handleSearchEnd');
+    try {
+      return super.handleSearchEnd();
+    } finally {
+      _$_UserStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void _applyNewRecsList() {
+    final _$actionInfo = _$_UserStoreActionController.startAction(
+        name: '_UserStore._applyNewRecsList');
+    try {
+      return super._applyNewRecsList();
+    } finally {
+      _$_UserStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 isLoggedIn: ${isLoggedIn},

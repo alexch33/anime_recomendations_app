@@ -10,7 +10,7 @@ description: Anime recommendations app
 version: 0.4.1+18
 
 environment:
-  sdk: ">=2.19.0 <3.0.0"
+  sdk: ">=3.1.3 <4.0.0"
 
 dependencies:
   flutter:

@@ -73,13 +73,13 @@ class _AnimeDetailsState extends State<AnimeDetails> {
             }),
             Observer(
               builder: (context) =>
-                  (_userStore.loading || _animeStore.isLoading)
-                      ? SizedBox(
-                          height: 100,
-                          width: 100,
-                          child: CustomProgressIndicatorWidget(),
-                        )
-                      : SizedBox.shrink(),
+              (_userStore.loading || _animeStore.isLoading)
+                  ? SizedBox(
+                height: 100,
+                width: 100,
+                child: CustomProgressIndicatorWidget(),
+              )
+                  : SizedBox.shrink(),
             )
           ],
         ),

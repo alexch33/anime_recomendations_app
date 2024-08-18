@@ -22,8 +22,8 @@ class NetworkModule extends PreferenceModule {
 
     dio
       ..options.baseUrl = Endpoints.baseUrl
-      ..options.connectTimeout = Duration(milliseconds: 10000)
-      ..options.receiveTimeout = Duration(milliseconds: 10000)
+      ..options.connectTimeout = Duration(milliseconds: Endpoints.connectionTimeout)
+      ..options.receiveTimeout = Duration(milliseconds: Endpoints.receiveTimeout)
       ..options.headers = {'Content-Type': 'application/json; charset=utf-8'}
       ..interceptors.add(LogInterceptor(
         request: true,
@@ -52,15 +52,25 @@ class NetworkModule extends PreferenceModule {
         onError: ((DioException error, ErrorInterceptorHandler handler) async {
           if (error.response?.statusCode == 401) {
             final prefs = await SharedPreferences.getInstance();
+            await prefs.reload();
             final refreshToken = prefs.getString(Preferences.refresh_token);
 
             if (refreshToken != null) {
               RequestOptions options = error.response!.requestOptions;
 
-              final res = await dio.post(Endpoints.refreshTokens,
-                  data: {"refreshToken": refreshToken});
+              Response<dynamic>? res = null;
+              try {
+                res = await dio.post(Endpoints.refreshTokens,
+                    data: {"refreshToken": refreshToken});
+              } catch (e) {
+                if (e is DioException) {
+                  if (e.response?.statusCode == 401) {
+                    await prefs.remove(Preferences.refresh_token);
+                  }
+                }
+              }
 
-              if (res.statusCode == 200) {
+              if (res != null && res.statusCode == 200) {
                 final token = res.data["access"]["token"];
                 final refresh = res.data["refresh"]["token"];
 
@@ -79,7 +89,7 @@ class NetworkModule extends PreferenceModule {
                     options: opt,
                     data: options.data,
                     queryParameters: options.queryParameters);
-                handler.resolve(a);
+                return handler.resolve(a);
               }
               return handler.reject(error);
             }
@@ -110,9 +120,8 @@ class NetworkModule extends PreferenceModule {
   ///
   /// Calling it multiple times will return the same instance.
 
-  AnimeApi providePostApi(DioClient dioClient) => AnimeApi(dioClient);
+  AnimeApi provideAnimeApi(DioClient dioClient) => AnimeApi(dioClient);
 
   UsersApi provideUsersApi(DioClient dioClient) => UsersApi(dioClient);
 // Api Providers End:---------------------------------------------------------
-
 }

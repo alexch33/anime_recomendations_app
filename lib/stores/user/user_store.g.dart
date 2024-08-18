@@ -212,15 +212,6 @@ mixin _$UserStore on _UserStore, Store {
         .run(() => super.querryUserRecomendations(userId));
   }
 
-  late final _$_querryUserRecomendationsCartAsyncAction =
-      AsyncAction('_UserStore._querryUserRecomendationsCart', context: context);
-
-  @override
-  Future<RecomendationList> _querryUserRecomendationsCart() {
-    return _$_querryUserRecomendationsCartAsyncAction
-        .run(() => super._querryUserRecomendationsCart());
-  }
-
   late final _$deleteAllUserEventsAsyncAction =
       AsyncAction('_UserStore.deleteAllUserEvents', context: context);
 
@@ -274,6 +265,15 @@ mixin _$UserStore on _UserStore, Store {
     return _$likeAnimeAsyncAction.run(() => super.likeAnime(animeId));
   }
 
+  late final _$_querryUserRecomendationsCartAsyncAction =
+      AsyncAction('_UserStore._querryUserRecomendationsCart', context: context);
+
+  @override
+  Future<RecomendationList> _querryUserRecomendationsCart() {
+    return _$_querryUserRecomendationsCartAsyncAction
+        .run(() => super._querryUserRecomendationsCart());
+  }
+
   late final _$_UserStoreActionController =
       ActionController(name: '_UserStore', context: context);
 
@@ -294,6 +294,28 @@ mixin _$UserStore on _UserStore, Store {
         name: '_UserStore.handleSearchStart');
     try {
       return super.handleSearchStart();
+    } finally {
+      _$_UserStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void handleSearchEnd() {
+    final _$actionInfo = _$_UserStoreActionController.startAction(
+        name: '_UserStore.handleSearchEnd');
+    try {
+      return super.handleSearchEnd();
+    } finally {
+      _$_UserStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void _applyNewRecsList() {
+    final _$actionInfo = _$_UserStoreActionController.startAction(
+        name: '_UserStore._applyNewRecsList');
+    try {
+      return super._applyNewRecsList();
     } finally {
       _$_UserStoreActionController.endAction(_$actionInfo);
     }

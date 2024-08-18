@@ -1,5 +1,7 @@
 import 'package:anime_recommendations_app/stores/anime/anime_store.dart';
 import 'package:anime_recommendations_app/stores/user/user_store.dart';
+import 'package:anime_recommendations_app/ui/anime_details/widgets/similars_button_widget.dart';
+import 'package:anime_recommendations_app/ui/anime_details/widgets/watch_online_button_widget.dart';
 import 'package:anime_recommendations_app/utils/locale/app_localization.dart';
 import 'package:anime_recommendations_app/widgets/progress_indicator_widget.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,8 @@ class AnimeDetails extends StatefulWidget {
 }
 
 class _AnimeDetailsState extends State<AnimeDetails> {
+  final ScrollController _scrollController = ScrollController();
+
   //stores:---------------------------------------------------------------------
   late AnimeStore _animeStore;
   late UserStore _userStore;
@@ -39,36 +43,53 @@ class _AnimeDetailsState extends State<AnimeDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.translate('info')),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.translate('info')),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16),
+        child: Stack(
+          children: [
+            LayoutBuilder(builder:
+                (BuildContext context, BoxConstraints viewportConstraints) {
+              return SingleChildScrollView(
+                controller: _scrollController,
+                child: ConstrainedBox(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ImageBlockWidget(_anime, _userStore),
+                        SimilarsButtonWidget(_anime),
+                        WatchOnlineButtonWidget(onPressed: _onWatchClick),
+                        TextInfoWidget(_anime),
+                        LinksButtonsWidget(_animeStore, _anime),
+                      ]),
+                  constraints: BoxConstraints(
+                    minHeight: viewportConstraints.maxHeight,
+                  ),
+                ),
+              );
+            }),
+            Observer(
+              builder: (context) =>
+              (_userStore.loading || _animeStore.isLoading)
+                  ? SizedBox(
+                height: 100,
+                width: 100,
+                child: CustomProgressIndicatorWidget(),
+              )
+                  : SizedBox.shrink(),
+            )
+          ],
         ),
-        body: Padding(
-            padding: EdgeInsets.all(16),
-            child: Stack(
-              children: [
-                LayoutBuilder(builder:
-                    (BuildContext context, BoxConstraints viewportConstraints) {
-                  return SingleChildScrollView(
-                      child: ConstrainedBox(
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ImageBlockWidget(_anime, _userStore),
-                                TextInfoWidget(_anime),
-                                LinksButtonsWidget(_animeStore, _anime),
-                              ]),
-                          constraints: BoxConstraints(
-                            minHeight: viewportConstraints.maxHeight,
-                          )));
-                }),
-                Observer(
-                    builder: (context) =>
-                        (_userStore.loading || _animeStore.isLoading)
-                            ? CustomProgressIndicatorWidget()
-                            : Container())
-              ],
-            )));
+      ),
+    );
+  }
+
+  void _onWatchClick() {
+    _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+        duration: Duration(seconds: 1), curve: Curves.ease);
   }
 
   @override

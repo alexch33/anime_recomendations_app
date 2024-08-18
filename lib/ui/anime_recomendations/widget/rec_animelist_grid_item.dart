@@ -26,6 +26,7 @@ class RecAnimeListGridItem extends StatelessWidget {
         padding: EdgeInsets.all(8),
         child: AnimeGridTile(
             anime: anime,
+            score: rec.score,
             isLiked: _userStore.user.likedAnimes.contains(anime.dataId),
             isLater: _userStore.user.watchLaterAnimes.contains(anime.dataId),
             isBlack: _userStore.user.blackListAnimes.contains(anime.dataId)));

@@ -1,3 +1,4 @@
+import 'package:anime_recommendations_app/constants/app_theme.dart';
 import 'package:anime_recommendations_app/models/anime/anime.dart';
 import 'package:anime_recommendations_app/stores/anime/anime_store.dart';
 import 'package:anime_recommendations_app/stores/user/user_store.dart';
@@ -232,6 +233,9 @@ class _UserProfileState extends State<UserProfile>
   }
 
   _showMaterialDialog() {
+    final buttonsTextStyle =
+        Theme.of(context).primaryTextTheme.titleMedium?.apply(color: secondary);
+
     showDialog(
         context: context,
         builder: (_) => new AlertDialog(
@@ -241,15 +245,20 @@ class _UserProfileState extends State<UserProfile>
                   .translate('favorites_reset_ask')),
               actions: <Widget>[
                 TextButton(
-                  child:
-                      Text(AppLocalizations.of(context)!.translate('remove')),
+                  child: Text(
+                    AppLocalizations.of(context)!.translate('remove'),
+                    style: buttonsTextStyle,
+                  ),
                   onPressed: () async {
                     await deleteFavoritesAll();
                     Navigator.of(context).pop();
                   },
                 ),
                 TextButton(
-                  child: Text(AppLocalizations.of(context)!.translate('close')),
+                  child: Text(
+                    AppLocalizations.of(context)!.translate('close'),
+                    style: buttonsTextStyle,
+                  ),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },

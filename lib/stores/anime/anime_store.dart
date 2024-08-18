@@ -14,16 +14,17 @@ import 'package:anime_recommendations_app/stores/error/error_store.dart';
 import 'package:anime_recommendations_app/utils/dio/dio_error_util.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mobx/mobx.dart';
 import 'package:anime_recommendations_app/models/recomendation/recomendation_list.dart';
-import 'package:flutter_isolate/flutter_isolate.dart';
 
 part 'anime_store.g.dart';
 
 ReceivePort receivePort = ReceivePort();
 final String recieverName = "Reciever";
 
-enum ParserType { Anilibria, Gogo, AniVost }
+enum ParserType { Anilibria, Gogo, AniVost, Anime9, AnimeGo }
+
 class AnimeStore = _AnimeStore with _$AnimeStore;
 
 abstract class _AnimeStore with Store {
@@ -43,9 +44,6 @@ abstract class _AnimeStore with Store {
   Map<int, RecomendationList> similarsListsMap = {};
 
   @observable
-  bool success = false;
-
-  @observable
   bool isLoading = false;
 
   @observable
@@ -61,7 +59,30 @@ abstract class _AnimeStore with Store {
   String gogoAnimeUrl = '';
 
   @observable
+  String anime9Url = '';
+
+  @observable
+  String animeGoUrl = '';
+
+  @observable
   bool isSearching = false;
+
+  @observable
+  String fetchStatus = 'Loading...';
+
+  @observable
+  bool isFetchingAnimeList = false;
+
+  @observable
+  bool isAnimeFetchDone = false;
+
+  @observable
+  int currentFetchProgress = 0;
+
+  @observable
+  bool isCanSkipFetch = false;
+
+  final totalFetchProgress = 15348390;
 
   String searchText = "";
 
@@ -74,9 +95,13 @@ abstract class _AnimeStore with Store {
     if (!_isInited) {
       searchQuery.addListener(() {
         if (searchQuery.text.isEmpty) {
-          isSearching = false;
           searchText = "";
           animeList.cashedAnimes = animeList.animes;
+
+          var list = AnimeList(animes: animeList.animes);
+          list.cashedAnimes = animeList.animes;
+
+          animeList = list;
         } else {
           isSearching = true;
           searchText = searchQuery.text;
@@ -87,14 +112,41 @@ abstract class _AnimeStore with Store {
                       .contains(searchText.toLowerCase()) ||
                   element.name.toLowerCase().contains(searchText.toLowerCase()))
               .toList();
+
+          var list = AnimeList(animes: animeList.animes);
+          list.cashedAnimes = animeList.cashedAnimes;
+
+          animeList = list;
         }
       });
 
-      receivePort.listen((message) {
+      receivePort.listen((message) async {
         if (message["list"] != null) {
           this.animeList = message["list"];
+          final newAnimes = this.animeList.animes.toList();
+          newAnimes.sort((a, b) => (b.rating ?? 0).compareTo(a.rating ?? 0));
+
+          this.animeList = AnimeList(animes: newAnimes);
+          fetchStatus = "done";
+          isFetchingAnimeList = false;
+          isAnimeFetchDone = true;
         }
-        isLoading = false;
+
+        final status = message["status"];
+        if (status != null) {
+          fetchStatus = status;
+
+          if (status == "error") {
+            isFetchingAnimeList = false;
+            isAnimeFetchDone = false;
+            final count = await _repository.getAnimesDBCount();
+            isCanSkipFetch = count > 0;
+          }
+        }
+        final current = message["current"];
+        if (current != null) {
+          currentFetchProgress = current;
+        }
       });
     }
 
@@ -107,6 +159,7 @@ abstract class _AnimeStore with Store {
     animeList.cashedAnimes = animeList.animes;
   }
 
+  @action
   void handleSearchEnd() {
     isSearching = false;
     searchQuery.clear();
@@ -116,17 +169,22 @@ abstract class _AnimeStore with Store {
   @action
   Future<void> getLinksForAnime(Anime anime) async {
     var dio = DioClient(Dio());
-    try {
-      AnimeScrapper.fromType(dio, ParserType.Anilibria)
-          .getAnimeUrl(anime.name)
-          .then((value) => anilibriaAnimeUrl = value);
-      AnimeScrapper.fromType(dio, ParserType.Gogo)
-          .getAnimeUrl(anime.name)
-          .then((value) => gogoAnimeUrl = value);
-      AnimeScrapper.fromType(dio, ParserType.AniVost)
-          .getAnimeUrl(anime.name)
-          .then((value) => anivostAnimeUrl = value);
-    } catch (e) {}
+    AnimeScrapper.fromType(dio, ParserType.Gogo)
+        .getAnimeUrl(anime.name)
+        .then((value) => gogoAnimeUrl = value)
+        .onError((error, stackTrace) => "");
+    AnimeScrapper.fromType(dio, ParserType.AniVost)
+        .getAnimeUrl(anime.name)
+        .then((value) => anivostAnimeUrl = value)
+        .onError((error, stackTrace) => "");
+    AnimeScrapper.fromType(dio, ParserType.Anime9)
+        .getAnimeUrl(anime.name)
+        .then((value) => anime9Url = value)
+        .onError((error, stackTrace) => "");
+    AnimeScrapper.fromType(dio, ParserType.AnimeGo)
+        .getAnimeUrl(anime.name)
+        .then((value) => animeGoUrl = value)
+        .onError((error, stackTrace) => "");
   }
 
   @action
@@ -134,29 +192,50 @@ abstract class _AnimeStore with Store {
     anilibriaAnimeUrl = '';
     anivostAnimeUrl = '';
     gogoAnimeUrl = '';
+    anime9Url = '';
+    animeGoUrl = '';
   }
 
   // actions:-------------------------------------------------------------------
   @action
   Future getAnimes() async {
-    isLoading = true;
+    isFetchingAnimeList = true;
+    isAnimeFetchDone = false;
 
     try {
-      this.animeList = await _repository.getAnimes();
+      final count = await _repository.getAnimesDBCount();
+      if (count == 0) {
+        fetchStatus = "Connecting...";
+        await refreshAnimes();
+      } else {
+        fetchStatus = "Loading...";
+        currentFetchProgress = totalFetchProgress;
+        this.animeList = await _repository.getAnimesFromDBOrCached();
+      }
     } catch (error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
     }
 
-    isLoading = false;
+    final count = await _repository.getAnimesDBCount();
+
+    isAnimeFetchDone = count > 0;
+    isFetchingAnimeList = false;
+    fetchStatus = "done";
   }
 
   @action
   Future refreshAnimes() async {
-    isLoading = true;
-    FlutterIsolate.spawn<void>(_refreshAnimeList, null);
+    isFetchingAnimeList = true;
+    isAnimeFetchDone = false;
+    currentFetchProgress = 0;
+
+    final token = RootIsolateToken.instance;
+    await Isolate.spawn(_refreshAnimeList, token);
   }
 
-  static void _refreshAnimeList(nullData) async {
+  static void _refreshAnimeList(RootIsolateToken? token) async {
+    BackgroundIsolateBinaryMessenger.ensureInitialized(token!);
+
     Repository? _repository = AppComponent.getReposInstance(
       NetworkModule(),
       LocalModule(),
@@ -164,10 +243,26 @@ abstract class _AnimeStore with Store {
     );
     SendPort? checkingPort = IsolateNameServer.lookupPortByName(recieverName);
     try {
-      var animeList = await _repository?.refreshAnimes();
-      checkingPort?.send({"list": animeList});
+      checkingPort?.send({"status": "connecting"});
+
+      var animeList = await _repository?.getAnimesFromApi((curr, total) {
+        checkingPort?.send({
+          "status": "downloading",
+          "current": curr,
+        });
+      });
+
+      if (animeList?.animes != null && animeList?.animes.isNotEmpty == true) {
+        checkingPort?.send({"status": "unpacking"});
+        await _repository?.deleteAllAnimes();
+        await _repository?.insertAll(animeList!.animes);
+      }
+
+      if (animeList != null) {
+        checkingPort?.send({"list": animeList, "status": "done"});
+      }
     } catch (error) {
-      checkingPort?.send({"list": null});
+      checkingPort?.send({"list": null, "status": "error"});
     }
   }
 

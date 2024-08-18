@@ -1,5 +1,4 @@
 import 'package:anime_recommendations_app/models/anime/anime.dart';
-import 'package:anime_recommendations_app/widgets/ganres_widget.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
@@ -10,14 +9,16 @@ class AnimeGridTile extends StatelessWidget {
   final bool isLiked;
   final bool isLater;
   final bool isBlack;
+  final double score;
 
-  const AnimeGridTile(
-      {Key? key,
-      required this.anime,
-      this.isLiked = false,
-      this.isLater = false,
-      this.isBlack = false})
-      : super(key: key);
+  const AnimeGridTile({
+    Key? key,
+    required this.anime,
+    this.isLiked = false,
+    this.isLater = false,
+    this.isBlack = false,
+    this.score = 0.0,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,11 @@ class AnimeGridTile extends StatelessWidget {
                               Icons.star,
                               color: Colors.yellowAccent,
                             ),
-                            Text(anime.rating?.toStringAsFixed(2) ?? "",
+                            Text(
+                                anime.rating
+                                        ?.toStringAsFixed(2)
+                                        .replaceAll("-1.00", "") ??
+                                    "",
                                 style: Theme.of(context).textTheme.titleLarge),
                             Container(width: 16),
                             isLiked
@@ -68,22 +73,25 @@ class AnimeGridTile extends StatelessWidget {
                                 : Container(),
                           ],
                         ),
+                        score != 0.0
+                            ? Text(
+                                score.toStringAsFixed(3),
+                                style: Theme.of(context).textTheme.titleMedium,
+                              )
+                            : SizedBox.shrink(),
                         Text(anime.name,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             softWrap: false,
                             style: Theme.of(context).textTheme.titleLarge),
                         anime.nameEng.isNotEmpty
-                            ? Text(anime.nameEng,
+                            ? Text(anime.nameEng.replaceAll("UNKNOWN", ""),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: false,
                                 style: Theme.of(context).textTheme.bodyLarge)
                             : Container(),
                       ]),
-                      anime.genre.isNotEmpty
-                          ? GenresWidget(ganres: this.anime.genre)
-                          : Container()
                     ],
                   ),
                   flex: 34)

@@ -17,54 +17,34 @@ class AnimeApi {
   AnimeApi(this._dioClient);
 
   /// Returns list of post in response
-  Future<AnimeList> getAnimes() async {
-    try {
-      final res = await _dioClient
-          .get(Endpoints.getAnimes, queryParameters: {"limit": 20000});
-      return AnimeList.fromJson(res["results"]);
-    } catch (e) {
-      print(e.toString());
-      throw e;
-    }
+  Future<AnimeList> getAllAnimes(void Function(int, int)? onProgress) async {
+    final res = await _dioClient.get(Endpoints.getAnimes,
+        queryParameters: {"limit": 30000}, onReceiveProgress: onProgress);
+    return AnimeList.fromJson(res["results"]);
   }
 
   Future<bool> likeAnime(int animeId) async {
-    try {
-      await _dioClient.post(Endpoints.likeAnime, data: {"animeId": animeId});
-      return true;
-    } catch (e) {
-      throw e;
-    }
+    await _dioClient.post(Endpoints.likeAnime, data: {"animeId": animeId});
+    return true;
   }
 
   Future<RecomendationList> querryUserRecomendations(String userId) async {
-    try {
-      final resp = await _dioClient
-          .post(Endpoints.querryUserRecomendations, data: {"itemId": userId});
-      return RecomendationList.fromJson(jsonDecode(resp)["result"]);
-    } catch (e) {
-      throw e;
-    }
+    final resp = await _dioClient
+        .post(Endpoints.querryUserRecomendations, data: {"itemId": userId});
+    return RecomendationList.fromJson(jsonDecode(resp)["result"]);
   }
 
-  Future<RecomendationList> querryUserRecomendationsCart(List<String> animeSet) async {
-    try {
-      final resp = await _dioClient
-          .post(Endpoints.querryUserRecomendationsCart, data: {"itemSet": animeSet});
-      return RecomendationList.fromJson(jsonDecode(resp)["result"]);
-    } catch (e) {
-      throw e;
-    }
+  Future<RecomendationList> querryUserRecomendationsCart(
+      List<String> animeSet) async {
+    final resp = await _dioClient.post(Endpoints.querryUserRecomendationsCart,
+        data: {"itemSet": animeSet});
+    return RecomendationList.fromJson(jsonDecode(resp)["result"]);
   }
 
   Future<RecomendationList> querrySimilarItems(String animeId) async {
-    try {
-      final resp = await _dioClient
-          .post(Endpoints.querySimilarItems, data: {"itemId": animeId});
-      return RecomendationList.fromJson(jsonDecode(resp)["result"]);
-    } catch (e) {
-      throw e;
-    }
+    final resp = await _dioClient
+        .post(Endpoints.querySimilarItems, data: {"itemId": animeId});
+    return RecomendationList.fromJson(jsonDecode(resp)["result"]);
   }
 
   Future<List<AnimeVideo>> getLinksForAniById(

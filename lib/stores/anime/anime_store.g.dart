@@ -41,22 +41,6 @@ mixin _$AnimeStore on _AnimeStore, Store {
     });
   }
 
-  late final _$successAtom =
-      Atom(name: '_AnimeStore.success', context: context);
-
-  @override
-  bool get success {
-    _$successAtom.reportRead();
-    return super.success;
-  }
-
-  @override
-  set success(bool value) {
-    _$successAtom.reportWrite(value, super.success, () {
-      super.success = value;
-    });
-  }
-
   late final _$isLoadingAtom =
       Atom(name: '_AnimeStore.isLoading', context: context);
 
@@ -137,6 +121,38 @@ mixin _$AnimeStore on _AnimeStore, Store {
     });
   }
 
+  late final _$anime9UrlAtom =
+      Atom(name: '_AnimeStore.anime9Url', context: context);
+
+  @override
+  String get anime9Url {
+    _$anime9UrlAtom.reportRead();
+    return super.anime9Url;
+  }
+
+  @override
+  set anime9Url(String value) {
+    _$anime9UrlAtom.reportWrite(value, super.anime9Url, () {
+      super.anime9Url = value;
+    });
+  }
+
+  late final _$animeGoUrlAtom =
+      Atom(name: '_AnimeStore.animeGoUrl', context: context);
+
+  @override
+  String get animeGoUrl {
+    _$animeGoUrlAtom.reportRead();
+    return super.animeGoUrl;
+  }
+
+  @override
+  set animeGoUrl(String value) {
+    _$animeGoUrlAtom.reportWrite(value, super.animeGoUrl, () {
+      super.animeGoUrl = value;
+    });
+  }
+
   late final _$isSearchingAtom =
       Atom(name: '_AnimeStore.isSearching', context: context);
 
@@ -150,6 +166,87 @@ mixin _$AnimeStore on _AnimeStore, Store {
   set isSearching(bool value) {
     _$isSearchingAtom.reportWrite(value, super.isSearching, () {
       super.isSearching = value;
+    });
+  }
+
+  late final _$fetchStatusAtom =
+      Atom(name: '_AnimeStore.fetchStatus', context: context);
+
+  @override
+  String get fetchStatus {
+    _$fetchStatusAtom.reportRead();
+    return super.fetchStatus;
+  }
+
+  @override
+  set fetchStatus(String value) {
+    _$fetchStatusAtom.reportWrite(value, super.fetchStatus, () {
+      super.fetchStatus = value;
+    });
+  }
+
+  late final _$isFetchingAnimeListAtom =
+      Atom(name: '_AnimeStore.isFetchingAnimeList', context: context);
+
+  @override
+  bool get isFetchingAnimeList {
+    _$isFetchingAnimeListAtom.reportRead();
+    return super.isFetchingAnimeList;
+  }
+
+  @override
+  set isFetchingAnimeList(bool value) {
+    _$isFetchingAnimeListAtom.reportWrite(value, super.isFetchingAnimeList, () {
+      super.isFetchingAnimeList = value;
+    });
+  }
+
+  late final _$isAnimeFetchDoneAtom =
+      Atom(name: '_AnimeStore.isAnimeFetchDone', context: context);
+
+  @override
+  bool get isAnimeFetchDone {
+    _$isAnimeFetchDoneAtom.reportRead();
+    return super.isAnimeFetchDone;
+  }
+
+  @override
+  set isAnimeFetchDone(bool value) {
+    _$isAnimeFetchDoneAtom.reportWrite(value, super.isAnimeFetchDone, () {
+      super.isAnimeFetchDone = value;
+    });
+  }
+
+  late final _$currentFetchProgressAtom =
+      Atom(name: '_AnimeStore.currentFetchProgress', context: context);
+
+  @override
+  int get currentFetchProgress {
+    _$currentFetchProgressAtom.reportRead();
+    return super.currentFetchProgress;
+  }
+
+  @override
+  set currentFetchProgress(int value) {
+    _$currentFetchProgressAtom.reportWrite(value, super.currentFetchProgress,
+        () {
+      super.currentFetchProgress = value;
+    });
+  }
+
+  late final _$isCanSkipFetchAtom =
+      Atom(name: '_AnimeStore.isCanSkipFetch', context: context);
+
+  @override
+  bool get isCanSkipFetch {
+    _$isCanSkipFetchAtom.reportRead();
+    return super.isCanSkipFetch;
+  }
+
+  @override
+  set isCanSkipFetch(bool value) {
+    _$isCanSkipFetchAtom.reportWrite(value, super.isCanSkipFetch, () {
+      super.isCanSkipFetch = value;
     });
   }
 
@@ -230,6 +327,17 @@ mixin _$AnimeStore on _AnimeStore, Store {
   }
 
   @override
+  void handleSearchEnd() {
+    final _$actionInfo = _$_AnimeStoreActionController.startAction(
+        name: '_AnimeStore.handleSearchEnd');
+    try {
+      return super.handleSearchEnd();
+    } finally {
+      _$_AnimeStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void clearAnimesUrls() {
     final _$actionInfo = _$_AnimeStoreActionController.startAction(
         name: '_AnimeStore.clearAnimesUrls');
@@ -245,13 +353,19 @@ mixin _$AnimeStore on _AnimeStore, Store {
     return '''
 animeList: ${animeList},
 similarsListsMap: ${similarsListsMap},
-success: ${success},
 isLoading: ${isLoading},
 scrapperType: ${scrapperType},
 anilibriaAnimeUrl: ${anilibriaAnimeUrl},
 anivostAnimeUrl: ${anivostAnimeUrl},
 gogoAnimeUrl: ${gogoAnimeUrl},
-isSearching: ${isSearching}
+anime9Url: ${anime9Url},
+animeGoUrl: ${animeGoUrl},
+isSearching: ${isSearching},
+fetchStatus: ${fetchStatus},
+isFetchingAnimeList: ${isFetchingAnimeList},
+isAnimeFetchDone: ${isAnimeFetchDone},
+currentFetchProgress: ${currentFetchProgress},
+isCanSkipFetch: ${isCanSkipFetch}
     ''';
   }
 }

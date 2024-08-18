@@ -13,6 +13,7 @@ class SiteButtonContainer extends StatelessWidget {
       required this.urlToGo,
       required this.anime})
       : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -41,7 +42,7 @@ class SiteButtonContainer extends StatelessWidget {
 
   void goToAnime(BuildContext context, String url) {
     if (url.isEmpty) {
-      url = "https://www.google.com/search?q=${anime.name}";
+      url = "https://www.google.com/search?q=${anime.name} watch online";
     }
 
     if (url.isNotEmpty) {

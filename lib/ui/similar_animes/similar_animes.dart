@@ -35,8 +35,6 @@ class _SimilarAnimesState extends State<SimilarAnimes> {
       _animeStore.querrySImilarItems(_anime.dataId);
 
       isInited = true;
-
-      _userStore.showInterstitialAd();
     }
   }
 

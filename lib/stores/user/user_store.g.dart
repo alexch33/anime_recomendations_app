@@ -93,21 +93,6 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  late final _$isAdsOnAtom = Atom(name: '_UserStore.isAdsOn', context: context);
-
-  @override
-  bool get isAdsOn {
-    _$isAdsOnAtom.reportRead();
-    return super.isAdsOn;
-  }
-
-  @override
-  set isAdsOn(bool value) {
-    _$isAdsOnAtom.reportWrite(value, super.isAdsOn, () {
-      super.isAdsOn = value;
-    });
-  }
-
   late final _$isSearchingAtom =
       Atom(name: '_UserStore.isSearching', context: context);
 
@@ -329,7 +314,6 @@ user: ${user},
 success: ${success},
 loginFuture: ${loginFuture},
 loading: ${loading},
-isAdsOn: ${isAdsOn},
 isSearching: ${isSearching},
 recomendationsList: ${recomendationsList},
 page: ${page},

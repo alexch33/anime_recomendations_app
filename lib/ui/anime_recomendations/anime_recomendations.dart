@@ -37,8 +37,6 @@ class _AnimeRecomendationsState extends State<AnimeRecomendations> {
         _userStore.refreshRecs();
       }
       isInited = true;
-
-      _userStore.showInterstitialAd();
     }
   }
 

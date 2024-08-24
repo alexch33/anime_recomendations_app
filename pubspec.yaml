@@ -7,7 +7,7 @@ description: Anime recommendations app
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 0.4.1+18
+version: 0.4.2+19
 
 environment:
   sdk: ">=3.1.3 <4.0.0"
@@ -23,7 +23,7 @@ dependencies:
   shared_preferences: 2.3.2
   mobx: 2.3.3+2
   flutter_mobx: 2.2.1+1
-  sembast: 3.7.2
+  sembast: 3.7.3+2
   path_provider: 2.1.4
   xxtea: 2.1.0
   provider: 6.1.2
@@ -37,7 +37,6 @@ dependencies:
   string_similarity: 2.1.1
   html: 0.15.4
   flutter_inappwebview: 6.0.0
-  google_mobile_ads: 5.1.0
   share_plus: 10.0.2
   json_annotation: 4.9.0
 

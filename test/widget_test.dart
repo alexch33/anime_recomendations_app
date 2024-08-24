@@ -22,8 +22,7 @@ void main() {
           NetworkModule(),
           LocalModule(),
           PreferenceModule(),
-        )!),
-        const Duration(seconds: 5),
+        )!)
       );
       expect(find.text('Or'), findsOneWidget);
     },

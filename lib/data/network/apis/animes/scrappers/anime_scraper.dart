@@ -30,8 +30,6 @@ abstract class AnimeScrapper {
         return Anime9Scrapper(client);
       case ParserType.AnimeGo:
         return AnimeGoScraper(client);
-      default:
-        throw Exception("Wrong sscrapper type");
-    }
+      }
   }
 }

@@ -18,8 +18,8 @@ class RoundedButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: ButtonStyle(
-        shape: MaterialStateProperty.all<OutlinedBorder>(StadiumBorder()),
-        backgroundColor: MaterialStateProperty.all<Color>(buttonColor),
+        shape: WidgetStateProperty.all<OutlinedBorder>(StadiumBorder()),
+        backgroundColor: WidgetStateProperty.all<Color>(buttonColor),
       ),
       onPressed: onPressed,
       child: Text(

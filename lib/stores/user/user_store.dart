@@ -1,4 +1,3 @@
-import 'package:anime_recommendations_app/constants/strings.dart';
 import 'package:anime_recommendations_app/models/anime/anime.dart';
 import 'package:anime_recommendations_app/models/recomendation/recomendation_list.dart';
 import 'package:anime_recommendations_app/models/user/user.dart';

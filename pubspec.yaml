@@ -55,9 +55,6 @@ dev_dependencies:
   mobx_codegen: 2.7.0
   build_runner: 2.4.15
 
-dependency_overrides:
-  webview_flutter_android: 3.16.1
-
 flutter_icons:
   image_path: "assets/icons/ic_launcher.png"
   android: true
